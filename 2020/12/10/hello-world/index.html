@@ -13,7 +13,7 @@
         <link rel="icon" href="https://yiwenzhe.com/assets/images/favicon.ico">
     
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto"]},"articleBody":"Hexo配置\n\nWelcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.\nQuick StartCreate a new post1$ hexo new &quot;My New Post&quot;\n\nMore info: Writing\nRun server1$ hexo server\n\nMore info: Server\nGenerate static files1$ hexo generate\n\nMore info: Generating\nDeploy to remote sites1$ hexo deploy\n\nMore info: Deployment\n","dateCreated":"2020-12-10T23:05:46+08:00","dateModified":"2021-01-02T22:45:51+08:00","datePublished":"2020-12-10T23:05:46+08:00","description":"Hexo配置","headline":"Hello World","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2020/12/10/hello-world/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto"]},"url":"https://yiwenzhe.com/2020/12/10/hello-world/"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto"],"image":"picture.jpg"},"articleBody":"Hexo配置\n\nWelcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.\nQuick StartCreate a new post1$ hexo new &quot;My New Post&quot;\n\nMore info: Writing\nRun server1$ hexo server\n\nMore info: Server\nGenerate static files1$ hexo generate\n\nMore info: Generating\nDeploy to remote sites1$ hexo deploy\n\nMore info: Deployment\n","dateCreated":"2020-12-10T23:05:46+08:00","dateModified":"2021-01-02T22:45:51+08:00","datePublished":"2020-12-10T23:05:46+08:00","description":"Hexo配置","headline":"Hello World","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2020/12/10/hello-world/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto"],"image":"picture.jpg","logo":{"@type":"ImageObject","url":"picture.jpg"}},"url":"https://yiwenzhe.com/2020/12/10/hello-world/"}</script>
     <meta name="description" content="Hexo">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Hello World">
@@ -30,12 +30,14 @@
         
     
     
+        <meta property="og:image" content="https://yiwenzhe.com/assets/images/picture.jpg"/>
+    
     
     
     
     <!--STYLES-->
     
-<link rel="stylesheet" href="/assets/css/style-f8o9erlq34fwdhxisjrujz9tozoutjtvfcd8yaybvlfqcfnwme7maowf4vgm.min.css">
+<link rel="stylesheet" href="/assets/css/style-vukighwbsivyefbwrq90crcs92rfpj153lmsgi12uybowne4uwtqovzzincn.min.css">
 
     <!--STYLES END-->
     
@@ -52,6 +54,10 @@
             <!-- Define author's picture -->
 
 
+    
+        
+            
+        
     
 
 <header id="header" data-behavior="4">
@@ -74,6 +80,8 @@
             >
         
         
+            <img class="header-picture" src="/assets/images/picture.jpg" alt="作者的图片"/>
+        
         </a>
     
 </header>
@@ -81,8 +89,26 @@
             <!-- Define author's picture -->
 
 
+
+        
+    
+
 <nav id="sidebar" data-behavior="4">
     <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a
+                    href="/#about"
+                    aria-label="阅读有关作者的更多信息"
+                >
+                    <img class="sidebar-profile-picture" src="/assets/images/picture.jpg" alt="作者的图片"/>
+                </a>
+                <h4 class="sidebar-profile-name">YWZ</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>无</p>
+</h5>
+                
+            </div>
         
         
             <ul class="sidebar-buttons">
@@ -248,10 +274,10 @@
                                 target="_blank"
                             
                             rel="noopener"
-                            title="global.google"
+                            title="Google"
                         >
                         <i class="sidebar-button-icon fab fa-google" aria-hidden="true"></i>
-                        <span class="sidebar-button-desc">global.google</span>
+                        <span class="sidebar-button-desc">Google</span>
                     </a>
             </li>
             
@@ -435,6 +461,19 @@
                 </a>
             </li>
         
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2020/12/10/hello-world/"
+                    title="分享到 Weibo"
+                    aria-label="分享到 Weibo"
+                >
+                    <i class="fab fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
         
             
         
@@ -573,6 +612,19 @@
                 </a>
             </li>
         
+            
+            
+            <li class="post-action hide-xs">
+                <a
+                    class="post-action-btn btn btn--default"
+                    target="new" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2020/12/10/hello-world/"
+                    title="分享到 Weibo"
+                    aria-label="分享到 Weibo"
+                >
+                    <i class="fab fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
         
             
         
@@ -658,6 +710,19 @@
                     </a>
                 </li>
             
+                
+                
+                <li class="share-option">
+                    <a
+                        class="share-option-btn"
+                        target="new"
+                        href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2020/12/10/hello-world/"
+                        aria-label="分享到 Weibo"
+                    >
+                        <i class="fab fa-weibo" aria-hidden="true"></i><span>分享到 Weibo</span>
+                    </a>
+                </li>
+            
         </ul>
     </div>
 
@@ -667,25 +732,37 @@
         
 
 
+    
+        
+    
+
 <div id="about">
     <div id="about-card">
         <div id="about-btn-close">
             <i class="fa fa-times"></i>
         </div>
         
+            <img id="about-card-picture" src="/assets/images/picture.jpg" alt="作者的图片"/>
+        
             <h4 id="about-card-name">YWZ</h4>
         
-            <div id="about-card-bio"><p>author.bio</p>
+            <div id="about-card-bio"><p>无</p>
 </div>
         
         
             <div id="about-card-job">
                 <i class="fa fa-briefcase"></i>
                 <br/>
-                <p>author.job</p>
+                <p>武汉大学本科生</p>
 
             </div>
         
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Wuhan
+            </div>
         
     </div>
 </div>
@@ -695,7 +772,7 @@
 <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 
-<script src="/assets/js/script-a9hu0iiyz0b2clfvlu2isf76dwvbzvc4wcut8cezos67w0aywxcuo71iale7.min.js"></script>
+<script src="/assets/js/script-gnliy9nd69uaxasitkvmrdvdhldp8ks3e1f82sg3ljnyiseosk2ajxndioxa.min.js"></script>
 
 <!--SCRIPTS END-->
 
