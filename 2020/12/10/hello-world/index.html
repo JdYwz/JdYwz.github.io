@@ -41,7 +41,7 @@
     
     <!--STYLES-->
     
-<link rel="stylesheet" href="/assets/css/style-ul6dpfdpjel1rvzevyczeijsgdeuj1ltyxe0wy0n8cfuaa6f3yw6ylyqqxxp.min.css">
+<link rel="stylesheet" href="/assets/css/style-uakszrlux8tmrdgennuo9pqjixglblljsgayvuoisanjholwhg02hxfbkwun.min.css">
 
     <!--STYLES END-->
     
@@ -533,6 +533,23 @@
     <span class="copyrights">
         Copyrights &copy; 2021 YWZ. All Rights Reserved.
     </span>
+    <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("10/11/2020 14:56:39");//在此处修改你的建站时间，格式：月/日/年 时:分:秒
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+setInterval("createtime()",250);
+</script>
 </footer>
 
             </div>
@@ -804,7 +821,7 @@
 <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 
-<script src="/assets/js/script-rcmbxk2ytiqurg9rteturgrhrc7r1muoqutgts9z4jjtd4vu1augniervbve.min.js"></script>
+<script src="/assets/js/script-kgvzeyysqskwrv2qylzipwkcykmxvjjcxq8vjk418sz9urixu2xx0fgxsnwt.min.js"></script>
 
 <!--SCRIPTS END-->
 
