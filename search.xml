@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Hello</title>
+    <url>/2020/12/11/Hello/</url>
+    <content><![CDATA[<p>这是YWZ的个人网站，网站还在慢慢建立中，有时间的话会慢慢建起来。</p>
+<a id="more"></a>
+]]></content>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2020/12/10/hello-world/</url>
+    <content><![CDATA[<p>Hexo配置</p>
+<a id="more"></a>
+<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>平安夜</title>
+    <url>/2020/12/24/%E5%B9%B3%E5%AE%89%E5%A4%9C/</url>
+    <content><![CDATA[<p>平安夜的碎碎念</p>
+<a id="more"></a>
+<p>  平安夜本来是开开心心过节的，可是我却很焦虑。我就像永远在长跑，一分一秒都不敢松懈，被各种大作业压着，连短暂休息都会感到不安。我经常问自己，这个做好了吗？作业够完善了吗？复习了吗？</p>
+<h2 id="无法松懈"><a href="#无法松懈" class="headerlink" title="无法松懈"></a>无法松懈</h2><p>  大三了，每一门成绩都可能是最后保研的关键，每一个大作业、考试都不能掉以轻心。同时还有各种各样的竞赛需要我参加。很多时候不是我选择了这样的生活，而是被迫的没有选择，这些甚至都不是我想要的。</p>
+<h2 id="能力不足"><a href="#能力不足" class="headerlink" title="能力不足"></a>能力不足</h2><p>  我也常常反思，我适合计算机吗？我真的什么都不会，同龄人一个个都有奇思妙想，有熟练的技巧，我真的比不过他们，又该如何努力呢？</p>
+<p>  只是想吐槽一下，算是一种短暂休息吧。休息结束了，又要回归那忙碌的生活了，平安夜快乐。</p>
+]]></content>
+      <categories>
+        <category>碎碎念</category>
+      </categories>
+      <tags>
+        <tag>平安夜</tag>
+      </tags>
+  </entry>
+</search>
