@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>置顶说明</title>
+    <url>/2021/01/19/%E7%BD%AE%E9%A1%B6%E8%AF%B4%E6%98%8E/</url>
+    <content><![CDATA[<a id="more"></a>
+<h1 id="博客说明"><a href="#博客说明" class="headerlink" title="博客说明"></a>博客说明</h1><p>&emsp;&emsp;我是武汉大学在读本科生，信息安全专业，该博客为我的个人博客，主要是记录学习过程中遇到的问题（计算机方面）和自己的生活。</p>
+<h1 id="建博初衷"><a href="#建博初衷" class="headerlink" title="建博初衷"></a>建博初衷</h1><p>&emsp;&emsp;建立博客本是一时冲动。在学习烦躁时，我突然就有了申请域名的想法，还好申请个人域名价格也不算贵，所以就果断买了。有了域名仿佛就有了存在的证据，之后一个博客就顺其自然地出现了。<br>&emsp;&emsp;建立博客很快，照着各种教程马上就可以成型。但设计自己独立的风格很难，用了别人的博客主体还要自己一个个去修改，其中还需要一些前端js知识，对我这种前端小白来说还是很有难度的。<br>&emsp;&emsp;现在博客陆陆续续变得好看了起来，之后我会进一步完善。</p>
+]]></content>
+  </entry>
+  <entry>
     <title>平安夜</title>
     <url>/2020/12/24/%E5%B9%B3%E5%AE%89%E5%A4%9C/</url>
     <content><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="密码错误，请重试." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
@@ -22,12 +30,5 @@
         <tag>平安夜</tag>
         <tag>生活</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>置顶说明</title>
-    <url>/2021/01/19/%E7%BD%AE%E9%A1%B6%E8%AF%B4%E6%98%8E/</url>
-    <content><![CDATA[<h1 id="博客说明"><a href="#博客说明" class="headerlink" title="博客说明"></a>博客说明</h1><p>&emsp;&emsp;我是武汉大学在读本科生，信息安全专业，该博客为我的个人博客，主要是记录学习过程中遇到的问题（计算机方面）和自己的生活。</p>
-<h1 id="建博初衷"><a href="#建博初衷" class="headerlink" title="建博初衷"></a>建博初衷</h1><p>&emsp;&emsp;建立博客本是一时冲动。在学习烦躁时，我突然就有了申请域名的想法，还好申请个人域名价格也不算贵，所以就果断买了。有了域名仿佛就有了存在的证据，之后一个博客就顺其自然地出现了。<br>&emsp;&emsp;建立博客很快，照着各种教程马上就可以成型。但设计自己独立的风格很难，用了别人的博客主体还要自己一个个去修改，其中还需要一些前端js知识，对我这种前端小白来说还是很有难度的。<br>&emsp;&emsp;现在博客陆陆续续变得好看了起来，之后我会进一步完善。</p>
-]]></content>
   </entry>
 </search>
