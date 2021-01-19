@@ -3,9 +3,18 @@
   <entry>
     <title>Hello</title>
     <url>/2020/12/11/Hello/</url>
-    <content><![CDATA[<p>这是YWZ的个人网站，网站还在慢慢建立中，有时间的话会慢慢建起来。</p>
-<a id="more"></a>
-]]></content>
+    <content><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="密码错误，请重试." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <script id="hbeData" type="hbeData" data-hmacdigest="f5f99f9daa14a2ad7391cfcc87664609ac139f031a5ef0f6eecaf1ecc0c065e8">78bfbe46d1fbb911a562f369fb1db0ed85364b5125e933b763c3020ce53386237c77bfea831d6194781c9cb9912aa0f14374c3134fc258d13e8bf3c1a725bc2d5f17e981323baa75ecd151b43d9b2d37b9ba48b0f8095e84a954f893eee556a0d3556799c6444c798d4e759d8f67a3b9b275b8f24da3abcddf957ef8e163c1a7851ddd3732dacd3d78565e97a8b040cf</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">请输入密码</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">]]></content>
   </entry>
   <entry>
     <title>Hello World</title>
