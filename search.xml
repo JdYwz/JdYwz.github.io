@@ -10,6 +10,20 @@
 ]]></content>
   </entry>
   <entry>
+    <title>机器学习笔记(一)：模型评估与选择</title>
+    <url>/2021/02/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E4%B8%80%EF%BC%9A%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/</url>
+    <content><![CDATA[<p>周志华《机器学习》学习笔记：第2章 模型评估与选择</p>
+<a id="more"></a>
+]]></content>
+      <categories>
+        <category>学习笔记</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>2021美赛D题</title>
     <url>/2021/02/12/2021%E7%BE%8E%E8%B5%9BD%E9%A2%98/</url>
     <content><![CDATA[<p>2021美赛中文翻译及英文原文。</p>
@@ -18,6 +32,7 @@
 <ol>
 <li><a href="#%E4%B8%AD%E6%96%87%E7%BF%BB%E8%AF%91%EF%BC%9A">中文翻译</a></li>
 <li><a href="#%E8%8B%B1%E6%96%87%E5%8E%9F%E6%96%87%EF%BC%9A">英文原文</a></li>
+<li><a href="#D%E9%A2%98%E6%95%B0%E6%8D%AE%E4%B8%8B%E8%BD%BD%EF%BC%9A">D题数据下载</a></li>
 </ol>
 <h1 id="中文翻译："><a href="#中文翻译：" class="headerlink" title="中文翻译："></a>中文翻译：</h1><p><strong>问题D：音乐的影响</strong></p>
 <p>自古以来，音乐就已成为人类社会的一部分，已成为文化遗产的重要组成部分。为了理解音乐在人类集体经验中所扮演的角色，我们被要求开发一种量化音乐发展的方法。在创作新音乐时，有许多因素会影响艺术家，包括其天赋的创造力，当前的社会或政治事件，使用新乐器或工具的机会或其他个人经历。我们的目标是了解和衡量先前制作的音乐对新音乐和音乐艺术家的影响。</p>
@@ -207,6 +222,7 @@
 <li> <strong>song_title (censored)</strong>: The name of the track. (string) Software was run to remove any potential explicit words in the song title.</li>
 <li> <strong>count</strong>: The number of songs a particular artist is represented in the full_music_data.csv file. (integer)</li>
 </ul>
+<h1 id="D题数据下载："><a href="#D题数据下载：" class="headerlink" title="D题数据下载："></a>D题数据下载：</h1><p><a href="2021_ICM_Problem_D_Data.zip">点击下载</a></p>
 ]]></content>
       <categories>
         <category>竞赛</category>
