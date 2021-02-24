@@ -5,6 +5,7 @@
     <url>/2021/01/19/%E7%BD%AE%E9%A1%B6%E8%AF%B4%E6%98%8E/</url>
     <content><![CDATA[<p>博客说明</p>
 <a id="more"></a>
+<!-- toc -->
 <h3 id="博客说明"><a href="#博客说明" class="headerlink" title="博客说明"></a>博客说明</h3><p>&emsp;&emsp;我是武汉大学在读本科生，信息安全专业，该博客为我的个人博客，主要是记录学习过程中遇到的问题（计算机方面）和自己的生活。</p>
 <h3 id="建博初衷"><a href="#建博初衷" class="headerlink" title="建博初衷"></a>建博初衷</h3><p>&emsp;&emsp;建立博客本是一时冲动。在学习烦躁时，我突然就有了申请域名的想法，还好申请个人域名价格也不算贵，所以就果断买了。有了域名仿佛就有了存在的证据，之后一个博客就顺其自然地出现了。<br>&emsp;&emsp;建立博客很快，照着各种教程马上就可以成型。但设计自己独立的风格很难，用了别人的博客主体还要自己一个个去修改，其中还需要一些前端js知识，对我这种前端小白来说还是很有难度的。<br>&emsp;&emsp;现在博客陆陆续续变得好看了起来，之后我会进一步完善。希望该博客可以成为我学习的动力，不断充实完善自己。</p>
 ]]></content>
@@ -28,12 +29,8 @@
     <url>/2021/02/12/2021%E7%BE%8E%E8%B5%9BD%E9%A2%98/</url>
     <content><![CDATA[<p>2021美赛中文翻译及英文原文。</p>
 <a id="more"></a>
-<p><strong>目录：</strong></p>
-<ol>
-<li><a href="#%E4%B8%AD%E6%96%87%E7%BF%BB%E8%AF%91%EF%BC%9A">中文翻译</a></li>
-<li><a href="#%E8%8B%B1%E6%96%87%E5%8E%9F%E6%96%87%EF%BC%9A">英文原文</a></li>
-<li><a href="#D%E9%A2%98%E6%95%B0%E6%8D%AE%E4%B8%8B%E8%BD%BD%EF%BC%9A">D题数据下载</a></li>
-</ol>
+<!-- toc -->
+
 <h1 id="中文翻译："><a href="#中文翻译：" class="headerlink" title="中文翻译："></a>中文翻译：</h1><p><strong>问题D：音乐的影响</strong></p>
 <p>自古以来，音乐就已成为人类社会的一部分，已成为文化遗产的重要组成部分。为了理解音乐在人类集体经验中所扮演的角色，我们被要求开发一种量化音乐发展的方法。在创作新音乐时，有许多因素会影响艺术家，包括其天赋的创造力，当前的社会或政治事件，使用新乐器或工具的机会或其他个人经历。我们的目标是了解和衡量先前制作的音乐对新音乐和音乐艺术家的影响。</p>
 <p>一些艺术家可以列出十几个或更多他们认为对自己的音乐作品有影响的艺术家。还建议可以通过歌曲特征（例如结构，节奏或歌词）之间的相似程度来衡量影响力。音乐有时会发生革命性的变化，提供新的声音或节奏，例如何时出现新的流派，或者对现有流派（例如古典，流行/摇滚，爵士等）进行重新发明。这可能是由于一系列小变化，艺术家的合作努力，一系列有影响力的艺术家或社会内部的变化所致。</p>
@@ -236,13 +233,8 @@
     <url>/2021/02/12/%E7%BE%8E%E8%B5%9B%E5%8F%82%E8%B5%9B%E5%BF%83%E5%BE%97/</url>
     <content><![CDATA[<p>本人在大三第一次参加了美赛，在这里写下参赛心得，供后续回顾查看。</p>
 <a id="more"></a>
-<p><strong>目录：</strong></p>
-<ol>
-<li><a href="#%E8%B5%9B%E5%89%8D%E5%87%86%E5%A4%87">赛前准备</a></li>
-<li><a href="#%E8%B5%9B%E4%B8%AD%E8%A7%A3%E9%A2%98">赛中解题</a></li>
-<li><a href="#%E8%B5%9B%E5%90%8E%E6%8F%90%E4%BA%A4">赛后提交</a></li>
-<li><a href="#%E8%B5%9B%E5%90%8E%E5%8F%8D%E6%80%9D">赛后反思</a></li>
-</ol>
+<!-- toc -->
+
 <h1 id="赛前准备"><a href="#赛前准备" class="headerlink" title="赛前准备"></a>赛前准备</h1><p>&emsp;&emsp;参加美赛实在是被迫的，都大三了，我还没有参加过任何竞赛，也没有得过奖，实在是很惭愧。又到了保研考研的季节，想通过竞赛冲一下，能得到加分更好了。所以咬咬牙想试一试。<br>&emsp;&emsp;赛前半个月我才开始组队，找到一个同学后就再也找不到队友了。本以为只有题目会让人绝望，组队竟然也是，怎么都找不到第三个队友。无奈最后就两个人参赛了，参赛费六七百，死贵还不说，还是我们两个人分。唉，而且两个人参赛工作量巨大。好在我们两个比较熟，参赛很容易沟通，这也是优点吧，还是挺感谢她的。<br>&emsp;&emsp;赛前十天左右，我开始学习相关模型和算法。当初在学校作业多，完全没有时间准备，现在只能十天速成。B站上有很多讲解视频，十分详细，很适合学习。还好美赛许多算法，如模拟退火、图论、最短路径、分治，专业课我都学习过，复习一下就好。其他的模型，如评价模型、优化模型、智能算法，原理很容易掌握，代码也能在网上找到。单纯使用的话没问题，但是参加比赛还是需要依据题目进行改进，并且要多练习。<br>&emsp;&emsp;关于论文和模板，赛前真的需要多看往年优秀论文，同时也要做一做往年题，不然实战真的很懵，呜呜呜。美赛是英文论文，看的头疼也要坚持看，太难了。<br>&emsp;&emsp;这里还是给了自己一个警醒，参加比赛前几个月一定要好好准备，不然完全吃不透，只能掌握大概。还有如果想获奖，还是需要努力了，没有那么简单的。</p>
 <h1 id="赛中解题"><a href="#赛中解题" class="headerlink" title="赛中解题"></a>赛中解题</h1><p>&emsp;&emsp;2021年美赛于北京时间2月5号上午六点放题，一共ABCDEF六种题型，MCM是ABC三题，ICM是DEF三题，每种题型考察侧重点不同。题型一般为连续型、离散型、大数据、环境科学、政府政策、网络科学等。<br>&emsp;&emsp;看了两个小时英文原文后，初步选择D题。赛前我们是准备就选准C题的，因为C题给定数据，不用自己再找数据可能比较方便。然而今年C题关于黄蜂，需要自然语言处理和图像处理，感觉难度挺大，而D题也给了数据，都是Excel表格，数据类型单一，比较好处理。<br>&emsp;&emsp;D题就是关于图论的问题，给了四个Excel表格，记录了一个音乐家受到了哪几个音乐家影响，一个歌曲的各种特征等。然后根据所给数据分析音乐家之间的影响关系和相似度。<br>&emsp;&emsp;D题原文及翻译链接如下：<a href="https://yiwenzhe.com/2021/02/12/2021%E7%BE%8E%E8%B5%9BD%E9%A2%98" target="_blank">2021美赛D题</a><br>&emsp;&emsp;拿到题目就是几天没日没夜的解题了。每天睡六七个小时，然后娱乐时间都没有。每天明明起得早睡得晚，但我还是很有精神，应该是注意力很集中吧，每天都有具体的工作，这样就不会犯困了。</p>
 <h1 id="赛后提交"><a href="#赛后提交" class="headerlink" title="赛后提交"></a>赛后提交</h1><p>&emsp;&emsp;从2月5号早上6点开始一直到忙到2月9号早上6点提交，最后一天甚至通宵写论文（有一说一论文真的不好写）。赛前看的论文不多，所以最后写的时候还要一个个调格式，仿照往年优秀论文的写法，最后的summary需要写的简洁凝练。写论文总共花了一天时间，毕竟是全英文论文，写完也要一句句检查，订正语法错误和拼写错误。建议多留出时间写论文和修改。<br>&emsp;&emsp;2021美赛截止时间是北京时间9号早上9点，这里还发生了一个小插曲。我们6点提交，比最后提交时间早三个小时，不到五分钟官方那边就收到了。反而他们后面八九点提交时，官方服务器坏了，所以很多被退信。好在最后官方延长提交时间，解决了这一问题。但还是提醒我们，很多比赛，尤其是国外的，要记得提前交，不要拖到最后一刻。最后提交人很多，经常会出现服务器崩溃的问题。</p>
@@ -261,6 +253,7 @@
     <url>/2021/01/21/Python%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/</url>
     <content><![CDATA[<p>寒假之余学习了python，记录一下学习后的体会。</p>
 <a id="more"></a>
+<!-- toc -->
 <h3 id="学习书籍："><a href="#学习书籍：" class="headerlink" title="学习书籍："></a>学习书籍：<img src="https://yiwenzhe.com/2021/01/21/Python%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/Python.png" alt="Python"></h3><p>&emsp;&emsp;该书籍比较适合python学习新手，讲解均为基础语法内容，全书分两部分：首部分介绍用Python 编程所必须了解的基本概念，包括变量、列表、字典、if语句、类、文件与异常、代码测试等内容；第二部分将理论付诸实践，讲解如何开发三个项目，包括简单的Python 2D游戏开发，如何利用数据生成交互式的信息图，以及创建和定制简单的Web应用，并帮读者解决常见编程问题和困惑。<br>&emsp;&emsp;全书目录如下：</p>
 <figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="strong">**第一部分 基础知识**</span></span><br><span class="line"> 第1章 起步 （环境搭建）</span><br><span class="line"> 第2章 变量和简单数据类型</span><br><span class="line"> 第3章 列表简介</span><br><span class="line"> 第4章 操作列表</span><br><span class="line"> 第5章 if语句</span><br><span class="line"> 第6章 字典</span><br><span class="line"> 第7章 用户输入和while循环</span><br><span class="line"> 第8章 函数</span><br><span class="line"> 第9章 类</span><br><span class="line"> 第10章 文件和异常</span><br><span class="line"> 第11章 测试代码</span><br><span class="line"> </span><br><span class="line"> <span class="strong">**第二部分 项目**</span></span><br><span class="line"> <span class="strong">**项目1 外星人入侵**</span></span><br><span class="line"> 第12章 武装飞船</span><br><span class="line"> 第13章 外星人</span><br><span class="line"> 第14章 计分</span><br><span class="line"> <span class="strong">**项目2 数据可视化**</span></span><br><span class="line"> 第15章 生产数据</span><br><span class="line"> 第16章 下载数据</span><br><span class="line"> 第17章 使用API</span><br><span class="line"> <span class="strong">**项目3 Web应用程序**</span></span><br><span class="line"> 第18章 Django入门</span><br><span class="line"> 第19章 用户账户</span><br><span class="line"> 第20章 设置应用程序的样式并对其进行部署</span><br><span class="line"> </span><br><span class="line"> 附录A 安装python</span><br><span class="line"> 附录B 文本编辑器</span><br><span class="line"> 附录C 寻求帮助</span><br><span class="line"> 附录D 使用Git进行版本控制</span><br></pre></td></tr></table></figure>
 
