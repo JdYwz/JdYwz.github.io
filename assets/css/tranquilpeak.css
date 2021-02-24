@@ -119,8 +119,13 @@ a, a:hover, a:active, a:visited {
   text-decoration: none; }
 
 a:hover {
-  color: #349ef3;
-  text-decoration: underline; }
+  color: #79BCF2;
+  text-decoration: none;
+  -webkit-transition: color 0.25s ease-in-out;
+  -moz-transition: color 0.25s ease-in-out;
+  -o-transition: color 0.25s ease-in-out;
+  -ms-transition: color 0.25s ease-in-out;
+  transition: color 0.25s ease-in-out; }
 
 table {
   width: 100%;
@@ -2231,7 +2236,7 @@ a.fancybox {
 @media only screen and (min-width: 480px) {
   .postShorten.postShorten--thumbnailimg-right .postShorten-thumbnailimg {
     float: right;
-    margin: 5px 0 30px 15px; }
+    margin: 15px 0 30px 15px; }
     .postShorten.postShorten--thumbnailimg-right .postShorten-thumbnailimg img {
       display: block;
       width: 140px;
