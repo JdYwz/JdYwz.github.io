@@ -546,7 +546,7 @@ setInterval("createtime()",250);
                                 
                             </span>
                         </span>
-                        <div class="media-content hide-xs font-merryweather"><p>周志华《机器学习》学习笔记：第2章 模型评估与选择</p></div>
+                        <div class="media-content hide-xs font-merryweather"><p>周志华《机器学习》学习笔记：第2章 模型评估与选择<br></p></div>
                     </div>
                     <div style="clear:both;"></div>
                     <hr>
@@ -586,5 +586,20 @@ setInterval("createtime()",250);
     </script>
 
 
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
