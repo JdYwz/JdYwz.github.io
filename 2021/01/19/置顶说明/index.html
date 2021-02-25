@@ -41,7 +41,7 @@
     
     <!--STYLES-->
     
-<link rel="stylesheet" href="/assets/css/style-sweqtoydnz5bfxp1mwdtn6wlgtvofuf41vvv0kmulngnynv4pwhxeedicra0.min.css">
+<link rel="stylesheet" href="/assets/css/style-h7tielxpkmsopw4yk6aybd7qitddblfilsaerrjf9ookalwdjr3zdrkzgr5g.min.css">
 
     <!--STYLES END-->
     
@@ -383,23 +383,41 @@
         
         
             
-                <div id="vcomment" class="comment"></div>
-<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
-<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
-    var notify = 'false' == true ? true : false;
-    var verify = 'false' == true ? true : false;
-    new Valine({
-        el: '#vcomment',
-        app_id: "52oW76geJJkFhJ94ivarDsuW-gzGzoHsz",
-        app_key: "lvBEQy2DMEtkOMoNXLaKYRKv",
-        placeholder: "ヾﾉ≧∀≦)o来啊，快活啊!",
-        avatar:"robohash",
-        meta:"nick,mail,link",
-    });
-</script>
+                <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+</style>
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
 
+<script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',  
+        appId: '52oW76geJJkFhJ94ivarDsuW-gzGzoHsz',
+        appKey: 'lvBEQy2DMEtkOMoNXLaKYRKv', 
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!' ,
+        notify: 'false',
+        verity: '',
+        path: window.location.pathname,
+        avatar: 'robohash',
+        meta: ['nick','mail','link'],
+        pageSize: '10',
+        lang: 'zh-cn',
+        visitor: 'false',
+        highlight: ''
+    });
+</script>  
             
         
     </div>
@@ -726,40 +744,11 @@ setInterval("createtime()",250);
 <div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 
-<script src="/assets/js/script-nd1pr2sezjcdik2ywub4vry4lvdn5frcpu71o3nemzzivwcf71a1tcl1bxg4.min.js"></script>
+<script src="/assets/js/script-bzavqauhml9f5ryoz2ogycermgd4kwf3aicni3601mc1bpfn1rsqxnx5vw8i.min.js"></script>
 
 <!--SCRIPTS END-->
 
 
-    
-      
-<script src="/assets/js/valine.js"></script>
-
-      
-            <section id="comments" class="comments">
-              <style>
-                .comments{margin:30px;padding:10px;background:#fff}
-                @media screen and (max-width:800px){.comments{margin:auto;padding:10px;background:#fff}}
-              </style>
-              <div id="vcomment" class="comment"></div>
-<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
-<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
-    var notify = 'false' == true ? true : false;
-    var verify = 'false' == true ? true : false;
-    new Valine({
-        el: '#vcomment',
-        app_id: "52oW76geJJkFhJ94ivarDsuW-gzGzoHsz",
-        app_key: "lvBEQy2DMEtkOMoNXLaKYRKv",
-        placeholder: "ヾﾉ≧∀≦)o来啊，快活啊!",
-        avatar:"robohash",
-        meta:"nick,mail,link",
-    });
-</script>
-
-          </section>
-        
     
 
 
