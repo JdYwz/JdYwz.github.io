@@ -6,7 +6,7 @@
   <link href="https://yiwenzhe.com/atom.xml" rel="self"/>
   
   <link href="https://yiwenzhe.com/"/>
-  <updated>2021-02-26T10:51:05.818Z</updated>
+  <updated>2021-02-27T06:24:40.368Z</updated>
   <id>https://yiwenzhe.com/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="https://yiwenzhe.com/2021/02/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/"/>
     <id>https://yiwenzhe.com/2021/02/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/</id>
     <published>2021-02-13T09:38:20.000Z</published>
-    <updated>2021-02-26T10:51:05.818Z</updated>
+    <updated>2021-02-27T06:24:40.368Z</updated>
     
-    <content type="html"><![CDATA[<!-- excerpt --><br><!-- toc --></p>]]></content>
+    <content type="html"><![CDATA[<!-- excerpt --><br><!-- toc --></p><h1 id="经验误差与过拟合"><a href="#经验误差与过拟合" class="headerlink" title="经验误差与过拟合"></a>经验误差与过拟合</h1><p>&emsp;&emsp;<strong>错误率</strong>：分类错误的样本数占样本总数的比例。m个样本中有a个样本分类错误，则错误率E=a/m。<br>&emsp;&emsp;<strong>精度</strong>：分类正确的样本数占样本总数的比例。精度=1-错误率。<br>&emsp;&emsp;<strong>误差</strong>：学习器实际预测的输出与样本的真实输出之间的差异。训练集上的误差称为“训练误差”或“经验误差”，在新样本上的误差称为“泛化误差”。<br>&emsp;&emsp;<strong>过拟合</strong>：把训练样本自身的一些特点当做所有样本的一般性质，泛化性能下降。<br>&emsp;&emsp;<strong>欠拟合</strong>：对训练样本的一般性质尚未学好，学习能力过低。<br><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/leaf.png" alt="过拟合和欠拟合"><br>&emsp;&emsp;我们的目标是在新样本上表现好的学习器，即泛化误差小。当学习器把训练样本学的太好时，可能会出现过拟合情况。欠拟合比较容易客服，如增加训练轮数等，而过拟合是无法彻底避免的，只能缓解或者说减小其风险。<br>&emsp;&emsp;面对具体任务时，往往有多种算法可供选择，以及不同的参数配置。选择算法、配置参数的过程就叫做“模型选择”。理想的解决方案是对候选模型的泛化误差进行评估，选择泛化误差最小的模型。</p><h1 id="评估方法"><a href="#评估方法" class="headerlink" title="评估方法"></a>评估方法</h1><p>&emsp;&emsp;<strong>训练集</strong>：用来训练学习器的数据集。<br>&emsp;&emsp;<strong>测试集</strong>：用来测试学习器对新样本判别能力的数据集。在测试集上的“测试误差”将作为泛化误差的近似。测试集应尽可能与训练集互斥。<br>&emsp;&emsp;现有包含m个样例的数据集D={(x<sub>1</sub>,y<sub>1</sub>), (x<sub>2</sub>,y<sub>2</sub>), …, (x<sub>m</sub>,y<sub>m</sub>)}，既要训练又要测试，将D分为训练集S和测试T。</p><h2 id="留出法"><a href="#留出法" class="headerlink" title="留出法"></a>留出法</h2><h2 id="交叉验证法"><a href="#交叉验证法" class="headerlink" title="交叉验证法"></a>交叉验证法</h2><h2 id="自助法"><a href="#自助法" class="headerlink" title="自助法"></a>自助法</h2><h1 id="性能度量"><a href="#性能度量" class="headerlink" title="性能度量"></a>性能度量</h1><h1 id="比较检验"><a href="#比较检验" class="headerlink" title="比较检验"></a>比较检验</h1><h1 id="偏差与方差"><a href="#偏差与方差" class="headerlink" title="偏差与方差"></a>偏差与方差</h1>]]></content>
     
     
     <summary type="html">&lt;p&gt;周志华《机器学习》学习笔记：第2章 模型评估与选择&lt;br&gt;</summary>
