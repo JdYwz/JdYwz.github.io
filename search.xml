@@ -10,8 +10,19 @@
   <entry>
     <title>软件逆向之扫雷(二)：破解雷区</title>
     <url>/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/</url>
-    <content><![CDATA[<!-- excerpt -->
-<!-- toc -->]]></content>
+    <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
+<h1 id="问题导入"><a href="#问题导入" class="headerlink" title="问题导入"></a>问题导入</h1><p>&emsp;&emsp;上一节中我们通过修改注册表修改了扫雷英雄榜，自行改动了榜上的昵称和时间。然而这只是表面工作，没有解决扫雷游戏的本质：找出所有雷区。这一节我们分析雷区的存储方式和位置，人工破解雷区。</p>
+<h1 id="雷区分析"><a href="#雷区分析" class="headerlink" title="雷区分析"></a>雷区分析</h1><p>&emsp;&emsp;扫雷的界面是一个n*m的矩形雷区，每个小方块代表一个位置，和矩阵十分类似。因此我们猜想是通过二维矩阵来存储数据，将矩阵中特定位置标记为雷区，而每次点击非雷区时会出现数字，即计算点击位置周边八个块的地雷数目，然后显示在块上。<br>&emsp;&emsp;将矩阵转化成扫雷的界面则需要调用几个API函数，比较常用的就是BitBlt函数。BitBlt将某一内存块的数据传送到另一内存块，前一内存块被称为”源”，后一内存块被称为”目标”。使用该函数我们可以将矩阵进行变换，从而显示出来。</p>
+<h1 id="逆向分析"><a href="#逆向分析" class="headerlink" title="逆向分析"></a>逆向分析</h1><p>&emsp;&emsp;使用OllyDBG打开扫雷程序winmine.exe，查看调用的API函数。</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/1.png" width="250" height="250"></div><br>&emsp;&emsp;可以看到从GDI32.dll导入的函数很多与作图有关，如SetLayout、CreatePen等。我们选中BitBlt函数，在每个参考上设置断点，然后运行至断点处。<br>&emsp;&emsp;第一个断点处，整个扫雷界面都未加载完成，而且我们也没有进行点击，故不是所需代码块，取消该出断点，继续运行。<br>&emsp;&emsp;图像界面显示出来，程序停止了运行，表示程序还未运行到第二个断点，可能在等待用户点击鼠标。我们选择雷区任意一个位置点击，程序运行到第二个断点处停止。</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/2.png"></div><br>&emsp;&emsp;BitBlt所需参数均在图中标识出来，现在我们需要分析这些参数，找到二维矩阵的内存位置。<br>&emsp;&emsp;首先我们要知道矩阵位置的计算，对于一维矩阵，a[n]，a[i]的内存位置=基址(a[0])+i*sizeof(单个数据内存大小)。对于二维矩阵a[m][n]，a[i][j]的内存位置=基址+i*n*sizeof(单个数据内存大小)+j*sizeof(单个数据内存大小)。</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/3.png" width="150" height="150"></div><br>&emsp;&emsp;函数中刚好有两条类似的寻址语句。[edx+eax+01005340h]和[edx*4+105A20]。第一条是mov操作，并且更符合二维数组寻址，因此我们猜测01005340h是数组基址。</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/4.png" width="200" height="200"></div><br>&emsp;&emsp;在左下角数据窗口使用ctrl+G，输入01005340h，跳转到该位置。查看数据窗口内容。</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/5.png" width="200" height="200"></div><br>&emsp;&emsp;数据窗口一开始全是10，有33个。由于我们使用的是高级模式，扫雷界面是16*32，初步猜测10代表边界。然后是大量0F和少量8F。前七个数据是六个0F和一个8F，那我们点击扫雷第一排前七个格子。前七个均没有雷，第八个是雷。</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/6.png" width="200" height="200"></div><br>&emsp;&emsp;查看数据区内容是否发生变化：</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/7.png" width="150" height="150"></div><br>&emsp;&emsp;前五个格子为空，数据由0F变为40；第六个格子是数字1，数据由0F变为41。同时数字2、3对应数据也分别变为42、43。得出结论：未点开非雷区数据为0F，点开的非雷区数字x的数据为4x。<br>&emsp;&emsp;第七个格子是我们点中的雷，数据由8F变为CC；而第八个格子我们未点中的雷由8F变为8A。得出结论：原数据8F即表示该位置是雷。<br>&emsp;&emsp;除此之外，扫雷还有两个符号，旗子和问号，现在我们再次尝试，分别在雷区和非雷区标上旗子和问号，查看数据。</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/8.png" width="150" height="150"></div></p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/9.png" width="150" height="150"></div><br>&emsp;&emsp;标上旗子，雷区数据由8F变成8E，非雷区数据由0F变成0E；标上问号，雷区数据由8F变成8D，非雷区数据由0F变成0D。由此可得雷区最高位为1，不论是8（1000）还是C（1010），最高位都是1；非雷区最高位为0。<br>&emsp;&emsp;由以上情况作出总结：<br>雷区（最高位为1）：<br>&emsp;&emsp;1.未点开为8F<br>&emsp;&emsp;2.点开为CC，其他为8A<br>&emsp;&emsp;3.标上旗子为8E<br>&emsp;&emsp;4.标上问号为8D<br>非雷区（最高位为0）：<br>&emsp;&emsp;1.未点开为0F<br>&emsp;&emsp;2.点开为4x（x代表格子显示数字）<br>&emsp;&emsp;3.标上旗子为0E<br>&emsp;&emsp;4.标上问号为0D<br>当然我们也可以人为修改数据达到各种效果，如初始化是雷区却不爆雷等。</p>]]></content>
       <categories>
         <category>学习笔记</category>
       </categories>
@@ -26,26 +37,26 @@
 <h1 id="问题导入"><a href="#问题导入" class="headerlink" title="问题导入"></a>问题导入</h1><p>&emsp;&emsp;扫雷的游戏目标是在最短的时间内根据点击格子出现的数字找出所有非雷格子，同时避免踩雷，踩到一个雷即全盘皆输。如果用时破纪录，则会在扫雷英雄榜上留下昵称和用时记录。现在我们通过逆向分析来人为修改这一记录。</p>
 <h1 id="使用工具"><a href="#使用工具" class="headerlink" title="使用工具"></a>使用工具</h1><p>&emsp;&emsp;Ollydbg：通常称作OD，是反汇编工作的常用工具。本人使用的是看雪学院的优化版OD：OllyICE，可在看雪学院官网进行下载。</p>
 <h1 id="逆向分析"><a href="#逆向分析" class="headerlink" title="逆向分析"></a>逆向分析</h1><p>&emsp;&emsp;下图为游戏菜单栏，可以看出扫雷英雄榜的点击链接在“菜单栏”-“游戏”-“扫雷英雄榜”，菜单项会响应鼠标点击并显示出英雄榜信息。</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1.png" width="250" height="250"></div>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2.png" width="150" height="150"></div>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/1.png" width="250" height="250"></div>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/2.png" width="150" height="150"></div>
 &emsp;&emsp;可以看到英雄榜初始化昵称均为匿名，时间均为999。当扫雷在不同电脑运行时，该英雄榜均会初始化，因此该数据应该不是存储在exe中，可能是电脑某个文件，如软件注册表。
 <br>
 &emsp;&emsp;用Ollydbg打开winmine.exe，得到如下调试界面：
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/3.png"></div>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/3.png"></div>
 &emsp;&emsp;现在我们需要找到注册表位置，也就是找到注册表相关函数，这些函数都是exe从外部dll库调入的。在反汇编窗口点击右键，选择“查找”-“当前模块中的名称（标签）”，得到exe的导入库函数。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/4.png"></div>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/4.png"></div>
 &emsp;&emsp;点击地址字段排序，最前面几个函数均是从ADVAPI32.dll导入的，和注册表有关。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/5.png" width="100" height="100"></div>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/5.png" width="100" height="100"></div>
 &emsp;&emsp;RegCreateKeyExw函数功能为创建或打开注册表项。默认为创建，当注册表中有此项时，为打开。我们左键选中该函数，右键选择在“每个参考上设置断点”，这样调用该函数位置均会加上断点。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/6.png"></div>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/6.png"></div>
 &emsp;&emsp;返回反汇编窗口，快捷键F9（fn+F9）运行程序到断点位置。右下角堆栈窗口即有函数调用的参数信息，可以看到注册表位置路径“Software\Microsoft\winmine”。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/7.png" width="100" height="100"></div>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/7.png" width="100" height="100"></div>
 &emsp;&emsp;使用Win+R打开电脑运行，输入regedit打开注册表。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/8.png" width="150" height="150"></div>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/8.png" width="150" height="150"></div>
 &emsp;&emsp;在HKEY_CURRENT_USER下寻找路径software\Microsoft\winmine，找到英雄榜相关信息如下：
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/9.png"></div>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/9.png"></div>
 &emsp;&emsp;可以看到Name、Time字段，Name都是匿名，Time都是999，与之前看到的英雄榜数据相同，接下来修改相应字段即可。修改后打开扫雷，查看英雄榜，可见信息已经被修改。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/10.png" width="150" height="150"></div>]]></content>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/10.png" width="150" height="150"></div>]]></content>
       <categories>
         <category>学习笔记</category>
       </categories>
