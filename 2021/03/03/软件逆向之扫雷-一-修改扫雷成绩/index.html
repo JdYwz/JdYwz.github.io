@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="YWZ">
-    <title>软件逆向之扫雷(一):修改扫雷成绩 - YWZ</title>
+    <title>软件逆向之扫雷(一)：修改扫雷成绩 - YWZ</title>
     <meta name="author" content="YWZ">
     
     
@@ -17,10 +17,10 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg"},"articleBody":"\n问题导入&emsp;&emsp;扫雷的游戏目标是在最短的时间内根据点击格子出现的数字找出所有非雷格子，同时避免踩雷，踩到一个雷即全盘皆输。如果用时破纪录，则会在扫雷英雄榜上留下昵称和用时记录。现在我们通过逆向分析来人为修改这一记录。\n使用工具&emsp;&emsp;Ollydbg：通常称作OD，是反汇编工作的常用工具。本人使用的是看雪学院的优化版OD：OllyICE，可在看雪学院官网进行下载。\n逆向分析&emsp;&emsp;下图为游戏菜单栏，可以看出扫雷英雄榜的点击链接在“菜单栏”-“游戏”-“扫雷英雄榜”，菜单项会响应鼠标点击并显示出英雄榜信息。\n\n\n&emsp;&emsp;可以看到英雄榜初始化昵称均为匿名，时间均为999。当扫雷在不同电脑运行时，该英雄榜均会初始化，因此该数据应该不是存储在exe中，可能是电脑某个文件，如软件注册表。\n\n&emsp;&emsp;用Ollydbg打开winmine.exe，得到如下调试界面：\n\n&emsp;&emsp;现在我们需要找到注册表位置，也就是找到注册表相关函数，这些函数都是exe从外部dll库调入的。在反汇编窗口点击右键，选择“查找”-“当前模块中的名称（标签）”，得到exe的导入库函数。\n\n&emsp;&emsp;点击地址字段排序，最前面几个函数均是从ADVAPI32.dll导入的，和注册表有关。\n\n&emsp;&emsp;RegCreateKeyExw函数功能为创建或打开注册表项。默认为创建，当注册表中有此项时，为打开。我们左键选中该函数，右键选择在“每个参考上设置断点”，这样调用该函数位置均会加上断点。\n\n&emsp;&emsp;返回反汇编窗口，快捷键F9（fn+F9）运行程序到断点位置。右下角堆栈窗口即有函数调用的参数信息，可以看到注册表位置路径“Software\\Microsoft\\winmine”。\n\n&emsp;&emsp;使用Win+R打开电脑运行，输入regedit打开注册表。\n\n&emsp;&emsp;在HKEY_CURRENT_USER下寻找路径software\\Microsoft\\winmine，找到英雄榜相关信息如下：\n\n&emsp;&emsp;可以看到Name、Time字段，Name都是匿名，Time都是999，与之前看到的英雄榜数据相同，接下来修改相应字段即可。修改后打开扫雷，查看英雄榜，可见信息已经被修改。\n","dateCreated":"2021-03-03T22:56:47+08:00","dateModified":"2021-03-04T10:45:36+08:00","datePublished":"2021-03-03T22:56:47+08:00","description":"大三上学期学过软件安全，接触了一点软件逆向知识，大三下学期选择了软件逆向分析课程来深入学习。第一节课老师便让我们逆向分析扫雷(winmine.exe)，因此做下记录。","headline":"软件逆向之扫雷(一):修改扫雷成绩","image":["https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/top.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg","logo":{"@type":"ImageObject","url":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg"}},"url":"https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/","keywords":"学习笔记, 软件逆向, 扫雷","thumbnailUrl":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/top.png"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg"},"articleBody":"\n问题导入&emsp;&emsp;扫雷的游戏目标是在最短的时间内根据点击格子出现的数字找出所有非雷格子，同时避免踩雷，踩到一个雷即全盘皆输。如果用时破纪录，则会在扫雷英雄榜上留下昵称和用时记录。现在我们通过逆向分析来人为修改这一记录。\n使用工具&emsp;&emsp;Ollydbg：通常称作OD，是反汇编工作的常用工具。本人使用的是看雪学院的优化版OD：OllyICE，可在看雪学院官网进行下载。\n逆向分析&emsp;&emsp;下图为游戏菜单栏，可以看出扫雷英雄榜的点击链接在“菜单栏”-“游戏”-“扫雷英雄榜”，菜单项会响应鼠标点击并显示出英雄榜信息。\n\n\n&emsp;&emsp;可以看到英雄榜初始化昵称均为匿名，时间均为999。当扫雷在不同电脑运行时，该英雄榜均会初始化，因此该数据应该不是存储在exe中，可能是电脑某个文件，如软件注册表。\n\n&emsp;&emsp;用Ollydbg打开winmine.exe，得到如下调试界面：\n\n&emsp;&emsp;现在我们需要找到注册表位置，也就是找到注册表相关函数，这些函数都是exe从外部dll库调入的。在反汇编窗口点击右键，选择“查找”-“当前模块中的名称（标签）”，得到exe的导入库函数。\n\n&emsp;&emsp;点击地址字段排序，最前面几个函数均是从ADVAPI32.dll导入的，和注册表有关。\n\n&emsp;&emsp;RegCreateKeyExw函数功能为创建或打开注册表项。默认为创建，当注册表中有此项时，为打开。我们左键选中该函数，右键选择在“每个参考上设置断点”，这样调用该函数位置均会加上断点。\n\n&emsp;&emsp;返回反汇编窗口，快捷键F9（fn+F9）运行程序到断点位置。右下角堆栈窗口即有函数调用的参数信息，可以看到注册表位置路径“Software\\Microsoft\\winmine”。\n\n&emsp;&emsp;使用Win+R打开电脑运行，输入regedit打开注册表。\n\n&emsp;&emsp;在HKEY_CURRENT_USER下寻找路径software\\Microsoft\\winmine，找到英雄榜相关信息如下：\n\n&emsp;&emsp;可以看到Name、Time字段，Name都是匿名，Time都是999，与之前看到的英雄榜数据相同，接下来修改相应字段即可。修改后打开扫雷，查看英雄榜，可见信息已经被修改。\n","dateCreated":"2021-03-03T22:56:47+08:00","dateModified":"2021-03-04T15:41:47+08:00","datePublished":"2021-03-03T22:56:47+08:00","description":"大三上学期学过软件安全，接触了一点软件逆向知识，大三下学期选择了软件逆向分析课程来深入学习。第一节课老师便让我们逆向分析扫雷(winmine.exe)，因此做下记录。","headline":"软件逆向之扫雷(一)：修改扫雷成绩","image":["https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/top.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg","logo":{"@type":"ImageObject","url":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg"}},"url":"https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/","keywords":"软件逆向","thumbnailUrl":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/top.png"}</script>
     <meta name="description" content="大三上学期学过软件安全，接触了一点软件逆向知识，大三下学期选择了软件逆向分析课程来深入学习。第一节课老师便让我们逆向分析扫雷(winmine.exe)，因此做下记录。">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="软件逆向之扫雷(一):修改扫雷成绩">
+<meta property="og:title" content="软件逆向之扫雷(一)：修改扫雷成绩">
 <meta property="og:url" content="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/index.html">
 <meta property="og:site_name" content="YWZ">
 <meta property="og:description" content="大三上学期学过软件安全，接触了一点软件逆向知识，大三下学期选择了软件逆向分析课程来深入学习。第一节课老师便让我们逆向分析扫雷(winmine.exe)，因此做下记录。">
@@ -36,11 +36,9 @@
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/9.png">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/10.png">
 <meta property="article:published_time" content="2021-03-03T14:56:47.000Z">
-<meta property="article:modified_time" content="2021-03-04T02:45:36.735Z">
+<meta property="article:modified_time" content="2021-03-04T07:41:47.323Z">
 <meta property="article:author" content="YWZ">
-<meta property="article:tag" content="学习笔记">
 <meta property="article:tag" content="软件逆向">
-<meta property="article:tag" content="扫雷">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1.png">
     
@@ -263,7 +261,7 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            软件逆向之扫雷(一):修改扫雷成绩
+            软件逆向之扫雷(一)：修改扫雷成绩
         </h1>
     
     
@@ -282,7 +280,7 @@
     
     
         &nbsp;|&nbsp; 更新于
-        <time itemprop="dateUpdated" content="Thu Mar 04 2021 10:45:36 GMT+0800">
+        <time itemprop="dateUpdated" content="Thu Mar 04 2021 15:41:47 GMT+0800">
         
 		    2021 年 03 月 04 日
     	
@@ -328,18 +326,18 @@
             
                 <div class="article-footer-copyright">
     <!--
-    <p><span>本文标题:</span><href="/%20"> 软件逆向之扫雷(一):修改扫雷成绩</a></p>
+    <p><span>本文标题:</span><href="/%20"> 软件逆向之扫雷(一)：修改扫雷成绩</a></p>
     <p><span>文章作者:</span><a href="/" title="访问 YWZ的个人博客">YWZ</a></p>
     <p><span>发布时间:</span>2021年03月03日 - 22:56</p>
-    <p><span>最后更新:</span>2021年03月04日 - 10:45</p>
-    <p><span>原始链接:</span><a href="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/" title="软件逆向之扫雷(一):修改扫雷成绩">https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/</a>
+    <p><span>最后更新:</span>2021年03月04日 - 15:41</p>
+    <p><span>原始链接:</span><a href="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/" title="软件逆向之扫雷(一)：修改扫雷成绩">https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/"  aria-label="复制成功！"></i></span>
     </p>
     <p><span>许可协议:</span><i class="fab fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
      -->
     <p>文章作者:<a href="/" title="访问 YWZ的个人博客">YWZ</a>
     <br>该文章是本人原创，转载请注明出处
-    <br>本文链接地址: <a href="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/" title="软件逆向之扫雷(一):修改扫雷成绩">https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/</a></p>
+    <br>本文链接地址: <a href="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/" title="软件逆向之扫雷(一)：修改扫雷成绩">https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/</a></p>
 </div>
 
             
@@ -351,7 +349,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">标签</span><br>
                 
-    <a class="tag tag--primary tag--small t-none-link" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="tag">学习笔记</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%E6%89%AB%E9%9B%B7/" rel="tag">扫雷</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91/" rel="tag">软件逆向</a>
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91/" rel="tag">软件逆向</a>
 
             </div>
         
@@ -361,8 +359,9 @@
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--disabled" aria-hidden="true">
-                        
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/" data-tooltip="软件逆向之扫雷(二)：破解雷区" aria-label="上一篇: 软件逆向之扫雷(二)：破解雷区">
+                    
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -380,7 +379,7 @@
     </nav>
     <ul class="post-actions post-action-share">
         <li class="post-action hide-lg hide-md hide-sm">
-            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
         </li>
@@ -388,7 +387,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/&amp;title=软件逆向之扫雷(一):修改扫雷成绩" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/&amp;title=软件逆向之扫雷(一)：修改扫雷成绩" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-qq" aria-hidden="true"></i>
                 </a>
             </li>
@@ -503,8 +502,9 @@ setInterval("createtime()",250);
         <ul class="post-actions post-action-nav">
             <li class="post-action">
                 
-                    <a class="post-action-btn btn btn--disabled" aria-hidden="true">
-                        
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/" data-tooltip="软件逆向之扫雷(二)：破解雷区" aria-label="上一篇: 软件逆向之扫雷(二)：破解雷区">
+                    
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
                     </a>
@@ -522,7 +522,7 @@ setInterval("createtime()",250);
     </nav>
     <ul class="post-actions post-action-share">
         <li class="post-action hide-lg hide-md hide-sm">
-            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
         </li>
@@ -530,7 +530,7 @@ setInterval("createtime()",250);
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/&amp;title=软件逆向之扫雷(一):修改扫雷成绩" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/&amp;title=软件逆向之扫雷(一)：修改扫雷成绩" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-qq" aria-hidden="true"></i>
                 </a>
             </li>
@@ -574,7 +574,7 @@ setInterval("createtime()",250);
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/&amp;title=软件逆向之扫雷(一):修改扫雷成绩" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/&amp;title=软件逆向之扫雷(一)：修改扫雷成绩" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-qq" aria-hidden="true"></i><span>分享到 QQ</span>
                     </a>
                 </li>
@@ -790,14 +790,14 @@ setInterval("createtime()",250);
                 <div class="media">
                     
                     <div class="media-left">
-                        <a class="link-unstyled" href="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/" aria-label=": 软件逆向之扫雷(一):修改扫雷成绩">
+                        <a class="link-unstyled" href="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/" aria-label=": 软件逆向之扫雷(一)：修改扫雷成绩">
                             <img class="media-image" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/top.png" width="90" height="90">
                         </a>
                     </div>
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/" aria-label=": 软件逆向之扫雷(一):修改扫雷成绩">
-                            <h3 class="media-heading">软件逆向之扫雷(一):修改扫雷成绩</h3>
+                        <a class="link-unstyled" href="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/" aria-label=": 软件逆向之扫雷(一)：修改扫雷成绩">
+                            <h3 class="media-heading">软件逆向之扫雷(一)：修改扫雷成绩</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -812,11 +812,36 @@ setInterval("createtime()",250);
                     <hr>
                 </div>
                 
+                <div class="media">
+                    
+                    <div class="media-left">
+                        <a class="link-unstyled" href="https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/" aria-label=": 软件逆向之扫雷(二)：破解雷区">
+                            <img class="media-image" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/top.png" width="90" height="90">
+                        </a>
+                    </div>
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/" aria-label=": 软件逆向之扫雷(二)：破解雷区">
+                            <h3 class="media-heading">软件逆向之扫雷(二)：破解雷区</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    2021年3月4日
+                                
+                            </span>
+                        </span>
+                        <div class="media-content hide-xs font-merryweather"></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
             </div>
         </div>
         <div class="modal-footer">
             <p class="results-count text-medium" data-message-zero="没有找到文章" data-message-one="找到 1 篇文章" data-message-other="找到 {n} 篇文章">
-                找到 7 篇文章
+                找到 8 篇文章
             </p>
         </div>
     </div>
