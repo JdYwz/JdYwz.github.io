@@ -1,108 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>置顶说明</title>
-    <url>/2021/01/19/%E7%BD%AE%E9%A1%B6%E8%AF%B4%E6%98%8E/</url>
+    <title>Python学习心得</title>
+    <url>/2021/01/21/Python%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/</url>
     <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
-<h3 id="博客说明"><a href="#博客说明" class="headerlink" title="博客说明"></a>博客说明</h3><p>&emsp;&emsp;我是武汉大学在读本科生，信息安全专业，该博客为我的个人博客，主要是记录学习过程中遇到的问题（计算机方面）和自己的生活。</p>
-<h3 id="建博初衷"><a href="#建博初衷" class="headerlink" title="建博初衷"></a>建博初衷</h3><p>&emsp;&emsp;建立博客本是一时冲动。在学习烦躁时，我突然就有了申请域名的想法，还好申请个人域名价格也不算贵，所以就果断买了。有了域名仿佛就有了存在的证据，之后一个博客就顺其自然地出现了。<br>&emsp;&emsp;建立博客很快，照着各种教程马上就可以成型。但设计自己独立的风格很难，用了别人的博客主体还要自己一个个去修改，其中还需要一些前端js知识，对我这种前端小白来说还是很有难度的。<br>&emsp;&emsp;现在博客陆陆续续变得好看了起来，之后我会进一步完善。希望该博客可以成为我学习的动力，不断充实完善自己。</p>]]></content>
-  </entry>
-  <entry>
-    <title>DVWA(八)：SQL-Injection（Blind盲注）</title>
-    <url>/2021/06/28/DVWA-%E5%85%AB-%EF%BC%9ASQL-Injection%EF%BC%88Blind%E7%9B%B2%E6%B3%A8%EF%BC%89/</url>
-    <content><![CDATA[]]></content>
+<h3 id="学习书籍："><a href="#学习书籍：" class="headerlink" title="学习书籍："></a>学习书籍：<img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/Python.png" alt="Python"></h3><p>&emsp;&emsp;该书籍比较适合python学习新手，讲解均为基础语法内容，全书分两部分：首部分介绍用Python 编程所必须了解的基本概念，包括变量、列表、字典、if语句、类、文件与异常、代码测试等内容；第二部分将理论付诸实践，讲解如何开发三个项目，包括简单的Python 2D游戏开发，如何利用数据生成交互式的信息图，以及创建和定制简单的Web应用，并帮读者解决常见编程问题和困惑。<br>&emsp;&emsp;全书目录如下：<br><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="strong">**第一部分 基础知识**</span></span><br><span class="line"> 第1章 起步 （环境搭建）</span><br><span class="line"> 第2章 变量和简单数据类型</span><br><span class="line"> 第3章 列表简介</span><br><span class="line"> 第4章 操作列表</span><br><span class="line"> 第5章 if语句</span><br><span class="line"> 第6章 字典</span><br><span class="line"> 第7章 用户输入和while循环</span><br><span class="line"> 第8章 函数</span><br><span class="line"> 第9章 类</span><br><span class="line"> 第10章 文件和异常</span><br><span class="line"> 第11章 测试代码</span><br><span class="line"> </span><br><span class="line"> <span class="strong">**第二部分 项目**</span></span><br><span class="line"> <span class="strong">**项目1 外星人入侵**</span></span><br><span class="line"> 第12章 武装飞船</span><br><span class="line"> 第13章 外星人</span><br><span class="line"> 第14章 计分</span><br><span class="line"> <span class="strong">**项目2 数据可视化**</span></span><br><span class="line"> 第15章 生产数据</span><br><span class="line"> 第16章 下载数据</span><br><span class="line"> 第17章 使用API</span><br><span class="line"> <span class="strong">**项目3 Web应用程序**</span></span><br><span class="line"> 第18章 Django入门</span><br><span class="line"> 第19章 用户账户</span><br><span class="line"> 第20章 设置应用程序的样式并对其进行部署</span><br><span class="line"> </span><br><span class="line"> 附录A 安装python</span><br><span class="line"> 附录B 文本编辑器</span><br><span class="line"> 附录C 寻求帮助</span><br><span class="line"> 附录D 使用Git进行版本控制</span><br></pre></td></tr></table></figure></p>
+<h3 id="学习心得"><a href="#学习心得" class="headerlink" title="学习心得"></a>学习心得</h3><p> &emsp;&emsp;由于我之前学习过C语言，所以python学习很容易上手，python基本语法和C语言很类似。相比于C语言，python中添加了字典、类等，使用起来会更方便快捷，同时python语法更为简洁，调库即可解决很多问题，代码简洁凝练。<br>  &emsp;&emsp;我学习python是为以后的机器学习做准备，下一步目标是学习机器学习、神经网络相关内容。</p>]]></content>
       <categories>
-        <category>学习笔记</category>
+        <category>学习心得</category>
       </categories>
       <tags>
-        <tag>DVWA</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
-    <title>DVWA(七)：SQL-Injection（sql注入）</title>
-    <url>/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/</url>
-    <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
-<h1 id="SQL注入定义"><a href="#SQL注入定义" class="headerlink" title="SQL注入定义"></a>SQL注入定义</h1><p>&emsp;&emsp;SQL是操作数据库数据的结构化查询语言，网页的应用数据和后台数据库中的数据进行交互时会采用SQL。而SQL注入是将Web页面的原URL、表单域或数据包输入的参数，修改拼接成SQL语句，传递给Web服务器，进而传给数据库服务器以执行数据库命令。如Web应用程序的开发人员对用户所输入的数据或cookie等内容不进行过滤或验证(即存在注入点)就直接传输给数据库，就可能导致拼接的SQL被执行，获取对数据库的信息以及提权，发生SQL注入攻击。（来自百度百科）</p>
-<h1 id="SQL注入流程"><a href="#SQL注入流程" class="headerlink" title="SQL注入流程"></a>SQL注入流程</h1><p>&emsp;&emsp;当我们在web页面中遇到用户输入框，或者url上显示了输入数据情况，怀疑存在sql注入，可以执行以下步骤：</p>
-<ol>
-<li>寻找注入点，确认是字符串注入还是数字注入</li>
-<li>查询该表中字段数</li>
-<li>查询各字段含义</li>
-<li>找到当前数据库名称</li>
-<li>找出数据库中的表名</li>
-<li>找出表中字段名和字段值</li>
-<li>写入webshell</li>
-</ol>
-<h1 id="安全级别Low"><a href="#安全级别Low" class="headerlink" title="安全级别Low"></a>安全级别Low</h1><h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( isset( $_REQUEST[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line">	<span class="comment">// Get input 获取输入的id</span></span><br><span class="line">	$id = $_REQUEST[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Check database 数据库查询语句</span></span><br><span class="line">	$query  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;$id&#x27;;&quot;</span>;</span><br><span class="line">	$result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $query ) or die( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Get results 获取查询结果</span></span><br><span class="line">	<span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;</span><br><span class="line">		<span class="comment">// Get values</span></span><br><span class="line">		$first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">		$last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Feedback for end user 显示结果</span></span><br><span class="line">		$html .= <span class="string">&quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;关键数据库查询语句如下，id传入是字符串型：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">SELECT first_name, last_name FROM users WHERE user_id = <span class="string">&#x27;$id&#x27;</span>;</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;DVWA中注入位置如下，是数据库id查询框：</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/1.jpg" width="150" height="150"></div>
-
-<p>&emsp;&emsp;其中$id就是用户的输入内容，可以看出，该代码并未对用户输入进行处理，而是直接拼接成sql语句执行，因此很容易注入。</p>
-<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>&emsp;&emsp;输入框输入1，显示信息是该id的First name和Surname：</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/2.png" width="150" height="150"></div>
-
-<p>&emsp;&emsp;输入框输入1’，测试是否有引号闭合：</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/3.png"></div>
-
-<p>&emsp;&emsp;提示引号错误，因为多了一个单引号，查询语句变为：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">SELECT first_name, last_name FROM users WHERE user_id = <span class="string">&#x27;1&#x27;</span><span class="string">&#x27;;</span></span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;说明输入是字符串型输入，要闭合单引号。这和我们看到的代码吻合，sql查询语句中使用‘id’，输入内容被当做字符串。<br>&emsp;&emsp;闭合单引号，输入框输入1’ and 1=1#，结果如下：</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/4.png" width="150" height="150"></div>
-
-<p>&emsp;&emsp;该语句中1=1为永真条件，sql中#为注释符，因此原语句单引号被注释掉，不会发生错误，查询语句变为：</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">SELECT first_name, last_name FROM users WHERE user_id = &#x27;1&#x27; and 1=1 #&#x27;;</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;在mysql语句中使用order by进行查询的排序，order by后可以接字段名，也可以接字段号，如按照第一个字段排序就是order by 1。因此可以利用该特性找出表中的字段数，当order by 报错时，说明超出表中的字段数。输入1’ order by 2#，结果如下：</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/5.png" width="150" height="150"></div>
-
-<p>&emsp;&emsp;当我们输入1’ order by 3# 时显示：</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/6.png"></div>
-
-<p>&emsp;&emsp;说明该表中只有两个字段，即显示的First name和Surname。<br>&emsp;&emsp;在mysql中可以使用union联合查询多条信息，而select有一个特性，select直接加数字串时，可以不写后面的表名，那么它输出的内容就是我们select后的数字。我们利用该特性来注入，输入1’ union select 1,2#，结果如下：</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/7.png" width="200" height="200"></div>
-
-<p>&emsp;&emsp;如果我们替换select后面的1和2为sql语句，那么就会先执行语句再显示。mysql中可以使用database()显示当前数据库名，使用version()显示版本信息。那么我们输入1’ union select version(),database()#，结果如下： </p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/8.png" width="200" height="200"></div>
-
-<p>&emsp;&emsp;以上都是一些比较基础和简单的信息，接下来我们需要爆出库中的表、表中的各项数据。首先需要知道mysql中有一个信息数据库 information_schema ，记录了该数据库的各种信息。<br>&emsp;&emsp;information_schema.schemata表，表中schema_name记录了数据库名称；information_schema.tables表，表中table_schema记录数据表所属的数据库名，table_name记录表名称；information_schema.columns表，表中table_name记录该列的表名，column_name 记录列名。利用这三个表可以获得数据库中的各种信息。<br>&emsp;&emsp;输入1’ union select 1,group_concat(schema_name) from information_schema.schemata#，获取数据库的名称：</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/9.png" width="200" height="200"></div>
-
-<p>&emsp;&emsp;现在知道有一个名为dvwa的数据库，输入1’ union select 1,group_concat(table_name) from information_schema.tables where table_schema=’dvwa’#，查找属于dvwa库的表名称：</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/10.png" width="200" height="200"></div>
-
-<p>&emsp;&emsp;查询到dvwa数据库中有guestbook和users表，因此输入1’ union select 1,group_concat(column_name) from information_schema.columns where table_name=’users’#，查询users表中的字段名称：</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/11.png" width="200" height="200"></div>
-
-<p>&emsp;&emsp;现在已经获取到关键字段名称，如first_name、last_name，就是正常显示的字段。其中有user、password两个字段，获取这两个字段信息，现在已经知道表名和字段名，直接查询即可，输入1’ union select user,password from users#，结果如下：</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/12.png" width="400" height="400"></div>
-
-<h1 id="安全级别Medium"><a href="#安全级别Medium" class="headerlink" title="安全级别Medium"></a>安全级别Medium</h1><h2 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( isset( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_POST[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    $id = mysqli_real_escape_string($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $id);</span><br><span class="line"></span><br><span class="line">    $query  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = $id;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $query) or die( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    <span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;</span><br><span class="line">        <span class="comment">// Display values</span></span><br><span class="line">        $first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">        $last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        echo <span class="string">&quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// This is used later on in the index.php page</span></span><br><span class="line"><span class="comment">// Setting it here so we can close the database connection in here like in the rest of the source scripts</span></span><br><span class="line">$query  = <span class="string">&quot;SELECT COUNT(*) FROM users;&quot;</span>;</span><br><span class="line">$result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $query ) or die( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line">$number_of_rows = mysqli_fetch_row( $result )[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]);</span><br><span class="line">?&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h2 id="漏洞复现-1"><a href="#漏洞复现-1" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><h1 id="安全级别High"><a href="#安全级别High" class="headerlink" title="安全级别High"></a>安全级别High</h1><h2 id="源码分析-2"><a href="#源码分析-2" class="headerlink" title="源码分析"></a>源码分析</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( isset( $_SESSION [ <span class="string">&#x27;id&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_SESSION[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check database</span></span><br><span class="line">    $query  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;$id&#x27; LIMIT 1;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $query ) or die( <span class="string">&#x27;&lt;pre&gt;Something went wrong.&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    <span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;</span><br><span class="line">        <span class="comment">// Get values</span></span><br><span class="line">        $first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">        $last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        echo <span class="string">&quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : $___mysqli_res);        </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
-<h2 id="漏洞复现-2"><a href="#漏洞复现-2" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><h1 id="安全级别Impossible"><a href="#安全级别Impossible" class="headerlink" title="安全级别Impossible"></a>安全级别Impossible</h1><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( isset( $_GET[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Check Anti-CSRF token</span></span><br><span class="line">    checkToken( $_REQUEST[ <span class="string">&#x27;user_token&#x27;</span> ], $_SESSION[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_GET[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Was a number entered?</span></span><br><span class="line">    <span class="keyword">if</span>(is_numeric( $id )) &#123;</span><br><span class="line">        <span class="comment">// Check the database</span></span><br><span class="line">        $data = $db-&gt;prepare( <span class="string">&#x27;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#x27;</span> );</span><br><span class="line">        $data-&gt;bindParam( <span class="string">&#x27;:id&#x27;</span>, $id, <span class="attr">PDO</span>::PARAM_INT );</span><br><span class="line">        $data-&gt;execute();</span><br><span class="line">        $row = $data-&gt;fetch();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Make sure only 1 result is returned</span></span><br><span class="line">        <span class="keyword">if</span>( $data-&gt;rowCount() == <span class="number">1</span> ) &#123;</span><br><span class="line">            <span class="comment">// Get values</span></span><br><span class="line">            $first = $row[ <span class="string">&#x27;first_name&#x27;</span> ];</span><br><span class="line">            $last  = $row[ <span class="string">&#x27;last_name&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Feedback for end user</span></span><br><span class="line">            echo <span class="string">&quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Generate Anti-CSRF token</span></span><br><span class="line">generateSessionToken();</span><br><span class="line"></span><br><span class="line">?&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>学习笔记</category>
-      </categories>
-      <tags>
-        <tag>DVWA</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>DVWA(一)：Brute Force（暴力破解）</title>
-    <url>/2021/06/21/DVWA-%E4%B8%80-%EF%BC%9ABrute-Force%EF%BC%88%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3%EF%BC%89/</url>
-    <content><![CDATA[]]></content>
-      <categories>
-        <category>学习笔记</category>
-      </categories>
-      <tags>
-        <tag>DVWA</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>20岁</title>
-    <url>/2021/05/24/20%E5%B2%81/</url>
+    <title>平安夜</title>
+    <url>/2020/12/24/%E5%B9%B3%E5%AE%89%E5%A4%9C/</url>
     <content><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="密码错误，请重试." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
-  <script id="hbeData" type="hbeData" data-hmacdigest="9b144c1ea771e345a65808c97621292ae997142c0d7e14686a378d9a3f296415">5fe6c8a68ad5071aecbb46d073c337456f4fc402b2025989eda52134abef6efcd3a8ae8a604dcb3ed02d13069b6a20d6dd9d26fdc66a517be1f244ab34058acfafd6b82274b25153b842a74f1ba4bb69a042de92b0d78211193bc4f39dceae90aef2008c6c7b43bd79694f45f70456eb8da879d64a6b8e3d93d6147cfa44ee20e7ea29bdffe5b6d4f9948f99138d0e881c92794a374423bc521f3dbe15d4e6e7b78148329e44ec10045d369868f04f77f4108131e1585a9ecf7032d48c39f43f5f956ddea7f5aed3fb3038418c9cf506ee1a45757f6455ece9273b2d8a35ba32a1b6eb6fe995696d201b931e5144b3ecc748dddf5d8b355c9f6bdc9aeffb644cab8ee40d70fd2d26857f609bbb5936b6c726d3d69464884dc14b62508292bb74ad890e0e4d3784f05ac324fcdc4d0984bdcc1a39fc272ebb20801c734558d5ab8f53c6a9cbb5cff5efea54754f4cb2e82eed9c074802fdd2cf1b6950339901642f5eadfe91815af221109c2dffead1cf2b7d1a4ecdd13e3bb7305286ee0413486f2620f873df906d6f3ee0f65a8af9f68293a4e01a36a84492fc060f11424ed620c05abf627afff83a03fd1e91920d91367ea3a5f412325d7ba817cfccb7d3e820ac650de5ef96b524c96d287b544008e787a3a595428e94a151497249fec940126beb1a15cb2909f5da445edf82b1e6547e49d5385fe5674d4e7220ce190aa8be4bd88fae701c8251d787055ca242445be43808046e62e0a2eb10ea5ee1e81b296abd0600bc9da716ad71a9f3b4657776ee41e28b15840cdaf99e7577691db561b25c3beb3303b2d28ad24a8a3b7877ef2caf88b84db7a671ebd22d8de9abd6b7904b3de0549437ca87fefa81a337f064490d82cc130d49f685ad6bc22d135e2113d7c90475b222f2c28dee627dea3bf8fef55015253b1f43bdb80dc620cb785e6a3a9cec3a055a805086889ecdcbf1d91d0a58bb689e1a9abef615335662fd5f98da248d1955f094d48cb2d3ae0c58c33abe62c8162fbbe1a00b6fc41e9d2199414a828fb4112ec8f364a94af83b88997a74de2ba66aacdba0d90145e8441947f16dd353b210198ded830d650c2d4aea3e27d7aea0d64b45d39fd4af6c141f8eec908ac9ed728b65261699251c18b5e16dbd1a66ebe1355923f352f3eef0f2aeeda254e589e1d918963b5d9f77d506ba7fe3b780b2702302052d410670b40c4b083bba9c1b529a67d49ec31ad6cfcf5c0af826456e6b88010b1f814a0e62d411a5b25c6eb4c3043cd10ef164b5072c30dd664bc8dc86baf34e36dfbe8af184b21f038056f16550a56e350ac3ca1ba8751f4ae027281639b704fd276977818f7a4224a6ea55fe2050ad4860015c0159214fa493dd59ae3ff29945724191c5a1ae40b93cd3baf52829c488179bb7b1c37d375c6d6899ff7b89f09e6544ba9f6864f3f989d5c98df338b28a6a680a3066b81f8b84c06effeddaf4bccfc0ced40289d79bed071e0b851822210cb52d33d28bf133111d8cf4ffdd4febb2fc9e9966a9810a608ecfc9c09a5752824ebbc20bbf7afb66a76abcbc67d09621503a08794908da3abfc7fdbab6060c8bf766e01370debc0a0da92a0084f5f56b71035edcbab8149ea81183e0816cd5dc5f3f3582ba83be42ec83e078fbf0f7e70b3e8d7bb14993e3d602044c18a1022e5d00c133e860afa6adcb486b5c4d996b97fb113a99e0f075ba926a9986f3a43041cf5f7178da200cd95264bc5329cb04592e790cffcf1b2d9b990bf668087488da29d4baa53d1bcd4a16e3029a702e83b015608398437633f9b81efede09ec5e2d4be22179eb9eb5ecc187ded484994c92f406258460d0dac8306b5e5a3ac456de298a05ebcdb86dffee2d8e73b7cd5780af0e0cac62289c5ae3b8f316aa8c3cbb37e60f0418c89c2283346bc106579b4d2457ed30a13377e32048629a575de310de3c0814b12643a6963651fc868bd3b81d66678b7935fd23bdc79b4ac8e336d322b831c38366bae184ab00e8459e01ab5db092ba16c8e4919d38ecf4007c04d931f3bb1aff115495b7bdb92271806ec5f5d09db06a399c1d666ff3a7a3f28a6d1df9576318525103a91266c6f42ea4848240366c149d0efc267ebfddbc18c852ecc9e8043651eab914e6f5f81b053e91a9d868d936e6f3092a652e3c756a54dc5aa99242301df81cd331b29efe2978e5b73e1218d88202d35e004652503569ee64cf4f43453f7f8d51d015ecf836f77d16e070256393bbafa34659fc74c072e9d21ccaa7b237a53accbf2b3b1ec2d90212654f6d8c1cdfb8f51ef0d0ff00b9aabf64877f2b742967c4358716a250f5a5c5893b75ff169793af9a8f6e2c5f196e47b87c404979237d002a6be491d6d606cfb0fc153361e3dff308ef1b81dcb3271af94a4b8c973fe11d22c735d6da6f4ee1324bb0029fccb555dc6b90dc7af549077559ad6c82583c476350da8656209d471ad7b56855489c4fc4d1d09bbc4c9593d539e0dfd515dba1ace4a5019a340b45ea8107e1c7e230cd22f55538e437d3497d3fe36a8b1e84bddb0ac025711137edf69324a8dc3e7e1a3502123762fa68c1617a61653c14b55c1339432d51d830a47a7f248090f78861537f52c9dbf8683a0413622d40678516ee99bab67003c6fc634ea52b6d8d574c84694dd09982f3444398719d2e92b3c45c439ebfb36d196c99dc399d6f8e2963b303e9f0a9f210beea8eb2aa001b139bb54246de54b908e84997aeafc8e55ad48530ddaafe03d43f9ae9ae85440096becfac752737278f6cad3696890c91bf6900dcb1d2d045d993fe0ddb0f7ae6203c570021645adc48c5ae1c911ad6643eb41e96bbe121d521a2e3a05a488d390bddb640f46bb72dbac0eb2b4b2b3ab3c9daae932e1d800bd4cb01543a25be94d2dd035c0bf75b3aeda3adc359920c3ff7dfa426f09acbc45d17736114fa0055e94db5ea2c17ef4faf5404af71078aa1e334e30b56392561a3c8970a780c01c27959efb6d5fd2df7ca91d7440dd2be8612bb2f5d946778643240a45b8bad8aa15f85cdd99631f756900ece11093c387ac1f102efe2d8cd09d4805496f2512bf609a0255483256077c99013ba21902dda203caf9f1e942ff64e3b18022701e85d32b4f781029b0f8a0fa6d9d77b4a8e55a4562ad4e19ade66f1fbb18f33c65ff5dcd7b2b4dbcba7f3b2fca7d97041fe2ec2eff2699c13a02d670df5ec8446f2bbef01558e98a78080d80ef753be45102cb6057e5b94621c05860218184d79672d3cc0a0dc1f7bf8703e906db28e977f0bde652461167c6bcdfaa7beb654fa513a8548f0d2bce15d511faabb2fa54e5e734a08936368a36af99f43b9747d427248a23be91cfae51011852081e57eb0f7b97db7a46b748ae7888a25ba8f50f50e33bc4fcfde63e7d9d2076b41b72134bc690f12085d92cbf2b1441db336dd129e2312cc98a3ab4d731ac84ab177a958bb392e2e82ba01c9ed4b15c7e90fe375bce24dc59d94a32dcdfe434bb5dd03cb9e65bbc204db12c6107327c99a5d2f846607364b8fb69553dabaa434357fb97cee408c68c3e065f6e0883ab6c57575c0d6ae4d6eb349c209186ed46b4fbdc11692dbc2187b073339dbb98c7a5405b22c0864f99851655215a59e0d0eaa9d14912a654b5d8831d607e5baa02c0ba264d525ea09fde2546bf7e21955217f9dbc33a73b42ed52797daa73f545767aede52df67fe1b8bba71fdad4f80b4d83a5fbc00d917bca72a19a6e7566d21987ecbb0eccfdcb316ff3a1d0e2b7b3c276f5a043b6208797cc75a1030c130cf8a7d3d1b66524ac3674f18a7bf32a1383db7592cb2fe3ff506bd307568516016ab1501ea6c1bc80629e761d9a1dfff1a9a8829dd4a08c46f292332e246e7c89e6c87865ab5ebc651fcf91ff39b5734d63dbc4c999880389c66115111aa346b56c92efbcf556caccc8ed78843af2ce7c8ad31151794ef20d5f01d2a4a9662400a207d76c139fba3e0c0d50bac2d888791e739274ca6fe85ccb0d4131df7e8f4555893aaf17a528500b81e8c4a7e857e24c2c08f2260a61e7c172da732b498bef0ead4b31bd785aad5ccb938e2f085ae06bc40381c22f775904ad9901dc0954e606c5fb035aedfea8987abe8f78f8dc9874b443c37db39672d4ecfa2d2d4aef47fe0fdb5c6b2dff039b4e69d88ef91a046325bb2480ad37f3987a54437ce4740c960a92bcd3e2b9bebe446536270c4b5b8c9f589a3efe666a1c3c4112c4540adea364022455441f08e9f51e3e117310c16a07d1b70aa75d5c3c6280079feb5207e5b7c78c0dbcd5bd1ae62d8ccbc0606339dfa7d1642dd7c85cffb589ba5e9ea6a5901466a9747b67ff3d89eb6436532031d09e0aa074b87bdb2ebaea86cd404930d1aa88efd5fdbb72ad0dbd1585d260f1a4355a067fedd59b8e7426f9d26028a25d9a7f1df6673f4ef986164375ebd71f31a7d838397c26601fe57fd9e9a16b19d649cfd562dcff6c3651c664f0c6650d519a10a03cfd2b4bfc6b2f78d8841666cba86f717ab26446e09d86655eadb9ea7747189393139f3b0f4cb15de23ae3f0d546ff5aeea1bdf2287bde560e7498aaa067ec81bd5dfeb66e400349398b5e69eb527264f02bac633b3a2b9f2404bc3c2ca8fab13f505b44b436ee30a4d664028885061def40dfdd329b75b8a252b5c6f27c5d0beff9aac413b0f446f08e0c572cb12bd2d34321d1233866317565ff08c85445a238a0dcd4a5c13f18ab5fa33f4930ef781cfcfd4a4fb4649e75c552aa2b020ccd16d515485fd75863c45f9f69795235131b6cc8e390cbf29e97cc9e002b0b9f3d13f0587d9a32e03a0c8b03985efe55c6bcc84b7d428411e8dce55dbbe934fdf375b9c5e855bdc54c34db9c0390b6f43ec921331fe2d1583b1f30e956443e03bbb482afcabba31ece83c52d025476a7470354e065f71264e6f0ce197ed235e99821ab17cb4d626f4e4092c63506221811d8539eab6e997922878f69e1803827b085b16cd56f9ba5b7c2ca0d062d94d5506d7c90263d0d97962a09cd87e4359985c25efdb7f04215da9b2a3f4f02b74c8c40f047715c58dc56a5f70b9afd9c25203789c35edfed025d1a9417dfa0415e02c5da150d88086d09ba9fc2367d7144247e05ff74934b6613fbf010dc4711d4d9884a2cf3d6208d1bcdbc7766ef73aca98a0e6f846e0139cd0dbc796efac21ad0e03131641265e791adf5ba9a57230ebdb32896d6d050b5d0e22cb15ff23844931b656ec177d333343375aa7808703ec769b01e17593604ea39a4fb161ceed0a1837a822f4ac3b67ce1b84904bca8c1f049a81794186b36b8b97290aa94b74b46a3b7f9f02f1dbb155e7b23833c10c531d097342e3e34d8816147bdd8ae658de9df8a8b825931685c8744da5287cb0a9ea23d985613d5153d15b6c9bf1641fb0f1e766abaff91ec6ce029e62e44dd9a0f10a60eed6464084e5ca933d7d4e3c0b264413da8afb1350e8eff5bcdabf362f34aa206ac5928f94a20a7429839de</script>
+  <script id="hbeData" type="hbeData" data-hmacdigest="95ec9c315cd58359a4567fd3da94c797628e00f4eb7194f290ec2d44ab3a0768">5fe6c8a68ad5071aecbb46d073c337450b5cb98f9fa11c8b1e6729a1c45104fa91f9c33cdc3b859fa5fc2ebe46efd4a885c429b52d4a939a835a042cedb1eb76557bb252e1277ff8535b5719d6a4a87956249e77693fe57ff4e7e306ef335317859d7d23e7ce02ad9c53820d4371755ecb5ab51e65bf076470c056712fd5cd1049a7eb14cabf34fa023e28c4a398b07b25118b550c0bc78c42c72443b30b0fc7df21a3138c55422ee7b6b1c05547b6095d17490c0cc79dcd290927de472a5422212b6cc51ded5df9e3f17c3e0c1ff2fb9e9dc222e8e9c4cbc4cda9942a60e3b28b764cf9735430d208b9a29a7a9e0f2a4e486423606f3ea9c2935812edc6d3d5eb40025ef7f65af525029e31a6ad5b38f0d9ad1df45361b48218a117424718aac6f03204ca95b7b7e127578d970ffdda15ea4b6883eb8a093e551b94a8d9735ea73ea3e2be03dc449e3e7cf3033c8ee33c43df4a2f004eecc492b2bcbef1252994551e142b970c48c8381ec5f78ea6a61219cefad4355d1a7f9a77028a081ede1522e74080ccafe5cf61741e203bb7dd51977266f067d6c1f5e36897ba344ab846ebbe6fe31bd6f80078089c86329f747ea1eb7d14fb14fad6f27b9f66e55d0b0a30c5f06575d2dd2300a7273da8ad984073b9c1c623c7ae5ddeb125d1795caf09cef8055fac9fa34baf293e1a1575923b4aca60fbe668d72c919639bc8745d19a6f482c9fe57ac89f2686cfcaa72ce991c779af80f21ece56f341ed43dcb402bec8346572096e5c9e76ac46bacd20af99c787a98ad7b13b2fd7180d4ff733ee3a9f6b8f67161ba554f6f5260c4b83b02b3782c6722024b7aa3587996f0237c3d35fc929181953d35c3d1de05dc6595571f90146696a961fd46e73249b4f2aecee6344fc95224e6f73e48b3176e901580a9f78093e1e36141eaa94fa74212da4ac0c7d19ae4bd5bc9a06aa6841a01864fc65c1d893f6b0f258324c3282bb0ad5d390c9463447142a96888d049b1505c10f155b879416356393e2500171ac8c1ed62fad4c75d277e5d7f799d54974c2a8d7b1221ca5c7121ca0200880a8c417532b3b0b644a0c0da81222fade85ece8ed702ee1aa2768eea5cf3735a2de67d25890019ea676fc64ac3f28ad03ec0e8710de1f081b339497a9bcd0247561dd453f267486fc960d237a1acaff6845aace0b32046378b6f4a3f1146ef968f13386d6ca85118e73910570a0209aca4e60e82509337f06bfe03bb9d038a6026c8954b936b68b076b78d8ebb575aaffc81605879d42847b3d39822f6f071ae90fd7f16f1f1238cdce2df84700ecd4d6f4194d045c2353961f293141b501637a4513edec46b30cfa4823127702091285b603e2216fa07d5e6a8d9f10660cc76d8a47816d55cd5995c86036f29a4c1a901556e76c5171758d05092c8a7c002e6117c55ab074c7aa2b1df0e60f6b82eacc2a498b93c58ddfa4914c81c0a2a3b246db56ec35abb644630daa603a618e4eac1466a3cde268603e0504b6620b3ba8449fe324617ffcd8128f840538693480ac92abfe821464348405068bee1f22e7bd557972edb2ba29ec3f26697742f2f99796c292e1a9c86046094c8ab7932d1b7650148be8fc27e9b99d764e3fd27a5689b9fda42867cf0fbf297c49286d96c9e977027312</script>
   <div class="hbe hbe-content">
     <div class="hbe hbe-input hbe-input-default">
       <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
@@ -114,82 +29,32 @@
 </div>
 <script src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">]]></content>
       <categories>
-        <category>人生十年</category>
+        <category>生活吐槽</category>
       </categories>
       <tags>
-        <tag>生日</tag>
+        <tag>生活</tag>
       </tags>
   </entry>
   <entry>
-    <title>软件逆向之扫雷(二)：破解雷区</title>
-    <url>/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/</url>
+    <title>置顶说明</title>
+    <url>/2021/01/19/%E7%BD%AE%E9%A1%B6%E8%AF%B4%E6%98%8E/</url>
     <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
-<h1 id="问题导入"><a href="#问题导入" class="headerlink" title="问题导入"></a>问题导入</h1><p>&emsp;&emsp;上一节中我们通过修改注册表修改了扫雷英雄榜，自行改动了榜上的昵称和时间。然而这只是表面工作，没有解决扫雷游戏的本质：找出所有雷区。这一节我们分析雷区的存储方式和位置，人工破解雷区。</p>
-<h1 id="雷区分析"><a href="#雷区分析" class="headerlink" title="雷区分析"></a>雷区分析</h1><p>&emsp;&emsp;扫雷的界面是一个n*m的矩形雷区，每个小方块代表一个位置，和矩阵十分类似。因此我们猜想是通过二维矩阵来存储数据，将矩阵中特定位置标记为雷区，而每次点击非雷区时会出现数字，即计算点击位置周边八个块的地雷数目，然后显示在块上。<br>&emsp;&emsp;将矩阵转化成扫雷的界面则需要调用几个API函数，比较常用的就是BitBlt函数。BitBlt将某一内存块的数据传送到另一内存块，前一内存块被称为”源”，后一内存块被称为”目标”。使用该函数我们可以将矩阵进行变换，从而显示出来。</p>
-<h1 id="逆向分析"><a href="#逆向分析" class="headerlink" title="逆向分析"></a>逆向分析</h1><p>&emsp;&emsp;使用OllyDBG打开扫雷程序winmine.exe，查看调用的API函数。</p>
-<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/1.png" width="250" height="250"></div><br>&emsp;&emsp;可以看到从GDI32.dll导入的函数很多与作图有关，如SetLayout、CreatePen等。我们选中BitBlt函数，在每个参考上设置断点，然后运行至断点处。<br>&emsp;&emsp;第一个断点处，整个扫雷界面都未加载完成，而且我们也没有进行点击，故不是所需代码块，取消该出断点，继续运行。<br>&emsp;&emsp;图像界面显示出来，程序停止了运行，表示程序还未运行到第二个断点，可能在等待用户点击鼠标。我们选择雷区任意一个位置点击，程序运行到第二个断点处停止。</p>
-<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/2.png"></div><br>&emsp;&emsp;BitBlt所需参数均在图中标识出来，现在我们需要分析这些参数，找到二维矩阵的内存位置。<br>&emsp;&emsp;首先我们要知道矩阵位置的计算，对于一维矩阵，a[n]，a[i]的内存位置=基址(a[0])+i*sizeof(单个数据内存大小)。对于二维矩阵a[m][n]，a[i][j]的内存位置=基址+i*n*sizeof(单个数据内存大小)+j*sizeof(单个数据内存大小)。</p>
-<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/3.png" width="150" height="150"></div><br>&emsp;&emsp;函数中刚好有两条类似的寻址语句。[edx+eax+01005340h]和[edx*4+105A20]。第一条是mov操作，并且更符合二维数组寻址，因此我们猜测01005340h是数组基址。</p>
-<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/4.png" width="200" height="200"></div><br>&emsp;&emsp;在左下角数据窗口使用ctrl+G，输入01005340h，跳转到该位置。查看数据窗口内容。</p>
-<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/5.png" width="200" height="200"></div><br>&emsp;&emsp;数据窗口一开始全是10，有33个。由于我们使用的是高级模式，扫雷界面是16*32，初步猜测10代表边界。然后是大量0F和少量8F。前七个数据是六个0F和一个8F，那我们点击扫雷第一排前七个格子。前七个均没有雷，第八个是雷。</p>
-<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/6.png" width="200" height="200"></div><br>&emsp;&emsp;查看数据区内容是否发生变化：</p>
-<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/7.png" width="150" height="150"></div><br>&emsp;&emsp;前五个格子为空，数据由0F变为40；第六个格子是数字1，数据由0F变为41。同时数字2、3对应数据也分别变为42、43。得出结论：未点开非雷区数据为0F，点开的非雷区数字x的数据为4x。<br>&emsp;&emsp;第七个格子是我们点中的雷，数据由8F变为CC；而第八个格子我们未点中的雷由8F变为8A。得出结论：原数据8F即表示该位置是雷。<br>&emsp;&emsp;除此之外，扫雷还有两个符号，旗子和问号，现在我们再次尝试，分别在雷区和非雷区标上旗子和问号，查看数据。</p>
-<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/8.png" width="150" height="150"></div></p>
-<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/9.png" width="150" height="150"></div><br>&emsp;&emsp;标上旗子，雷区数据由8F变成8E，非雷区数据由0F变成0E；标上问号，雷区数据由8F变成8D，非雷区数据由0F变成0D。由此可得雷区最高位为1，不论是8（1000）还是C（1010），最高位都是1；非雷区最高位为0。<br>&emsp;&emsp;由以上情况作出总结：<br>雷区（最高位为1）：<br>&emsp;&emsp;1.未点开为8F<br>&emsp;&emsp;2.点开为CC，其他为8A<br>&emsp;&emsp;3.标上旗子为8E<br>&emsp;&emsp;4.标上问号为8D<br>非雷区（最高位为0）：<br>&emsp;&emsp;1.未点开为0F<br>&emsp;&emsp;2.点开为4x（x代表格子显示数字）<br>&emsp;&emsp;3.标上旗子为0E<br>&emsp;&emsp;4.标上问号为0D<br>当然我们也可以人为修改数据达到各种效果，如初始化是雷区却不爆雷等。</p>]]></content>
-      <categories>
-        <category>学习笔记</category>
-      </categories>
-      <tags>
-        <tag>软件逆向</tag>
-      </tags>
+<h3 id="博客说明"><a href="#博客说明" class="headerlink" title="博客说明"></a>博客说明</h3><p>&emsp;&emsp;我是武汉大学在读本科生，信息安全专业，该博客为我的个人博客，主要是记录学习过程中遇到的问题（计算机方面）和自己的生活。</p>
+<h3 id="建博初衷"><a href="#建博初衷" class="headerlink" title="建博初衷"></a>建博初衷</h3><p>&emsp;&emsp;建立博客本是一时冲动。在学习烦躁时，我突然就有了申请域名的想法，还好申请个人域名价格也不算贵，所以就果断买了。有了域名仿佛就有了存在的证据，之后一个博客就顺其自然地出现了。<br>&emsp;&emsp;建立博客很快，照着各种教程马上就可以成型。但设计自己独立的风格很难，用了别人的博客主体还要自己一个个去修改，其中还需要一些前端js知识，对我这种前端小白来说还是很有难度的。<br>&emsp;&emsp;现在博客陆陆续续变得好看了起来，之后我会进一步完善。希望该博客可以成为我学习的动力，不断充实完善自己。</p>]]></content>
   </entry>
   <entry>
-    <title>软件逆向之扫雷(一)：修改扫雷成绩</title>
-    <url>/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/</url>
+    <title>美赛参赛心得</title>
+    <url>/2021/02/12/%E7%BE%8E%E8%B5%9B%E5%8F%82%E8%B5%9B%E5%BF%83%E5%BE%97/</url>
     <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
-<h1 id="问题导入"><a href="#问题导入" class="headerlink" title="问题导入"></a>问题导入</h1><p>&emsp;&emsp;扫雷的游戏目标是在最短的时间内根据点击格子出现的数字找出所有非雷格子，同时避免踩雷，踩到一个雷即全盘皆输。如果用时破纪录，则会在扫雷英雄榜上留下昵称和用时记录。现在我们通过逆向分析来人为修改这一记录。</p>
-<h1 id="使用工具"><a href="#使用工具" class="headerlink" title="使用工具"></a>使用工具</h1><p>&emsp;&emsp;Ollydbg：通常称作OD，是反汇编工作的常用工具。本人使用的是看雪学院的优化版OD：OllyICE，可在看雪学院官网进行下载。</p>
-<h1 id="逆向分析"><a href="#逆向分析" class="headerlink" title="逆向分析"></a>逆向分析</h1><p>&emsp;&emsp;下图为游戏菜单栏，可以看出扫雷英雄榜的点击链接在“菜单栏”-“游戏”-“扫雷英雄榜”，菜单项会响应鼠标点击并显示出英雄榜信息。</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/1.png" width="250" height="250"></div>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/2.png" width="150" height="150"></div>
-&emsp;&emsp;可以看到英雄榜初始化昵称均为匿名，时间均为999。当扫雷在不同电脑运行时，该英雄榜均会初始化，因此该数据应该不是存储在exe中，可能是电脑某个文件，如软件注册表。
-<br>
-&emsp;&emsp;用Ollydbg打开winmine.exe，得到如下调试界面：
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/3.png"></div>
-&emsp;&emsp;现在我们需要找到注册表位置，也就是找到注册表相关函数，这些函数都是exe从外部dll库调入的。在反汇编窗口点击右键，选择“查找”-“当前模块中的名称（标签）”，得到exe的导入库函数。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/4.png"></div>
-&emsp;&emsp;点击地址字段排序，最前面几个函数均是从ADVAPI32.dll导入的，和注册表有关。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/5.png" width="100" height="100"></div>
-&emsp;&emsp;RegCreateKeyExw函数功能为创建或打开注册表项。默认为创建，当注册表中有此项时，为打开。我们左键选中该函数，右键选择在“每个参考上设置断点”，这样调用该函数位置均会加上断点。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/6.png"></div>
-&emsp;&emsp;返回反汇编窗口，快捷键F9（fn+F9）运行程序到断点位置。右下角堆栈窗口即有函数调用的参数信息，可以看到注册表位置路径“Software\Microsoft\winmine”。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/7.png" width="100" height="100"></div>
-&emsp;&emsp;使用Win+R打开电脑运行，输入regedit打开注册表。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/8.png" width="150" height="150"></div>
-&emsp;&emsp;在HKEY_CURRENT_USER下寻找路径software\Microsoft\winmine，找到英雄榜相关信息如下：
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/9.png"></div>
-&emsp;&emsp;可以看到Name、Time字段，Name都是匿名，Time都是999，与之前看到的英雄榜数据相同，接下来修改相应字段即可。修改后打开扫雷，查看英雄榜，可见信息已经被修改。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/10.png" width="150" height="150"></div>]]></content>
+<h1 id="赛前准备"><a href="#赛前准备" class="headerlink" title="赛前准备"></a>赛前准备</h1><p>&emsp;&emsp;参加美赛实在是被迫的，都大三了，我还没有参加过任何竞赛，也没有得过奖，实在是很惭愧。又到了保研考研的季节，想通过竞赛冲一下，能得到加分更好了。所以咬咬牙想试一试。<br>&emsp;&emsp;赛前半个月我才开始组队，找到一个同学后就再也找不到队友了。本以为只有题目会让人绝望，组队竟然也是，怎么都找不到第三个队友。无奈最后就两个人参赛了，参赛费六七百，死贵还不说，还是我们两个人分。唉，而且两个人参赛工作量巨大。好在我们两个比较熟，参赛很容易沟通，这也是优点吧，还是挺感谢她的。<br>&emsp;&emsp;赛前十天左右，我开始学习相关模型和算法。当初在学校作业多，完全没有时间准备，现在只能十天速成。B站上有很多讲解视频，十分详细，很适合学习。还好美赛许多算法，如模拟退火、图论、最短路径、分治，专业课我都学习过，复习一下就好。其他的模型，如评价模型、优化模型、智能算法，原理很容易掌握，代码也能在网上找到。单纯使用的话没问题，但是参加比赛还是需要依据题目进行改进，并且要多练习。<br>&emsp;&emsp;关于论文和模板，赛前真的需要多看往年优秀论文，同时也要做一做往年题，不然实战真的很懵，呜呜呜。美赛是英文论文，看的头疼也要坚持看，太难了。<br>&emsp;&emsp;这里还是给了自己一个警醒，参加比赛前几个月一定要好好准备，不然完全吃不透，只能掌握大概。还有如果想获奖，还是需要努力了，没有那么简单的。</p>
+<h1 id="赛中解题"><a href="#赛中解题" class="headerlink" title="赛中解题"></a>赛中解题</h1><p>&emsp;&emsp;2021年美赛于北京时间2月5号上午六点放题，一共ABCDEF六种题型，MCM是ABC三题，ICM是DEF三题，每种题型考察侧重点不同。题型一般为连续型、离散型、大数据、环境科学、政府政策、网络科学等。<br>&emsp;&emsp;看了两个小时英文原文后，初步选择D题。赛前我们是准备就选准C题的，因为C题给定数据，不用自己再找数据可能比较方便。然而今年C题关于黄蜂，需要自然语言处理和图像处理，感觉难度挺大，而D题也给了数据，都是Excel表格，数据类型单一，比较好处理。<br>&emsp;&emsp;D题就是关于图论的问题，给了四个Excel表格，记录了一个音乐家受到了哪几个音乐家影响，一个歌曲的各种特征等。然后根据所给数据分析音乐家之间的影响关系和相似度。<br>&emsp;&emsp;D题原文及翻译链接如下：<a href="https://yiwenzhe.com/2021/02/12/2021%E7%BE%8E%E8%B5%9BD%E9%A2%98" target="_blank">2021美赛D题</a><br>&emsp;&emsp;拿到题目就是几天没日没夜的解题了。每天睡六七个小时，然后娱乐时间都没有。每天明明起得早睡得晚，但我还是很有精神，应该是注意力很集中吧，每天都有具体的工作，这样就不会犯困了。</p>
+<h1 id="赛后提交"><a href="#赛后提交" class="headerlink" title="赛后提交"></a>赛后提交</h1><p>&emsp;&emsp;从2月5号早上6点开始一直到忙到2月9号早上6点提交，最后一天甚至通宵写论文（有一说一论文真的不好写）。赛前看的论文不多，所以最后写的时候还要一个个调格式，仿照往年优秀论文的写法，最后的summary需要写的简洁凝练。写论文总共花了一天时间，毕竟是全英文论文，写完也要一句句检查，订正语法错误和拼写错误。建议多留出时间写论文和修改。<br>&emsp;&emsp;2021美赛截止时间是北京时间9号早上9点，这里还发生了一个小插曲。我们6点提交，比最后提交时间早三个小时，不到五分钟官方那边就收到了。反而他们后面八九点提交时，官方服务器坏了，所以很多被退信。好在最后官方延长提交时间，解决了这一问题。但还是提醒我们，很多比赛，尤其是国外的，要记得提前交，不要拖到最后一刻。最后提交人很多，经常会出现服务器崩溃的问题。</p>
+<h1 id="赛后反思"><a href="#赛后反思" class="headerlink" title="赛后反思"></a>赛后反思</h1><p>&emsp;&emsp;提交完真的是松了一口气，终于可以放松了，这几天忙的累死了。每天固定时间起床，晚上12点或者1点才睡。起来就是解题，注意力从来没有这么集中过，真的很考验人。<br>&emsp;&emsp;美赛还是很难的，感觉这次可能只是做慈善送钱了，获奖应该没有希望吧。准备最多才十天，真的没有准备好，临阵磨枪还是不太行。而且这种限时的比赛很考验耐力，我是不太行，不想参加第二次了。还是那种限时几个月提交作品的比赛适合我，唉，还是自己能力不行。<br>&emsp;&emsp;这几天参赛很感谢我的队友，只有我们两个还是能把这个题目做完，不论结果好坏，我们都是用了心的。她的工作量可能比我还大，她写作比较好，论文比较重要的部分都交给了她，她是真的很努力很用心，花几个小时去打磨一段话，最后summary写的很棒。比赛有一个靠谱努力的队友真的很重要。感谢你，这次比赛我们都付出了很多。希望下次能继续合作。</p>]]></content>
       <categories>
-        <category>学习笔记</category>
+        <category>学习心得</category>
       </categories>
       <tags>
-        <tag>软件逆向</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>机器学习笔记(一)：模型评估与选择</title>
-    <url>/2021/02/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/</url>
-    <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
-<h1 id="经验误差与过拟合"><a href="#经验误差与过拟合" class="headerlink" title="经验误差与过拟合"></a>经验误差与过拟合</h1><p>&emsp;&emsp;<strong>错误率</strong>：分类错误的样本数占样本总数的比例。m个样本中有a个样本分类错误，则错误率E=a/m。<br>&emsp;&emsp;<strong>精度</strong>：分类正确的样本数占样本总数的比例。精度=1-错误率。<br>&emsp;&emsp;<strong>误差</strong>：学习器实际预测的输出与样本的真实输出之间的差异。训练集上的误差称为“训练误差”或“经验误差”，在新样本上的误差称为“泛化误差”。<br>&emsp;&emsp;<strong>过拟合</strong>：把训练样本自身的一些特点当做所有样本的一般性质，泛化性能下降。<br>&emsp;&emsp;<strong>欠拟合</strong>：对训练样本的一般性质尚未学好，学习能力过低。</p>
-<p><center><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/leaf.png"></center><br>&emsp;&emsp;我们的目标是在新样本上表现好的学习器，即泛化误差小。当学习器把训练样本学的太好时，可能会出现过拟合情况。欠拟合比较容易客服，如增加训练轮数等，而过拟合是无法彻底避免的，只能缓解或者说减小其风险。<br>&emsp;&emsp;面对具体任务时，往往有多种算法可供选择，以及不同的参数配置。选择算法、配置参数的过程就叫做“模型选择”。理想的解决方案是对候选模型的泛化误差进行评估，选择泛化误差最小的模型。</p>
-<h1 id="评估方法"><a href="#评估方法" class="headerlink" title="评估方法"></a>评估方法</h1><p>&emsp;&emsp;<strong>训练集</strong>：用来训练学习器的数据集。<br>&emsp;&emsp;<strong>测试集</strong>：用来测试学习器对新样本判别能力的数据集。在测试集上的“测试误差”将作为泛化误差的近似。测试集应尽可能与训练集互斥。<br>&emsp;&emsp;现有包含m个样例的数据集D={(x<sub>1</sub>,y<sub>1</sub>), (x<sub>2</sub>,y<sub>2</sub>), …, (x<sub>m</sub>,y<sub>m</sub>)}，既要训练又要测试，将D分为训练集S和测试T。</p>
-<h2 id="留出法"><a href="#留出法" class="headerlink" title="留出法"></a>留出法</h2><h2 id="交叉验证法"><a href="#交叉验证法" class="headerlink" title="交叉验证法"></a>交叉验证法</h2><h2 id="自助法"><a href="#自助法" class="headerlink" title="自助法"></a>自助法</h2><h1 id="性能度量"><a href="#性能度量" class="headerlink" title="性能度量"></a>性能度量</h1><h1 id="比较检验"><a href="#比较检验" class="headerlink" title="比较检验"></a>比较检验</h1><h1 id="偏差与方差"><a href="#偏差与方差" class="headerlink" title="偏差与方差"></a>偏差与方差</h1>]]></content>
-      <categories>
-        <category>学习笔记</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
+        <tag>美赛</tag>
       </tags>
   </entry>
   <entry>
@@ -389,38 +254,82 @@
       </tags>
   </entry>
   <entry>
-    <title>美赛参赛心得</title>
-    <url>/2021/02/12/%E7%BE%8E%E8%B5%9B%E5%8F%82%E8%B5%9B%E5%BF%83%E5%BE%97/</url>
+    <title>机器学习笔记(一)：模型评估与选择</title>
+    <url>/2021/02/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/</url>
     <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
-<h1 id="赛前准备"><a href="#赛前准备" class="headerlink" title="赛前准备"></a>赛前准备</h1><p>&emsp;&emsp;参加美赛实在是被迫的，都大三了，我还没有参加过任何竞赛，也没有得过奖，实在是很惭愧。又到了保研考研的季节，想通过竞赛冲一下，能得到加分更好了。所以咬咬牙想试一试。<br>&emsp;&emsp;赛前半个月我才开始组队，找到一个同学后就再也找不到队友了。本以为只有题目会让人绝望，组队竟然也是，怎么都找不到第三个队友。无奈最后就两个人参赛了，参赛费六七百，死贵还不说，还是我们两个人分。唉，而且两个人参赛工作量巨大。好在我们两个比较熟，参赛很容易沟通，这也是优点吧，还是挺感谢她的。<br>&emsp;&emsp;赛前十天左右，我开始学习相关模型和算法。当初在学校作业多，完全没有时间准备，现在只能十天速成。B站上有很多讲解视频，十分详细，很适合学习。还好美赛许多算法，如模拟退火、图论、最短路径、分治，专业课我都学习过，复习一下就好。其他的模型，如评价模型、优化模型、智能算法，原理很容易掌握，代码也能在网上找到。单纯使用的话没问题，但是参加比赛还是需要依据题目进行改进，并且要多练习。<br>&emsp;&emsp;关于论文和模板，赛前真的需要多看往年优秀论文，同时也要做一做往年题，不然实战真的很懵，呜呜呜。美赛是英文论文，看的头疼也要坚持看，太难了。<br>&emsp;&emsp;这里还是给了自己一个警醒，参加比赛前几个月一定要好好准备，不然完全吃不透，只能掌握大概。还有如果想获奖，还是需要努力了，没有那么简单的。</p>
-<h1 id="赛中解题"><a href="#赛中解题" class="headerlink" title="赛中解题"></a>赛中解题</h1><p>&emsp;&emsp;2021年美赛于北京时间2月5号上午六点放题，一共ABCDEF六种题型，MCM是ABC三题，ICM是DEF三题，每种题型考察侧重点不同。题型一般为连续型、离散型、大数据、环境科学、政府政策、网络科学等。<br>&emsp;&emsp;看了两个小时英文原文后，初步选择D题。赛前我们是准备就选准C题的，因为C题给定数据，不用自己再找数据可能比较方便。然而今年C题关于黄蜂，需要自然语言处理和图像处理，感觉难度挺大，而D题也给了数据，都是Excel表格，数据类型单一，比较好处理。<br>&emsp;&emsp;D题就是关于图论的问题，给了四个Excel表格，记录了一个音乐家受到了哪几个音乐家影响，一个歌曲的各种特征等。然后根据所给数据分析音乐家之间的影响关系和相似度。<br>&emsp;&emsp;D题原文及翻译链接如下：<a href="https://yiwenzhe.com/2021/02/12/2021%E7%BE%8E%E8%B5%9BD%E9%A2%98" target="_blank">2021美赛D题</a><br>&emsp;&emsp;拿到题目就是几天没日没夜的解题了。每天睡六七个小时，然后娱乐时间都没有。每天明明起得早睡得晚，但我还是很有精神，应该是注意力很集中吧，每天都有具体的工作，这样就不会犯困了。</p>
-<h1 id="赛后提交"><a href="#赛后提交" class="headerlink" title="赛后提交"></a>赛后提交</h1><p>&emsp;&emsp;从2月5号早上6点开始一直到忙到2月9号早上6点提交，最后一天甚至通宵写论文（有一说一论文真的不好写）。赛前看的论文不多，所以最后写的时候还要一个个调格式，仿照往年优秀论文的写法，最后的summary需要写的简洁凝练。写论文总共花了一天时间，毕竟是全英文论文，写完也要一句句检查，订正语法错误和拼写错误。建议多留出时间写论文和修改。<br>&emsp;&emsp;2021美赛截止时间是北京时间9号早上9点，这里还发生了一个小插曲。我们6点提交，比最后提交时间早三个小时，不到五分钟官方那边就收到了。反而他们后面八九点提交时，官方服务器坏了，所以很多被退信。好在最后官方延长提交时间，解决了这一问题。但还是提醒我们，很多比赛，尤其是国外的，要记得提前交，不要拖到最后一刻。最后提交人很多，经常会出现服务器崩溃的问题。</p>
-<h1 id="赛后反思"><a href="#赛后反思" class="headerlink" title="赛后反思"></a>赛后反思</h1><p>&emsp;&emsp;提交完真的是松了一口气，终于可以放松了，这几天忙的累死了。每天固定时间起床，晚上12点或者1点才睡。起来就是解题，注意力从来没有这么集中过，真的很考验人。<br>&emsp;&emsp;美赛还是很难的，感觉这次可能只是做慈善送钱了，获奖应该没有希望吧。准备最多才十天，真的没有准备好，临阵磨枪还是不太行。而且这种限时的比赛很考验耐力，我是不太行，不想参加第二次了。还是那种限时几个月提交作品的比赛适合我，唉，还是自己能力不行。<br>&emsp;&emsp;这几天参赛很感谢我的队友，只有我们两个还是能把这个题目做完，不论结果好坏，我们都是用了心的。她的工作量可能比我还大，她写作比较好，论文比较重要的部分都交给了她，她是真的很努力很用心，花几个小时去打磨一段话，最后summary写的很棒。比赛有一个靠谱努力的队友真的很重要。感谢你，这次比赛我们都付出了很多。希望下次能继续合作。</p>]]></content>
+<h1 id="经验误差与过拟合"><a href="#经验误差与过拟合" class="headerlink" title="经验误差与过拟合"></a>经验误差与过拟合</h1><p>&emsp;&emsp;<strong>错误率</strong>：分类错误的样本数占样本总数的比例。m个样本中有a个样本分类错误，则错误率E=a/m。<br>&emsp;&emsp;<strong>精度</strong>：分类正确的样本数占样本总数的比例。精度=1-错误率。<br>&emsp;&emsp;<strong>误差</strong>：学习器实际预测的输出与样本的真实输出之间的差异。训练集上的误差称为“训练误差”或“经验误差”，在新样本上的误差称为“泛化误差”。<br>&emsp;&emsp;<strong>过拟合</strong>：把训练样本自身的一些特点当做所有样本的一般性质，泛化性能下降。<br>&emsp;&emsp;<strong>欠拟合</strong>：对训练样本的一般性质尚未学好，学习能力过低。</p>
+<p><center><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/leaf.png"></center><br>&emsp;&emsp;我们的目标是在新样本上表现好的学习器，即泛化误差小。当学习器把训练样本学的太好时，可能会出现过拟合情况。欠拟合比较容易客服，如增加训练轮数等，而过拟合是无法彻底避免的，只能缓解或者说减小其风险。<br>&emsp;&emsp;面对具体任务时，往往有多种算法可供选择，以及不同的参数配置。选择算法、配置参数的过程就叫做“模型选择”。理想的解决方案是对候选模型的泛化误差进行评估，选择泛化误差最小的模型。</p>
+<h1 id="评估方法"><a href="#评估方法" class="headerlink" title="评估方法"></a>评估方法</h1><p>&emsp;&emsp;<strong>训练集</strong>：用来训练学习器的数据集。<br>&emsp;&emsp;<strong>测试集</strong>：用来测试学习器对新样本判别能力的数据集。在测试集上的“测试误差”将作为泛化误差的近似。测试集应尽可能与训练集互斥。<br>&emsp;&emsp;现有包含m个样例的数据集D={(x<sub>1</sub>,y<sub>1</sub>), (x<sub>2</sub>,y<sub>2</sub>), …, (x<sub>m</sub>,y<sub>m</sub>)}，既要训练又要测试，将D分为训练集S和测试T。</p>
+<h2 id="留出法"><a href="#留出法" class="headerlink" title="留出法"></a>留出法</h2><h2 id="交叉验证法"><a href="#交叉验证法" class="headerlink" title="交叉验证法"></a>交叉验证法</h2><h2 id="自助法"><a href="#自助法" class="headerlink" title="自助法"></a>自助法</h2><h1 id="性能度量"><a href="#性能度量" class="headerlink" title="性能度量"></a>性能度量</h1><h1 id="比较检验"><a href="#比较检验" class="headerlink" title="比较检验"></a>比较检验</h1><h1 id="偏差与方差"><a href="#偏差与方差" class="headerlink" title="偏差与方差"></a>偏差与方差</h1>]]></content>
       <categories>
-        <category>学习心得</category>
+        <category>学习笔记</category>
       </categories>
       <tags>
-        <tag>美赛</tag>
+        <tag>机器学习</tag>
       </tags>
   </entry>
   <entry>
-    <title>Python学习心得</title>
-    <url>/2021/01/21/Python%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/</url>
+    <title>软件逆向之扫雷(一)：修改扫雷成绩</title>
+    <url>/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/</url>
     <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
-<h3 id="学习书籍："><a href="#学习书籍：" class="headerlink" title="学习书籍："></a>学习书籍：<img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/Python.png" alt="Python"></h3><p>&emsp;&emsp;该书籍比较适合python学习新手，讲解均为基础语法内容，全书分两部分：首部分介绍用Python 编程所必须了解的基本概念，包括变量、列表、字典、if语句、类、文件与异常、代码测试等内容；第二部分将理论付诸实践，讲解如何开发三个项目，包括简单的Python 2D游戏开发，如何利用数据生成交互式的信息图，以及创建和定制简单的Web应用，并帮读者解决常见编程问题和困惑。<br>&emsp;&emsp;全书目录如下：<br><figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="strong">**第一部分 基础知识**</span></span><br><span class="line"> 第1章 起步 （环境搭建）</span><br><span class="line"> 第2章 变量和简单数据类型</span><br><span class="line"> 第3章 列表简介</span><br><span class="line"> 第4章 操作列表</span><br><span class="line"> 第5章 if语句</span><br><span class="line"> 第6章 字典</span><br><span class="line"> 第7章 用户输入和while循环</span><br><span class="line"> 第8章 函数</span><br><span class="line"> 第9章 类</span><br><span class="line"> 第10章 文件和异常</span><br><span class="line"> 第11章 测试代码</span><br><span class="line"> </span><br><span class="line"> <span class="strong">**第二部分 项目**</span></span><br><span class="line"> <span class="strong">**项目1 外星人入侵**</span></span><br><span class="line"> 第12章 武装飞船</span><br><span class="line"> 第13章 外星人</span><br><span class="line"> 第14章 计分</span><br><span class="line"> <span class="strong">**项目2 数据可视化**</span></span><br><span class="line"> 第15章 生产数据</span><br><span class="line"> 第16章 下载数据</span><br><span class="line"> 第17章 使用API</span><br><span class="line"> <span class="strong">**项目3 Web应用程序**</span></span><br><span class="line"> 第18章 Django入门</span><br><span class="line"> 第19章 用户账户</span><br><span class="line"> 第20章 设置应用程序的样式并对其进行部署</span><br><span class="line"> </span><br><span class="line"> 附录A 安装python</span><br><span class="line"> 附录B 文本编辑器</span><br><span class="line"> 附录C 寻求帮助</span><br><span class="line"> 附录D 使用Git进行版本控制</span><br></pre></td></tr></table></figure></p>
-<h3 id="学习心得"><a href="#学习心得" class="headerlink" title="学习心得"></a>学习心得</h3><p> &emsp;&emsp;由于我之前学习过C语言，所以python学习很容易上手，python基本语法和C语言很类似。相比于C语言，python中添加了字典、类等，使用起来会更方便快捷，同时python语法更为简洁，调库即可解决很多问题，代码简洁凝练。<br>  &emsp;&emsp;我学习python是为以后的机器学习做准备，下一步目标是学习机器学习、神经网络相关内容。</p>]]></content>
+<h1 id="问题导入"><a href="#问题导入" class="headerlink" title="问题导入"></a>问题导入</h1><p>&emsp;&emsp;扫雷的游戏目标是在最短的时间内根据点击格子出现的数字找出所有非雷格子，同时避免踩雷，踩到一个雷即全盘皆输。如果用时破纪录，则会在扫雷英雄榜上留下昵称和用时记录。现在我们通过逆向分析来人为修改这一记录。</p>
+<h1 id="使用工具"><a href="#使用工具" class="headerlink" title="使用工具"></a>使用工具</h1><p>&emsp;&emsp;Ollydbg：通常称作OD，是反汇编工作的常用工具。本人使用的是看雪学院的优化版OD：OllyICE，可在看雪学院官网进行下载。</p>
+<h1 id="逆向分析"><a href="#逆向分析" class="headerlink" title="逆向分析"></a>逆向分析</h1><p>&emsp;&emsp;下图为游戏菜单栏，可以看出扫雷英雄榜的点击链接在“菜单栏”-“游戏”-“扫雷英雄榜”，菜单项会响应鼠标点击并显示出英雄榜信息。</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/1.png" width="250" height="250"></div>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/2.png" width="150" height="150"></div>
+&emsp;&emsp;可以看到英雄榜初始化昵称均为匿名，时间均为999。当扫雷在不同电脑运行时，该英雄榜均会初始化，因此该数据应该不是存储在exe中，可能是电脑某个文件，如软件注册表。
+<br>
+&emsp;&emsp;用Ollydbg打开winmine.exe，得到如下调试界面：
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/3.png"></div>
+&emsp;&emsp;现在我们需要找到注册表位置，也就是找到注册表相关函数，这些函数都是exe从外部dll库调入的。在反汇编窗口点击右键，选择“查找”-“当前模块中的名称（标签）”，得到exe的导入库函数。
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/4.png"></div>
+&emsp;&emsp;点击地址字段排序，最前面几个函数均是从ADVAPI32.dll导入的，和注册表有关。
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/5.png" width="100" height="100"></div>
+&emsp;&emsp;RegCreateKeyExw函数功能为创建或打开注册表项。默认为创建，当注册表中有此项时，为打开。我们左键选中该函数，右键选择在“每个参考上设置断点”，这样调用该函数位置均会加上断点。
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/6.png"></div>
+&emsp;&emsp;返回反汇编窗口，快捷键F9（fn+F9）运行程序到断点位置。右下角堆栈窗口即有函数调用的参数信息，可以看到注册表位置路径“Software\Microsoft\winmine”。
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/7.png" width="100" height="100"></div>
+&emsp;&emsp;使用Win+R打开电脑运行，输入regedit打开注册表。
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/8.png" width="150" height="150"></div>
+&emsp;&emsp;在HKEY_CURRENT_USER下寻找路径software\Microsoft\winmine，找到英雄榜相关信息如下：
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/9.png"></div>
+&emsp;&emsp;可以看到Name、Time字段，Name都是匿名，Time都是999，与之前看到的英雄榜数据相同，接下来修改相应字段即可。修改后打开扫雷，查看英雄榜，可见信息已经被修改。
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/10.png" width="150" height="150"></div>]]></content>
       <categories>
-        <category>学习心得</category>
+        <category>学习笔记</category>
       </categories>
       <tags>
-        <tag>python</tag>
+        <tag>软件逆向</tag>
       </tags>
   </entry>
   <entry>
-    <title>平安夜</title>
-    <url>/2020/12/24/%E5%B9%B3%E5%AE%89%E5%A4%9C/</url>
+    <title>软件逆向之扫雷(二)：破解雷区</title>
+    <url>/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/</url>
+    <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
+<h1 id="问题导入"><a href="#问题导入" class="headerlink" title="问题导入"></a>问题导入</h1><p>&emsp;&emsp;上一节中我们通过修改注册表修改了扫雷英雄榜，自行改动了榜上的昵称和时间。然而这只是表面工作，没有解决扫雷游戏的本质：找出所有雷区。这一节我们分析雷区的存储方式和位置，人工破解雷区。</p>
+<h1 id="雷区分析"><a href="#雷区分析" class="headerlink" title="雷区分析"></a>雷区分析</h1><p>&emsp;&emsp;扫雷的界面是一个n*m的矩形雷区，每个小方块代表一个位置，和矩阵十分类似。因此我们猜想是通过二维矩阵来存储数据，将矩阵中特定位置标记为雷区，而每次点击非雷区时会出现数字，即计算点击位置周边八个块的地雷数目，然后显示在块上。<br>&emsp;&emsp;将矩阵转化成扫雷的界面则需要调用几个API函数，比较常用的就是BitBlt函数。BitBlt将某一内存块的数据传送到另一内存块，前一内存块被称为”源”，后一内存块被称为”目标”。使用该函数我们可以将矩阵进行变换，从而显示出来。</p>
+<h1 id="逆向分析"><a href="#逆向分析" class="headerlink" title="逆向分析"></a>逆向分析</h1><p>&emsp;&emsp;使用OllyDBG打开扫雷程序winmine.exe，查看调用的API函数。</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/1.png" width="250" height="250"></div><br>&emsp;&emsp;可以看到从GDI32.dll导入的函数很多与作图有关，如SetLayout、CreatePen等。我们选中BitBlt函数，在每个参考上设置断点，然后运行至断点处。<br>&emsp;&emsp;第一个断点处，整个扫雷界面都未加载完成，而且我们也没有进行点击，故不是所需代码块，取消该出断点，继续运行。<br>&emsp;&emsp;图像界面显示出来，程序停止了运行，表示程序还未运行到第二个断点，可能在等待用户点击鼠标。我们选择雷区任意一个位置点击，程序运行到第二个断点处停止。</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/2.png"></div><br>&emsp;&emsp;BitBlt所需参数均在图中标识出来，现在我们需要分析这些参数，找到二维矩阵的内存位置。<br>&emsp;&emsp;首先我们要知道矩阵位置的计算，对于一维矩阵，a[n]，a[i]的内存位置=基址(a[0])+i*sizeof(单个数据内存大小)。对于二维矩阵a[m][n]，a[i][j]的内存位置=基址+i*n*sizeof(单个数据内存大小)+j*sizeof(单个数据内存大小)。</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/3.png" width="150" height="150"></div><br>&emsp;&emsp;函数中刚好有两条类似的寻址语句。[edx+eax+01005340h]和[edx*4+105A20]。第一条是mov操作，并且更符合二维数组寻址，因此我们猜测01005340h是数组基址。</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/4.png" width="200" height="200"></div><br>&emsp;&emsp;在左下角数据窗口使用ctrl+G，输入01005340h，跳转到该位置。查看数据窗口内容。</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/5.png" width="200" height="200"></div><br>&emsp;&emsp;数据窗口一开始全是10，有33个。由于我们使用的是高级模式，扫雷界面是16*32，初步猜测10代表边界。然后是大量0F和少量8F。前七个数据是六个0F和一个8F，那我们点击扫雷第一排前七个格子。前七个均没有雷，第八个是雷。</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/6.png" width="200" height="200"></div><br>&emsp;&emsp;查看数据区内容是否发生变化：</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/7.png" width="150" height="150"></div><br>&emsp;&emsp;前五个格子为空，数据由0F变为40；第六个格子是数字1，数据由0F变为41。同时数字2、3对应数据也分别变为42、43。得出结论：未点开非雷区数据为0F，点开的非雷区数字x的数据为4x。<br>&emsp;&emsp;第七个格子是我们点中的雷，数据由8F变为CC；而第八个格子我们未点中的雷由8F变为8A。得出结论：原数据8F即表示该位置是雷。<br>&emsp;&emsp;除此之外，扫雷还有两个符号，旗子和问号，现在我们再次尝试，分别在雷区和非雷区标上旗子和问号，查看数据。</p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/8.png" width="150" height="150"></div></p>
+<p><div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/9.png" width="150" height="150"></div><br>&emsp;&emsp;标上旗子，雷区数据由8F变成8E，非雷区数据由0F变成0E；标上问号，雷区数据由8F变成8D，非雷区数据由0F变成0D。由此可得雷区最高位为1，不论是8（1000）还是C（1010），最高位都是1；非雷区最高位为0。<br>&emsp;&emsp;由以上情况作出总结：<br>雷区（最高位为1）：<br>&emsp;&emsp;1.未点开为8F<br>&emsp;&emsp;2.点开为CC，其他为8A<br>&emsp;&emsp;3.标上旗子为8E<br>&emsp;&emsp;4.标上问号为8D<br>非雷区（最高位为0）：<br>&emsp;&emsp;1.未点开为0F<br>&emsp;&emsp;2.点开为4x（x代表格子显示数字）<br>&emsp;&emsp;3.标上旗子为0E<br>&emsp;&emsp;4.标上问号为0D<br>当然我们也可以人为修改数据达到各种效果，如初始化是雷区却不爆雷等。</p>]]></content>
+      <categories>
+        <category>学习笔记</category>
+      </categories>
+      <tags>
+        <tag>软件逆向</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>20岁</title>
+    <url>/2021/05/24/20%E5%B2%81/</url>
     <content><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="密码错误，请重试." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
-  <script id="hbeData" type="hbeData" data-hmacdigest="95ec9c315cd58359a4567fd3da94c797628e00f4eb7194f290ec2d44ab3a0768">5fe6c8a68ad5071aecbb46d073c337450b5cb98f9fa11c8b1e6729a1c45104fa91f9c33cdc3b859fa5fc2ebe46efd4a885c429b52d4a939a835a042cedb1eb76557bb252e1277ff8535b5719d6a4a87956249e77693fe57ff4e7e306ef335317859d7d23e7ce02ad9c53820d4371755ecb5ab51e65bf076470c056712fd5cd1049a7eb14cabf34fa023e28c4a398b07b25118b550c0bc78c42c72443b30b0fc7df21a3138c55422ee7b6b1c05547b6095d17490c0cc79dcd290927de472a5422212b6cc51ded5df9e3f17c3e0c1ff2fb9e9dc222e8e9c4cbc4cda9942a60e3b28b764cf9735430d208b9a29a7a9e0f2a4e486423606f3ea9c2935812edc6d3d5eb40025ef7f65af525029e31a6ad5b38f0d9ad1df45361b48218a117424718aac6f03204ca95b7b7e127578d970ffdda15ea4b6883eb8a093e551b94a8d9735ea73ea3e2be03dc449e3e7cf3033c8ee33c43df4a2f004eecc492b2bcbef1252994551e142b970c48c8381ec5f78ea6a61219cefad4355d1a7f9a77028a081ede1522e74080ccafe5cf61741e203bb7dd51977266f067d6c1f5e36897ba344ab846ebbe6fe31bd6f80078089c86329f747ea1eb7d14fb14fad6f27b9f66e55d0b0a30c5f06575d2dd2300a7273da8ad984073b9c1c623c7ae5ddeb125d1795caf09cef8055fac9fa34baf293e1a1575923b4aca60fbe668d72c919639bc8745d19a6f482c9fe57ac89f2686cfcaa72ce991c779af80f21ece56f341ed43dcb402bec8346572096e5c9e76ac46bacd20af99c787a98ad7b13b2fd7180d4ff733ee3a9f6b8f67161ba554f6f5260c4b83b02b3782c6722024b7aa3587996f0237c3d35fc929181953d35c3d1de05dc6595571f90146696a961fd46e73249b4f2aecee6344fc95224e6f73e48b3176e901580a9f78093e1e36141eaa94fa74212da4ac0c7d19ae4bd5bc9a06aa6841a01864fc65c1d893f6b0f258324c3282bb0ad5d390c9463447142a96888d049b1505c10f155b879416356393e2500171ac8c1ed62fad4c75d277e5d7f799d54974c2a8d7b1221ca5c7121ca0200880a8c417532b3b0b644a0c0da81222fade85ece8ed702ee1aa2768eea5cf3735a2de67d25890019ea676fc64ac3f28ad03ec0e8710de1f081b339497a9bcd0247561dd453f267486fc960d237a1acaff6845aace0b32046378b6f4a3f1146ef968f13386d6ca85118e73910570a0209aca4e60e82509337f06bfe03bb9d038a6026c8954b936b68b076b78d8ebb575aaffc81605879d42847b3d39822f6f071ae90fd7f16f1f1238cdce2df84700ecd4d6f4194d045c2353961f293141b501637a4513edec46b30cfa4823127702091285b603e2216fa07d5e6a8d9f10660cc76d8a47816d55cd5995c86036f29a4c1a901556e76c5171758d05092c8a7c002e6117c55ab074c7aa2b1df0e60f6b82eacc2a498b93c58ddfa4914c81c0a2a3b246db56ec35abb644630daa603a618e4eac1466a3cde268603e0504b6620b3ba8449fe324617ffcd8128f840538693480ac92abfe821464348405068bee1f22e7bd557972edb2ba29ec3f26697742f2f99796c292e1a9c86046094c8ab7932d1b7650148be8fc27e9b99d764e3fd27a5689b9fda42867cf0fbf297c49286d96c9e977027312</script>
+  <script id="hbeData" type="hbeData" data-hmacdigest="9b144c1ea771e345a65808c97621292ae997142c0d7e14686a378d9a3f296415">5fe6c8a68ad5071aecbb46d073c337456f4fc402b2025989eda52134abef6efcd3a8ae8a604dcb3ed02d13069b6a20d6dd9d26fdc66a517be1f244ab34058acfafd6b82274b25153b842a74f1ba4bb69a042de92b0d78211193bc4f39dceae90aef2008c6c7b43bd79694f45f70456eb8da879d64a6b8e3d93d6147cfa44ee20e7ea29bdffe5b6d4f9948f99138d0e881c92794a374423bc521f3dbe15d4e6e7b78148329e44ec10045d369868f04f77f4108131e1585a9ecf7032d48c39f43f5f956ddea7f5aed3fb3038418c9cf506ee1a45757f6455ece9273b2d8a35ba32a1b6eb6fe995696d201b931e5144b3ecc748dddf5d8b355c9f6bdc9aeffb644cab8ee40d70fd2d26857f609bbb5936b6c726d3d69464884dc14b62508292bb74ad890e0e4d3784f05ac324fcdc4d0984bdcc1a39fc272ebb20801c734558d5ab8f53c6a9cbb5cff5efea54754f4cb2e82eed9c074802fdd2cf1b6950339901642f5eadfe91815af221109c2dffead1cf2b7d1a4ecdd13e3bb7305286ee0413486f2620f873df906d6f3ee0f65a8af9f68293a4e01a36a84492fc060f11424ed620c05abf627afff83a03fd1e91920d91367ea3a5f412325d7ba817cfccb7d3e820ac650de5ef96b524c96d287b544008e787a3a595428e94a151497249fec940126beb1a15cb2909f5da445edf82b1e6547e49d5385fe5674d4e7220ce190aa8be4bd88fae701c8251d787055ca242445be43808046e62e0a2eb10ea5ee1e81b296abd0600bc9da716ad71a9f3b4657776ee41e28b15840cdaf99e7577691db561b25c3beb3303b2d28ad24a8a3b7877ef2caf88b84db7a671ebd22d8de9abd6b7904b3de0549437ca87fefa81a337f064490d82cc130d49f685ad6bc22d135e2113d7c90475b222f2c28dee627dea3bf8fef55015253b1f43bdb80dc620cb785e6a3a9cec3a055a805086889ecdcbf1d91d0a58bb689e1a9abef615335662fd5f98da248d1955f094d48cb2d3ae0c58c33abe62c8162fbbe1a00b6fc41e9d2199414a828fb4112ec8f364a94af83b88997a74de2ba66aacdba0d90145e8441947f16dd353b210198ded830d650c2d4aea3e27d7aea0d64b45d39fd4af6c141f8eec908ac9ed728b65261699251c18b5e16dbd1a66ebe1355923f352f3eef0f2aeeda254e589e1d918963b5d9f77d506ba7fe3b780b2702302052d410670b40c4b083bba9c1b529a67d49ec31ad6cfcf5c0af826456e6b88010b1f814a0e62d411a5b25c6eb4c3043cd10ef164b5072c30dd664bc8dc86baf34e36dfbe8af184b21f038056f16550a56e350ac3ca1ba8751f4ae027281639b704fd276977818f7a4224a6ea55fe2050ad4860015c0159214fa493dd59ae3ff29945724191c5a1ae40b93cd3baf52829c488179bb7b1c37d375c6d6899ff7b89f09e6544ba9f6864f3f989d5c98df338b28a6a680a3066b81f8b84c06effeddaf4bccfc0ced40289d79bed071e0b851822210cb52d33d28bf133111d8cf4ffdd4febb2fc9e9966a9810a608ecfc9c09a5752824ebbc20bbf7afb66a76abcbc67d09621503a08794908da3abfc7fdbab6060c8bf766e01370debc0a0da92a0084f5f56b71035edcbab8149ea81183e0816cd5dc5f3f3582ba83be42ec83e078fbf0f7e70b3e8d7bb14993e3d602044c18a1022e5d00c133e860afa6adcb486b5c4d996b97fb113a99e0f075ba926a9986f3a43041cf5f7178da200cd95264bc5329cb04592e790cffcf1b2d9b990bf668087488da29d4baa53d1bcd4a16e3029a702e83b015608398437633f9b81efede09ec5e2d4be22179eb9eb5ecc187ded484994c92f406258460d0dac8306b5e5a3ac456de298a05ebcdb86dffee2d8e73b7cd5780af0e0cac62289c5ae3b8f316aa8c3cbb37e60f0418c89c2283346bc106579b4d2457ed30a13377e32048629a575de310de3c0814b12643a6963651fc868bd3b81d66678b7935fd23bdc79b4ac8e336d322b831c38366bae184ab00e8459e01ab5db092ba16c8e4919d38ecf4007c04d931f3bb1aff115495b7bdb92271806ec5f5d09db06a399c1d666ff3a7a3f28a6d1df9576318525103a91266c6f42ea4848240366c149d0efc267ebfddbc18c852ecc9e8043651eab914e6f5f81b053e91a9d868d936e6f3092a652e3c756a54dc5aa99242301df81cd331b29efe2978e5b73e1218d88202d35e004652503569ee64cf4f43453f7f8d51d015ecf836f77d16e070256393bbafa34659fc74c072e9d21ccaa7b237a53accbf2b3b1ec2d90212654f6d8c1cdfb8f51ef0d0ff00b9aabf64877f2b742967c4358716a250f5a5c5893b75ff169793af9a8f6e2c5f196e47b87c404979237d002a6be491d6d606cfb0fc153361e3dff308ef1b81dcb3271af94a4b8c973fe11d22c735d6da6f4ee1324bb0029fccb555dc6b90dc7af549077559ad6c82583c476350da8656209d471ad7b56855489c4fc4d1d09bbc4c9593d539e0dfd515dba1ace4a5019a340b45ea8107e1c7e230cd22f55538e437d3497d3fe36a8b1e84bddb0ac025711137edf69324a8dc3e7e1a3502123762fa68c1617a61653c14b55c1339432d51d830a47a7f248090f78861537f52c9dbf8683a0413622d40678516ee99bab67003c6fc634ea52b6d8d574c84694dd09982f3444398719d2e92b3c45c439ebfb36d196c99dc399d6f8e2963b303e9f0a9f210beea8eb2aa001b139bb54246de54b908e84997aeafc8e55ad48530ddaafe03d43f9ae9ae85440096becfac752737278f6cad3696890c91bf6900dcb1d2d045d993fe0ddb0f7ae6203c570021645adc48c5ae1c911ad6643eb41e96bbe121d521a2e3a05a488d390bddb640f46bb72dbac0eb2b4b2b3ab3c9daae932e1d800bd4cb01543a25be94d2dd035c0bf75b3aeda3adc359920c3ff7dfa426f09acbc45d17736114fa0055e94db5ea2c17ef4faf5404af71078aa1e334e30b56392561a3c8970a780c01c27959efb6d5fd2df7ca91d7440dd2be8612bb2f5d946778643240a45b8bad8aa15f85cdd99631f756900ece11093c387ac1f102efe2d8cd09d4805496f2512bf609a0255483256077c99013ba21902dda203caf9f1e942ff64e3b18022701e85d32b4f781029b0f8a0fa6d9d77b4a8e55a4562ad4e19ade66f1fbb18f33c65ff5dcd7b2b4dbcba7f3b2fca7d97041fe2ec2eff2699c13a02d670df5ec8446f2bbef01558e98a78080d80ef753be45102cb6057e5b94621c05860218184d79672d3cc0a0dc1f7bf8703e906db28e977f0bde652461167c6bcdfaa7beb654fa513a8548f0d2bce15d511faabb2fa54e5e734a08936368a36af99f43b9747d427248a23be91cfae51011852081e57eb0f7b97db7a46b748ae7888a25ba8f50f50e33bc4fcfde63e7d9d2076b41b72134bc690f12085d92cbf2b1441db336dd129e2312cc98a3ab4d731ac84ab177a958bb392e2e82ba01c9ed4b15c7e90fe375bce24dc59d94a32dcdfe434bb5dd03cb9e65bbc204db12c6107327c99a5d2f846607364b8fb69553dabaa434357fb97cee408c68c3e065f6e0883ab6c57575c0d6ae4d6eb349c209186ed46b4fbdc11692dbc2187b073339dbb98c7a5405b22c0864f99851655215a59e0d0eaa9d14912a654b5d8831d607e5baa02c0ba264d525ea09fde2546bf7e21955217f9dbc33a73b42ed52797daa73f545767aede52df67fe1b8bba71fdad4f80b4d83a5fbc00d917bca72a19a6e7566d21987ecbb0eccfdcb316ff3a1d0e2b7b3c276f5a043b6208797cc75a1030c130cf8a7d3d1b66524ac3674f18a7bf32a1383db7592cb2fe3ff506bd307568516016ab1501ea6c1bc80629e761d9a1dfff1a9a8829dd4a08c46f292332e246e7c89e6c87865ab5ebc651fcf91ff39b5734d63dbc4c999880389c66115111aa346b56c92efbcf556caccc8ed78843af2ce7c8ad31151794ef20d5f01d2a4a9662400a207d76c139fba3e0c0d50bac2d888791e739274ca6fe85ccb0d4131df7e8f4555893aaf17a528500b81e8c4a7e857e24c2c08f2260a61e7c172da732b498bef0ead4b31bd785aad5ccb938e2f085ae06bc40381c22f775904ad9901dc0954e606c5fb035aedfea8987abe8f78f8dc9874b443c37db39672d4ecfa2d2d4aef47fe0fdb5c6b2dff039b4e69d88ef91a046325bb2480ad37f3987a54437ce4740c960a92bcd3e2b9bebe446536270c4b5b8c9f589a3efe666a1c3c4112c4540adea364022455441f08e9f51e3e117310c16a07d1b70aa75d5c3c6280079feb5207e5b7c78c0dbcd5bd1ae62d8ccbc0606339dfa7d1642dd7c85cffb589ba5e9ea6a5901466a9747b67ff3d89eb6436532031d09e0aa074b87bdb2ebaea86cd404930d1aa88efd5fdbb72ad0dbd1585d260f1a4355a067fedd59b8e7426f9d26028a25d9a7f1df6673f4ef986164375ebd71f31a7d838397c26601fe57fd9e9a16b19d649cfd562dcff6c3651c664f0c6650d519a10a03cfd2b4bfc6b2f78d8841666cba86f717ab26446e09d86655eadb9ea7747189393139f3b0f4cb15de23ae3f0d546ff5aeea1bdf2287bde560e7498aaa067ec81bd5dfeb66e400349398b5e69eb527264f02bac633b3a2b9f2404bc3c2ca8fab13f505b44b436ee30a4d664028885061def40dfdd329b75b8a252b5c6f27c5d0beff9aac413b0f446f08e0c572cb12bd2d34321d1233866317565ff08c85445a238a0dcd4a5c13f18ab5fa33f4930ef781cfcfd4a4fb4649e75c552aa2b020ccd16d515485fd75863c45f9f69795235131b6cc8e390cbf29e97cc9e002b0b9f3d13f0587d9a32e03a0c8b03985efe55c6bcc84b7d428411e8dce55dbbe934fdf375b9c5e855bdc54c34db9c0390b6f43ec921331fe2d1583b1f30e956443e03bbb482afcabba31ece83c52d025476a7470354e065f71264e6f0ce197ed235e99821ab17cb4d626f4e4092c63506221811d8539eab6e997922878f69e1803827b085b16cd56f9ba5b7c2ca0d062d94d5506d7c90263d0d97962a09cd87e4359985c25efdb7f04215da9b2a3f4f02b74c8c40f047715c58dc56a5f70b9afd9c25203789c35edfed025d1a9417dfa0415e02c5da150d88086d09ba9fc2367d7144247e05ff74934b6613fbf010dc4711d4d9884a2cf3d6208d1bcdbc7766ef73aca98a0e6f846e0139cd0dbc796efac21ad0e03131641265e791adf5ba9a57230ebdb32896d6d050b5d0e22cb15ff23844931b656ec177d333343375aa7808703ec769b01e17593604ea39a4fb161ceed0a1837a822f4ac3b67ce1b84904bca8c1f049a81794186b36b8b97290aa94b74b46a3b7f9f02f1dbb155e7b23833c10c531d097342e3e34d8816147bdd8ae658de9df8a8b825931685c8744da5287cb0a9ea23d985613d5153d15b6c9bf1641fb0f1e766abaff91ec6ce029e62e44dd9a0f10a60eed6464084e5ca933d7d4e3c0b264413da8afb1350e8eff5bcdabf362f34aa206ac5928f94a20a7429839de</script>
   <div class="hbe hbe-content">
     <div class="hbe hbe-input hbe-input-default">
       <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
@@ -432,10 +341,144 @@
 </div>
 <script src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">]]></content>
       <categories>
-        <category>生活吐槽</category>
+        <category>人生十年</category>
       </categories>
       <tags>
-        <tag>生活</tag>
+        <tag>生日</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>DVWA(一)：Brute Force（暴力破解）</title>
+    <url>/2021/06/21/DVWA-%E4%B8%80-%EF%BC%9ABrute-Force%EF%BC%88%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3%EF%BC%89/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>学习笔记</category>
+      </categories>
+      <tags>
+        <tag>DVWA</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>DVWA(七)：SQL-Injection（sql注入）</title>
+    <url>/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/</url>
+    <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
+<h1 id="SQL注入定义"><a href="#SQL注入定义" class="headerlink" title="SQL注入定义"></a>SQL注入定义</h1><p>&emsp;&emsp;SQL是操作数据库数据的结构化查询语言，网页的应用数据和后台数据库中的数据进行交互时会采用SQL。而SQL注入是将Web页面的原URL、表单域或数据包输入的参数，修改拼接成SQL语句，传递给Web服务器，进而传给数据库服务器以执行数据库命令。如Web应用程序的开发人员对用户所输入的数据或cookie等内容不进行过滤或验证(即存在注入点)就直接传输给数据库，就可能导致拼接的SQL被执行，获取对数据库的信息以及提权，发生SQL注入攻击。（来自百度百科）</p>
+<h1 id="SQL注入流程"><a href="#SQL注入流程" class="headerlink" title="SQL注入流程"></a>SQL注入流程</h1><p>&emsp;&emsp;当我们在web页面中遇到用户输入框，或者url上显示了输入数据情况，怀疑存在sql注入，可以执行以下步骤：</p>
+<ol>
+<li>寻找注入点，确认是字符串注入还是数字注入</li>
+<li>查询该表中字段数</li>
+<li>查询各字段含义</li>
+<li>找到当前数据库名称</li>
+<li>找出数据库中的表名</li>
+<li>找出表中字段名和字段值</li>
+<li>写入webshell</li>
+</ol>
+<h1 id="安全级别Low"><a href="#安全级别Low" class="headerlink" title="安全级别Low"></a>安全级别Low</h1><h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( isset( $_REQUEST[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line">	<span class="comment">// Get input 获取输入的id</span></span><br><span class="line">	$id = $_REQUEST[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Check database 数据库查询语句</span></span><br><span class="line">	$query  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;$id&#x27;;&quot;</span>;</span><br><span class="line">	$result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $query ) or die( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Get results 获取查询结果</span></span><br><span class="line">	<span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;</span><br><span class="line">		<span class="comment">// Get values</span></span><br><span class="line">		$first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">		$last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Feedback for end user 显示结果</span></span><br><span class="line">		$html .= <span class="string">&quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;关键数据库查询语句如下，id传入是字符串型：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">SELECT first_name, last_name FROM users WHERE user_id = <span class="string">&#x27;$id&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;DVWA中注入位置如下，是数据库id查询框：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/1.jpg" width="150" height="150"></div>
+
+<p>&emsp;&emsp;其中$id就是用户的输入内容，可以看出，该代码并未对用户输入进行处理，而是直接拼接成sql语句执行，因此很容易注入。</p>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>&emsp;&emsp;输入框输入1，显示信息是该id的First name和Surname：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/2.png" width="150" height="150"></div>
+
+<p>&emsp;&emsp;输入框输入1’，测试是否有引号闭合：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/3.png"></div>
+
+<p>&emsp;&emsp;提示引号错误，因为多了一个单引号，查询语句变为：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">SELECT first_name, last_name FROM users WHERE user_id = <span class="string">&#x27;1&#x27;</span><span class="string">&#x27;;</span></span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;说明输入是字符串型输入，要闭合单引号。这和我们看到的代码吻合，sql查询语句中使用‘id’，输入内容被当做字符串。<br>&emsp;&emsp;闭合单引号，输入框输入1’ and 1=1#，结果如下：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/4.png" width="150" height="150"></div>
+
+<p>&emsp;&emsp;该语句中1=1为永真条件，sql中#为注释符，因此原语句单引号被注释掉，不会发生错误，查询语句变为：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">SELECT first_name, last_name FROM users WHERE user_id = &#x27;1&#x27; and 1=1 #&#x27;;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;在mysql语句中使用order by进行查询的排序，order by后可以接字段名，也可以接字段号，如按照第一个字段排序就是order by 1。因此可以利用该特性找出表中的字段数，当order by 报错时，说明超出表中的字段数。输入1’ order by 2#，结果如下：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/5.png" width="150" height="150"></div>
+
+<p>&emsp;&emsp;当我们输入1’ order by 3# 时显示：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/6.png"></div>
+
+<p>&emsp;&emsp;说明该表中只有两个字段，即显示的First name和Surname。<br>&emsp;&emsp;在mysql中可以使用union联合查询多条信息，而select有一个特性，select直接加数字串时，可以不写后面的表名，那么它输出的内容就是我们select后的数字。我们利用该特性来注入，输入1’ union select 1,2#，结果如下：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/7.png" width="200" height="200"></div>
+
+<p>&emsp;&emsp;如果我们替换select后面的1和2为sql语句，那么就会先执行语句再显示。mysql中可以使用database()显示当前数据库名，使用version()显示版本信息。那么我们输入：<br>&emsp;&emsp;1’ union select version(),database()#<br>&emsp;&emsp;结果如下： </p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/8.png" width="200" height="200"></div>
+
+<p>&emsp;&emsp;以上都是一些比较基础和简单的信息，接下来我们需要爆出库中的表、表中的各项数据。首先需要知道mysql中有一个信息数据库 information_schema ，记录了该数据库的各种信息。<br>&emsp;&emsp;information_schema.schemata表，表中schema_name记录了数据库名称；information_schema.tables表，表中table_schema记录数据表所属的数据库名，table_name记录表名称；information_schema.columns表，表中table_name记录该列的表名，column_name 记录列名。利用这三个表可以获得数据库中的各种信息。<br>&emsp;&emsp;输入：<br>&emsp;&emsp;1’ union select 1,group_concat(schema_name) from information_schema.schemata#<br>&emsp;&emsp;获取数据库的名称：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/9.png" width="300" height="200"></div>
+
+<p>&emsp;&emsp;现在知道有一个名为dvwa的数据库，输入：<br>&emsp;&emsp;1’ union select 1,group_concat(table_name) from information_schema.tables where table_schema=’dvwa’#<br>&emsp;&emsp;查找属于dvwa库的表名称：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/10.png" width="300" height="200"></div>
+
+<p>&emsp;&emsp;查询到dvwa数据库中有guestbook和users表，因此输入：<br>&emsp;&emsp;1’ union select 1,group_concat(column_name) from information_schema.columns where table_name=’users’#<br>&emsp;&emsp;查询users表中的字段名称：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/11.png" width="300" height="200"></div>
+
+<p>&emsp;&emsp;现在已经获取到关键字段名称，如first_name、last_name，就是正常显示的字段。其中有user、password两个字段，获取这两个字段信息，现在已经知道表名和字段名，直接查询即可，输入：<br>&emsp;&emsp;1’ union select user,password from users#<br>&emsp;&emsp;结果如下：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Low/12.png" width="200" height="400"></div>
+
+<h1 id="安全级别Medium"><a href="#安全级别Medium" class="headerlink" title="安全级别Medium"></a>安全级别Medium</h1><h2 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( isset( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_POST[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line">    <span class="comment">//mysqli_real_escape_string将x00，\n，\r，\，&#x27;，&quot;，x1a这些特殊字符转义，防SQL注入</span></span><br><span class="line">    $id = mysqli_real_escape_string($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $id);</span><br><span class="line"></span><br><span class="line">    $query  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = $id;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $query) or die( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    <span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;</span><br><span class="line">        <span class="comment">// Display values</span></span><br><span class="line">        $first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">        $last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        echo <span class="string">&quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// This is used later on in the index.php page</span></span><br><span class="line"><span class="comment">// Setting it here so we can close the database connection in here like in the rest of the source scripts</span></span><br><span class="line">$query  = <span class="string">&quot;SELECT COUNT(*) FROM users;&quot;</span>;</span><br><span class="line">$result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $query ) or die( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line">$number_of_rows = mysqli_fetch_row( $result )[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]);</span><br><span class="line">?&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;代码和初级有所不同，在获取id传入数据后，调用mysqli_real_escape_string函数将x00，\n，\r，\，’，”，x1a这些特殊字符转义，防SQL注入。同时查询语句中id直接作为数字传入，没有单引号。<br>&emsp;&emsp;DVWA中中级显示如下，这次连输入框都没有了，通过下拉列表来实现id传入。</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Middle/1.png" width="100" height="100"></div>
+
+<h2 id="漏洞复现-1"><a href="#漏洞复现-1" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>&emsp;&emsp;在下拉列表中选择1，并点击Submit提交，获取到如下信息：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Middle/2.png" width="150" height="150"></div>
+
+<p>&emsp;&emsp;此时我们的url也没有发生变化，因此找不到注入点。我们通过burpsuit抓包看看：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Middle/3.png" width="300" height="300"></div>
+
+<p>&emsp;&emsp;发现Submit是通过POST方法提交的，post传入的数据为id=1&amp;Submit=Submit。因此我们可以更改post传入的id值来进行注入，使用hackbar插件，直接填充post的数据：<br>&emsp;&emsp;Submit=Submit&amp;id=1 union select 1,2</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Middle/4.png" width="200" height="200"></div>
+<br>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Middle/5.png" width="200" height="200"></div>
+
+<p>&emsp;&emsp;剩余步骤和级别low相同，一步步找出数据库名、表名、列名，最后获得用户和密码：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">1 union select 1,group_concat(schema_name) from information_schema.schemata#</span><br><span class="line">1 union select 1,group_concat(table_name) from information_schema.tables where table_schema=&#x27;dvwa&#x27;#</span><br><span class="line">1 union select 1,group_concat(column_name) from information_schema.columns where table_name=&#x27;users&#x27;#</span><br><span class="line">1 union select user,password from users#</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;最后结果如下：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Middle/6.png" width="200" height="200"></div>
+<br>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Middle/7.png" width="300" height="400"></div>
+
+<h1 id="安全级别High"><a href="#安全级别High" class="headerlink" title="安全级别High"></a>安全级别High</h1><h2 id="源码分析-2"><a href="#源码分析-2" class="headerlink" title="源码分析"></a>源码分析</h2><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( isset( $_SESSION [ <span class="string">&#x27;id&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_SESSION[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check database</span></span><br><span class="line">    $query  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;$id&#x27; LIMIT 1;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $query ) or die( <span class="string">&#x27;&lt;pre&gt;Something went wrong.&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    <span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;</span><br><span class="line">        <span class="comment">// Get values</span></span><br><span class="line">        $first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">        $last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        echo <span class="string">&quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : $___mysqli_res);        </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;DVWA中高级显示如下，点击”here to change your ID”，页面自动跳转，防御了自动化的SQL注入。分析源码可可知，对参数没有做防御，和级别low类似。</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/High/1.png" width="100" height="100"></div>
+
+<p>&emsp;&emsp;点击链接后：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/High/2.png" width="100" height="100"></div>
+
+<h2 id="漏洞复现-2"><a href="#漏洞复现-2" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>&emsp;&emsp;在输入框中输入1’ union select 1,2#，可以直接执行，结果如下：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/High/3.png" width="200" height="200"></div>
+
+<p>&emsp;&emsp;因此使用和low一样的步骤，可以依次得到数据库、表、列等数据，这里不再演示。</p>
+<h1 id="安全级别Impossible"><a href="#安全级别Impossible" class="headerlink" title="安全级别Impossible"></a>安全级别Impossible</h1><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( isset( $_GET[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Check Anti-CSRF token</span></span><br><span class="line">    checkToken( $_REQUEST[ <span class="string">&#x27;user_token&#x27;</span> ], $_SESSION[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_GET[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Was a number entered?</span></span><br><span class="line">    <span class="keyword">if</span>(is_numeric( $id )) &#123;</span><br><span class="line">        <span class="comment">// Check the database</span></span><br><span class="line">        $data = $db-&gt;prepare( <span class="string">&#x27;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#x27;</span> );</span><br><span class="line">        $data-&gt;bindParam( <span class="string">&#x27;:id&#x27;</span>, $id, <span class="attr">PDO</span>::PARAM_INT );</span><br><span class="line">        $data-&gt;execute();</span><br><span class="line">        $row = $data-&gt;fetch();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Make sure only 1 result is returned</span></span><br><span class="line">        <span class="keyword">if</span>( $data-&gt;rowCount() == <span class="number">1</span> ) &#123;</span><br><span class="line">            <span class="comment">// Get values</span></span><br><span class="line">            $first = $row[ <span class="string">&#x27;first_name&#x27;</span> ];</span><br><span class="line">            $last  = $row[ <span class="string">&#x27;last_name&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Feedback for end user</span></span><br><span class="line">            echo <span class="string">&quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Generate Anti-CSRF token</span></span><br><span class="line">generateSessionToken();</span><br><span class="line"></span><br><span class="line">?&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;impossible中使用了两处安全防护措施：</p>
+<ol>
+<li>Anti-CSRF token</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Check Anti-CSRF token</span></span><br><span class="line">checkToken( $_REQUEST[ <span class="string">&#x27;user_token&#x27;</span> ], $_SESSION[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;使用token验证用户，防止CSRF攻击</p>
+<ol>
+<li>sql预编译</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">$data = $db-&gt;prepare( <span class="string">&#x27;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#x27;</span> );</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;预编译会将传入的id值当做一个整体来处理，在运行时才替换参数，因此就算id中使用了引号或者sql语句，执行时会将其当做一整个字符串，不会有拼接动作，也就不能sql注入。<br>&emsp;&emsp;同时最后使用了$data-&gt;rowCount() == 1，限制回显数据只能为一条，也有效防止信息泄露。</p>]]></content>
+      <categories>
+        <category>学习笔记</category>
+      </categories>
+      <tags>
+        <tag>DVWA</tag>
+        <tag>sql注入</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>DVWA(八)：SQL-Injection（Blind盲注）</title>
+    <url>/2021/06/28/DVWA-%E5%85%AB-%EF%BC%9ASQL-Injection%EF%BC%88Blind%E7%9B%B2%E6%B3%A8%EF%BC%89/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>学习笔记</category>
+      </categories>
+      <tags>
+        <tag>DVWA</tag>
       </tags>
   </entry>
 </search>
