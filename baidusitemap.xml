@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://yiwenzhe.com/2021/07/03/DVWA-%E5%9B%9B-%EF%BC%9AFile-Inclusion%EF%BC%88%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89/</loc>
+    <lastmod>2021-07-03</lastmod>
+  </url>
+  <url>
     <loc>https://yiwenzhe.com/2021/06/28/DVWA-%E5%85%AB-%EF%BC%9ASQL-Injection%EF%BC%88Blind%E7%9B%B2%E6%B3%A8%EF%BC%89/</loc>
     <lastmod>2021-07-03</lastmod>
   </url>
