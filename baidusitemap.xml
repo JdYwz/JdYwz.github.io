@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://yiwenzhe.com/2021/07/03/DVWA-%E5%9B%9B-%EF%BC%9AFile-Inclusion%EF%BC%88%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89/</loc>
-    <lastmod>2021-07-03</lastmod>
-  </url>
-  <url>
-    <loc>https://yiwenzhe.com/2021/06/28/DVWA-%E5%85%AB-%EF%BC%9ASQL-Injection%EF%BC%88Blind%E7%9B%B2%E6%B3%A8%EF%BC%89/</loc>
-    <lastmod>2021-07-03</lastmod>
+    <loc>https://yiwenzhe.com/2021/06/21/DVWA-%E4%B8%80-%EF%BC%9ABrute-Force%EF%BC%88%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3%EF%BC%89/</loc>
+    <lastmod>2021-07-04</lastmod>
   </url>
   <url>
     <loc>https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/</loc>
-    <lastmod>2021-07-03</lastmod>
+    <lastmod>2021-07-04</lastmod>
   </url>
   <url>
-    <loc>https://yiwenzhe.com/2021/06/21/DVWA-%E4%B8%80-%EF%BC%9ABrute-Force%EF%BC%88%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3%EF%BC%89/</loc>
-    <lastmod>2021-06-28</lastmod>
+    <loc>https://yiwenzhe.com/2021/06/28/DVWA-%E5%85%AB-%EF%BC%9ASQL-Injection%EF%BC%88Blind%E7%9B%B2%E6%B3%A8%EF%BC%89/</loc>
+    <lastmod>2021-07-04</lastmod>
+  </url>
+  <url>
+    <loc>https://yiwenzhe.com/2021/07/03/DVWA-%E5%9B%9B-%EF%BC%9AFile-Inclusion%EF%BC%88%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%EF%BC%89/</loc>
+    <lastmod>2021-07-03</lastmod>
   </url>
   <url>
     <loc>https://yiwenzhe.com/2021/05/24/20%E5%B2%81/</loc>
