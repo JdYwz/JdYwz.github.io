@@ -1,0 +1,782 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="YWZ">
+    <title>DVWA(七)：SQL-Injection（sql注入） - YWZ</title>
+    <meta name="author" content="YWZ">
+    
+    
+        <link rel="icon" href="https://yiwenzhe.com/assets/images/favicon.ico">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg"},"articleBody":"\nSQL注入定义&emsp;&emsp;SQL是操作数据库数据的结构化查询语言，网页的应用数据和后台数据库中的数据进行交互时会采用SQL。而SQL注入是将Web页面的原URL、表单域或数据包输入的参数，修改拼接成SQL语句，传递给Web服务器，进而传给数据库服务器以执行数据库命令。如Web应用程序的开发人员对用户所输入的数据或cookie等内容不进行过滤或验证(即存在注入点)就直接传输给数据库，就可能导致拼接的SQL被执行，获取对数据库的信息以及提权，发生SQL注入攻击。（来自百度百科）\nSQL注入流程&emsp;&emsp;当我们在web页面中遇到用户输入框，或者url上显示了输入数据情况，怀疑存在sql注入，可以执行以下步骤：\n\n寻找注入点，确认是字符串注入还是数字注入\n查询该表中字段数\n查询各字段含义\n找到当前数据库名称\n找出数据库中的表名\n找出表中字段名和字段值\n写入webshell\n\n安全级别Low源码分析123456789101112131415161718192021222324&lt;?phpif( isset( $_REQUEST[ &#x27;Submit&#x27; ] ) ) &#123;\t// Get input 获取输入的id\t$id = $_REQUEST[ &#x27;id&#x27; ];\t// Check database 数据库查询语句\t$query  = &quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;$id&#x27;;&quot;;\t$result = mysqli_query($GLOBALS[&quot;___mysqli_ston&quot;],  $query ) or die( &#x27;&lt;pre&gt;&#x27; . ((is_object($GLOBALS[&quot;___mysqli_ston&quot;])) ? mysqli_error($GLOBALS[&quot;___mysqli_ston&quot;]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . &#x27;&lt;/pre&gt;&#x27; );\t// Get results 获取查询结果\twhile( $row = mysqli_fetch_assoc( $result ) ) &#123;\t\t// Get values\t\t$first = $row[&quot;first_name&quot;];\t\t$last  = $row[&quot;last_name&quot;];\t\t// Feedback for end user 显示结果\t\t$html .= &quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;;\t&#125;\tmysqli_close($GLOBALS[&quot;___mysqli_ston&quot;]);&#125;?&gt;\n&emsp;&emsp;关键数据库查询语句如下，id传入是字符串型：\n1SELECT first_name, last_name FROM users WHERE user_id = &#x27;$id&#x27;;\n&emsp;&emsp;DVWA中注入位置如下，是数据库id查询框：\n\n\n&emsp;&emsp;其中$id就是用户的输入内容，可以看出，该代码并未对用户输入进行处理，而是直接拼接成sql语句执行，因此很容易注入。\n漏洞复现&emsp;&emsp;输入框输入1，显示信息是该id的First name和Surname：\n\n\n&emsp;&emsp;输入框输入1’，测试是否有引号闭合：\n\n\n&emsp;&emsp;提示引号错误，因为多了一个单引号，查询语句变为：\n1SELECT first_name, last_name FROM users WHERE user_id = &#x27;1&#x27;&#x27;;\n&emsp;&emsp;说明输入是字符串型输入，要闭合单引号。这和我们看到的代码吻合，sql查询语句中使用‘id’，输入内容被当做字符串。&emsp;&emsp;闭合单引号，输入框输入1’ and 1=1#，结果如下：\n\n\n&emsp;&emsp;该语句中1=1为永真条件，sql中#为注释符，因此原语句单引号被注释掉，不会发生错误，查询语句变为：\n1SELECT first_name, last_name FROM users WHERE user_id = &#x27;1&#x27; and 1=1 #&#x27;;\n&emsp;&emsp;在mysql语句中使用order by进行查询的排序，order by后可以接字段名，也可以接字段号，如按照第一个字段排序就是order by 1。因此可以利用该特性找出表中的字段数，当order by 报错时，说明超出表中的字段数。输入1’ order by 2#，结果如下：\n\n\n&emsp;&emsp;当我们输入1’ order by 3# 时显示：\n\n\n&emsp;&emsp;说明该表中只有两个字段，即显示的First name和Surname。&emsp;&emsp;在mysql中可以使用union联合查询多条信息，而select有一个特性，select直接加数字串时，可以不写后面的表名，那么它输出的内容就是我们select后的数字。我们利用该特性来注入，输入1’ union select 1,2#，结果如下：\n\n\n&emsp;&emsp;如果我们替换select后面的1和2为sql语句，那么就会先执行语句再显示。mysql中可以使用database()显示当前数据库名，使用version()显示版本信息。那么我们输入：&emsp;&emsp;1’ union select version(),database()#&emsp;&emsp;结果如下： \n\n\n&emsp;&emsp;以上都是一些比较基础和简单的信息，接下来我们需要爆出库中的表、表中的各项数据。首先需要知道mysql中有一个信息数据库 information_schema ，记录了该数据库的各种信息。&emsp;&emsp;information_schema.schemata表，表中schema_name记录了数据库名称；information_schema.tables表，表中table_schema记录数据表所属的数据库名，table_name记录表名称；information_schema.columns表，表中table_name记录该列的表名，column_name 记录列名。利用这三个表可以获得数据库中的各种信息。&emsp;&emsp;输入：&emsp;&emsp;1’ union select 1,group_concat(schema_name) from information_schema.schemata#&emsp;&emsp;获取数据库的名称：\n\n\n&emsp;&emsp;现在知道有一个名为dvwa的数据库，输入：&emsp;&emsp;1’ union select 1,group_concat(table_name) from information_schema.tables where table_schema=’dvwa’#&emsp;&emsp;查找属于dvwa库的表名称：\n\n\n&emsp;&emsp;查询到dvwa数据库中有guestbook和users表，因此输入：&emsp;&emsp;1’ union select 1,group_concat(column_name) from information_schema.columns where table_name=’users’#&emsp;&emsp;查询users表中的字段名称：\n\n\n&emsp;&emsp;现在已经获取到关键字段名称，如first_name、last_name，就是正常显示的字段。其中有user、password两个字段，获取这两个字段信息，现在已经知道表名和字段名，直接查询即可，输入：&emsp;&emsp;1’ union select user,password from users#&emsp;&emsp;结果如下：\n\n\n安全级别Medium源码分析1234567891011121314151617181920212223242526272829303132&lt;?phpif( isset( $_POST[ &#x27;Submit&#x27; ] ) ) &#123;    // Get input    $id = $_POST[ &#x27;id&#x27; ];    //mysqli_real_escape_string将x00，\\n，\\r，\\，&#x27;，&quot;，x1a这些特殊字符转义，防SQL注入    $id = mysqli_real_escape_string($GLOBALS[&quot;___mysqli_ston&quot;], $id);    $query  = &quot;SELECT first_name, last_name FROM users WHERE user_id = $id;&quot;;    $result = mysqli_query($GLOBALS[&quot;___mysqli_ston&quot;], $query) or die( &#x27;&lt;pre&gt;&#x27; . mysqli_error($GLOBALS[&quot;___mysqli_ston&quot;]) . &#x27;&lt;/pre&gt;&#x27; );    // Get results    while( $row = mysqli_fetch_assoc( $result ) ) &#123;        // Display values        $first = $row[&quot;first_name&quot;];        $last  = $row[&quot;last_name&quot;];        // Feedback for end user        echo &quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;;    &#125;&#125;// This is used later on in the index.php page// Setting it here so we can close the database connection in here like in the rest of the source scripts$query  = &quot;SELECT COUNT(*) FROM users;&quot;;$result = mysqli_query($GLOBALS[&quot;___mysqli_ston&quot;],  $query ) or die( &#x27;&lt;pre&gt;&#x27; . ((is_object($GLOBALS[&quot;___mysqli_ston&quot;])) ? mysqli_error($GLOBALS[&quot;___mysqli_ston&quot;]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . &#x27;&lt;/pre&gt;&#x27; );$number_of_rows = mysqli_fetch_row( $result )[0];mysqli_close($GLOBALS[&quot;___mysqli_ston&quot;]);?&gt;\n&emsp;&emsp;代码和初级有所不同，在获取id传入数据后，调用mysqli_real_escape_string函数将x00，\\n，\\r，\\，’，”，x1a这些特殊字符转义，防SQL注入。同时查询语句中id直接作为数字传入，没有单引号。&emsp;&emsp;DVWA中中级显示如下，这次连输入框都没有了，通过下拉列表来实现id传入。\n\n\n漏洞复现&emsp;&emsp;在下拉列表中选择1，并点击Submit提交，获取到如下信息：\n\n\n&emsp;&emsp;此时我们的url也没有发生变化，因此找不到注入点。我们通过burpsuit抓包看看：\n\n\n&emsp;&emsp;发现Submit是通过POST方法提交的，post传入的数据为id=1&amp;Submit=Submit。因此我们可以更改post传入的id值来进行注入，使用hackbar插件，直接填充post的数据：&emsp;&emsp;Submit=Submit&amp;id=1 union select 1,2\n\n\n\n\n\n&emsp;&emsp;剩余步骤和级别low相同，一步步找出数据库名、表名、列名，最后获得用户和密码。需要注意的是单引号等特殊字符被转义，因此不能使用，当我们需要使用’dvwa’或者’users’时，可以使用16进制来绕过：\n12341 union select 1,group_concat(schema_name) from information_schema.schemata#1 union select 1,group_concat(table_name) from information_schema.tables where table_schema=0x64767761#      0x64767761是dvwa的16进制1 union select 1,group_concat(column_name) from information_schema.columns where table_name=0x7573657273#   0x7573657273是users的16进制1 union select user,password from users#\n&emsp;&emsp;最后结果如下：\n\n\n\n\n\n安全级别High源码分析123456789101112131415161718192021222324&lt;?phpif( isset( $_SESSION [ &#x27;id&#x27; ] ) ) &#123;    // Get input    $id = $_SESSION[ &#x27;id&#x27; ];    // Check database    $query  = &quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;$id&#x27; LIMIT 1;&quot;;    $result = mysqli_query($GLOBALS[&quot;___mysqli_ston&quot;], $query ) or die( &#x27;&lt;pre&gt;Something went wrong.&lt;/pre&gt;&#x27; );    // Get results    while( $row = mysqli_fetch_assoc( $result ) ) &#123;        // Get values        $first = $row[&quot;first_name&quot;];        $last  = $row[&quot;last_name&quot;];        // Feedback for end user        echo &quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;;    &#125;    ((is_null($___mysqli_res = mysqli_close($GLOBALS[&quot;___mysqli_ston&quot;]))) ? false : $___mysqli_res);        &#125;?&gt;\n&emsp;&emsp;DVWA中高级显示如下，点击”here to change your ID”，页面自动跳转，防御了自动化的SQL注入。分析源码可可知，对参数没有做防御，和级别low类似。\n\n\n&emsp;&emsp;点击链接后：\n\n\n漏洞复现&emsp;&emsp;在输入框中输入1’ union select 1,2#，可以直接执行，结果如下：\n\n\n&emsp;&emsp;因此使用和low一样的步骤，可以依次得到数据库、表、列等数据，这里不再演示。\n安全级别Impossible12345678910111213141516171819202122232425262728293031323334&lt;?phpif( isset( $_GET[ &#x27;Submit&#x27; ] ) ) &#123;    // Check Anti-CSRF token    checkToken( $_REQUEST[ &#x27;user_token&#x27; ], $_SESSION[ &#x27;session_token&#x27; ], &#x27;index.php&#x27; );    // Get input    $id = $_GET[ &#x27;id&#x27; ];    // Was a number entered?    if(is_numeric( $id )) &#123;        // Check the database        $data = $db-&gt;prepare( &#x27;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#x27; );        $data-&gt;bindParam( &#x27;:id&#x27;, $id, PDO::PARAM_INT );        $data-&gt;execute();        $row = $data-&gt;fetch();        // Make sure only 1 result is returned        if( $data-&gt;rowCount() == 1 ) &#123;            // Get values            $first = $row[ &#x27;first_name&#x27; ];            $last  = $row[ &#x27;last_name&#x27; ];            // Feedback for end user            echo &quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;;        &#125;    &#125;&#125;// Generate Anti-CSRF tokengenerateSessionToken();?&gt;\n&emsp;&emsp;impossible中使用了两处安全防护措施：\n\nAnti-CSRF token\n\n12// Check Anti-CSRF tokencheckToken( $_REQUEST[ &#x27;user_token&#x27; ], $_SESSION[ &#x27;session_token&#x27; ], &#x27;index.php&#x27; );\n&emsp;&emsp;使用token验证用户，防止CSRF攻击\n\n数字检查\n\n&emsp;&emsp;使用is_numeric( $id )判断输入的id是数字还是字符串，只有输入为数字才执行sql查询。\n\nsql预处理\n\n12$data = $db-&gt;prepare( &#x27;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#x27; );$data-&gt;bindParam( &#x27;:id&#x27;, $id, PDO::PARAM_INT );\n&emsp;&emsp;预处理和PDO会将传入的id值当做一个整体来处理，在运行时才替换参数，因此就算id中使用了引号或者sql语句，执行时会将其当做一整个字符串，不会有拼接动作，也就不能sql注入。&emsp;&emsp;同时最后使用了$data-&gt;rowCount() == 1，限制查询结果为一条时才输出，有效防止信息泄露。","dateCreated":"2021-06-28T21:22:40+08:00","dateModified":"2021-10-09T20:28:58+08:00","datePublished":"2021-06-28T21:22:40+08:00","description":"近期实训在学习sql注入，因此先更新了dvwa中sql注入攻击。","headline":"DVWA(七)：SQL-Injection（sql注入）","image":["https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/top.jpg"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg","logo":{"@type":"ImageObject","url":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg"}},"url":"https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/","keywords":"DVWA, sql注入","thumbnailUrl":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/top.jpg"}</script>
+    <meta name="description" content="近期实训在学习sql注入，因此先更新了dvwa中sql注入攻击。">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="DVWA(七)：SQL-Injection（sql注入）">
+<meta property="og:url" content="https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/index.html">
+<meta property="og:site_name" content="YWZ">
+<meta property="og:description" content="近期实训在学习sql注入，因此先更新了dvwa中sql注入攻击。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/1.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/2.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/3.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/4.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/5.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/6.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/7.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/8.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/9.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/10.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/11.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/12.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Middle/1.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Middle/2.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Middle/3.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Middle/4.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Middle/5.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Middle/6.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Middle/7.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/High/1.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/High/2.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/High/3.png">
+<meta property="article:published_time" content="2021-06-28T13:22:40.000Z">
+<meta property="article:modified_time" content="2021-10-09T12:28:58.096Z">
+<meta property="article:author" content="YWZ">
+<meta property="article:tag" content="DVWA">
+<meta property="article:tag" content="sql注入">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/1.jpg">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg">
+    
+    
+        <meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/top.jpg">
+        <meta class="swiftype" name="image" data-type="enum" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/top.jpg">
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-5ctctel0cuzrmzotlasreim3qgxouuqpfme70vruknhdpfxw6enuh6pympnk.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+    <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?003fd62f149a30bc5f172a1ed42483c3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/" aria-label>
+            YWZ
+        </a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about" aria-label="打开链接: /#about">
+        
+        
+            <img class="header-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about" aria-label="阅读有关作者的更多信息">
+                    <img class="sidebar-profile-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+                </a>
+                <h4 class="sidebar-profile-name">YWZ</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>一个无聊的程序员</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/" rel="noopener" title="首页">
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">首页</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-categories" rel="noopener" title="分类">
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">分类</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" rel="noopener" title="标签">
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">标签</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" rel="noopener" title="归档">
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">归档</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link open-algolia-search" href="/search" rel="noopener" title="搜索">
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">搜索</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/shuoshuo" rel="noopener" title="说说">
+                        <i class="sidebar-button-icon fas fa-comments" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">说说</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="#about" rel="noopener" title="关于">
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">关于</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://github.com/" target="_blank" rel="external nofollow noopener noreferrer" title="GitHub">
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="http://stackoverflow.com/users" target="_blank" rel="external nofollow noopener noreferrer" title="Stack Overflow">
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://twitter.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Twitter">
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://facebook.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Facebook">
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://google.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Google">
+                        <i class="sidebar-button-icon fab fa-google" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="mailto:2410776350@qq.com" target="_blank" rel="external nofollow noopener noreferrer" title="邮箱">
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">邮箱</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/atom.xml" rel="noopener" title="RSS">
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4" style="background-color: rgba(255, 255, 255, 0.85);" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            DVWA(七)：SQL-Injection（sql注入）
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2021-06-28T21:22:40+08:00">
+	
+		    2021 年 06 月 28 日
+    	
+    </time>
+    
+        <span>发布在 </span>
+        
+    <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+
+
+    
+    
+        &nbsp;|&nbsp; 更新于
+        <time itemprop="dateUpdated" content="Sat Oct 09 2021 20:28:58 GMT+0800">
+        
+		    2021 年 10 月 09 日
+    	
+        </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt --><br><h1 id="table-of-contents">目录</h1><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5%E5%AE%9A%E4%B9%89"><span class="toc-text">SQL注入定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5%E6%B5%81%E7%A8%8B"><span class="toc-text">SQL注入流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%BA%A7%E5%88%ABLow"><span class="toc-text">安全级别Low</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-text">源码分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%BA%A7%E5%88%ABMedium"><span class="toc-text">安全级别Medium</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-1"><span class="toc-text">源码分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-1"><span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%BA%A7%E5%88%ABHigh"><span class="toc-text">安全级别High</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90-2"><span class="toc-text">源码分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0-2"><span class="toc-text">漏洞复现</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%BA%A7%E5%88%ABImpossible"><span class="toc-text">安全级别Impossible</span></a></li></ol><p></p>
+<h1 id="SQL注入定义"><a href="#SQL注入定义" class="headerlink" title="SQL注入定义"></a>SQL注入定义</h1><p>&emsp;&emsp;SQL是操作数据库数据的结构化查询语言，网页的应用数据和后台数据库中的数据进行交互时会采用SQL。而SQL注入是将Web页面的原URL、表单域或数据包输入的参数，修改拼接成SQL语句，传递给Web服务器，进而传给数据库服务器以执行数据库命令。如Web应用程序的开发人员对用户所输入的数据或cookie等内容不进行过滤或验证(即存在注入点)就直接传输给数据库，就可能导致拼接的SQL被执行，获取对数据库的信息以及提权，发生SQL注入攻击。（来自百度百科）</p>
+<h1 id="SQL注入流程"><a href="#SQL注入流程" class="headerlink" title="SQL注入流程"></a>SQL注入流程</h1><p>&emsp;&emsp;当我们在web页面中遇到用户输入框，或者url上显示了输入数据情况，怀疑存在sql注入，可以执行以下步骤：</p>
+<ol>
+<li>寻找注入点，确认是字符串注入还是数字注入</li>
+<li>查询该表中字段数</li>
+<li>查询各字段含义</li>
+<li>找到当前数据库名称</li>
+<li>找出数据库中的表名</li>
+<li>找出表中字段名和字段值</li>
+<li>写入webshell</li>
+</ol>
+<h1 id="安全级别Low"><a href="#安全级别Low" class="headerlink" title="安全级别Low"></a>安全级别Low</h1><h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( isset( $_REQUEST[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line">	<span class="comment">// Get input 获取输入的id</span></span><br><span class="line">	$id = $_REQUEST[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Check database 数据库查询语句</span></span><br><span class="line">	$query  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;$id&#x27;;&quot;</span>;</span><br><span class="line">	$result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $query ) or die( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Get results 获取查询结果</span></span><br><span class="line">	<span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;</span><br><span class="line">		<span class="comment">// Get values</span></span><br><span class="line">		$first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">		$last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Feedback for end user 显示结果</span></span><br><span class="line">		$html .= <span class="string">&quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;关键数据库查询语句如下，id传入是字符串型：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT first_name, last_name FROM users WHERE user_id = <span class="string">&#x27;$id&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;DVWA中注入位置如下，是数据库id查询框：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/1.jpg" width="250" height="137"></div>
+
+<p>&emsp;&emsp;其中$id就是用户的输入内容，可以看出，该代码并未对用户输入进行处理，而是直接拼接成sql语句执行，因此很容易注入。</p>
+<h2 id="漏洞复现"><a href="#漏洞复现" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>&emsp;&emsp;输入框输入1，显示信息是该id的First name和Surname：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/2.png" width="350" height="172"></div>
+
+<p>&emsp;&emsp;输入框输入1’，测试是否有引号闭合：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/3.png"></div>
+
+<p>&emsp;&emsp;提示引号错误，因为多了一个单引号，查询语句变为：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT first_name, last_name FROM users WHERE user_id = <span class="string">&#x27;1&#x27;</span><span class="string">&#x27;;</span></span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;说明输入是字符串型输入，要闭合单引号。这和我们看到的代码吻合，sql查询语句中使用‘id’，输入内容被当做字符串。<br>&emsp;&emsp;闭合单引号，输入框输入1’ and 1=1#，结果如下：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/4.png" width="350" height="173"></div>
+
+<p>&emsp;&emsp;该语句中1=1为永真条件，sql中#为注释符，因此原语句单引号被注释掉，不会发生错误，查询语句变为：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT first_name, last_name FROM users WHERE user_id = &#x27;1&#x27; and 1=1 #&#x27;;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;在mysql语句中使用order by进行查询的排序，order by后可以接字段名，也可以接字段号，如按照第一个字段排序就是order by 1。因此可以利用该特性找出表中的字段数，当order by 报错时，说明超出表中的字段数。输入1’ order by 2#，结果如下：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/5.png" width="350" height="170"></div>
+
+<p>&emsp;&emsp;当我们输入1’ order by 3# 时显示：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/6.png"></div>
+
+<p>&emsp;&emsp;说明该表中只有两个字段，即显示的First name和Surname。<br>&emsp;&emsp;在mysql中可以使用union联合查询多条信息，而select有一个特性，select直接加数字串时，可以不写后面的表名，那么它输出的内容就是我们select后的数字。我们利用该特性来注入，输入1’ union select 1,2#，结果如下：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/7.png" width="350" height="227"></div>
+
+<p>&emsp;&emsp;如果我们替换select后面的1和2为sql语句，那么就会先执行语句再显示。mysql中可以使用database()显示当前数据库名，使用version()显示版本信息。那么我们输入：<br>&emsp;&emsp;1’ union select version(),database()#<br>&emsp;&emsp;结果如下： </p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/8.png" width="350" height="237"></div>
+
+<p>&emsp;&emsp;以上都是一些比较基础和简单的信息，接下来我们需要爆出库中的表、表中的各项数据。首先需要知道mysql中有一个信息数据库 information_schema ，记录了该数据库的各种信息。<br>&emsp;&emsp;information_schema.schemata表，表中schema_name记录了数据库名称；information_schema.tables表，表中table_schema记录数据表所属的数据库名，table_name记录表名称；information_schema.columns表，表中table_name记录该列的表名，column_name 记录列名。利用这三个表可以获得数据库中的各种信息。<br>&emsp;&emsp;输入：<br>&emsp;&emsp;1’ union select 1,group_concat(schema_name) from information_schema.schemata#<br>&emsp;&emsp;获取数据库的名称：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/9.png" width="600" height="243"></div>
+
+<p>&emsp;&emsp;现在知道有一个名为dvwa的数据库，输入：<br>&emsp;&emsp;1’ union select 1,group_concat(table_name) from information_schema.tables where table_schema=’dvwa’#<br>&emsp;&emsp;查找属于dvwa库的表名称：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/10.png" width="600" height="197"></div>
+
+<p>&emsp;&emsp;查询到dvwa数据库中有guestbook和users表，因此输入：<br>&emsp;&emsp;1’ union select 1,group_concat(column_name) from information_schema.columns where table_name=’users’#<br>&emsp;&emsp;查询users表中的字段名称：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/11.png" width="600" height="195"></div>
+
+<p>&emsp;&emsp;现在已经获取到关键字段名称，如first_name、last_name，就是正常显示的字段。其中有user、password两个字段，获取这两个字段信息，现在已经知道表名和字段名，直接查询即可，输入：<br>&emsp;&emsp;1’ union select user,password from users#<br>&emsp;&emsp;结果如下：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Low/12.png" width="350" height="407"></div>
+
+<h1 id="安全级别Medium"><a href="#安全级别Medium" class="headerlink" title="安全级别Medium"></a>安全级别Medium</h1><h2 id="源码分析-1"><a href="#源码分析-1" class="headerlink" title="源码分析"></a>源码分析</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( isset( $_POST[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_POST[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line">    <span class="comment">//mysqli_real_escape_string将x00，\n，\r，\，&#x27;，&quot;，x1a这些特殊字符转义，防SQL注入</span></span><br><span class="line">    $id = mysqli_real_escape_string($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $id);</span><br><span class="line"></span><br><span class="line">    $query  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = $id;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $query) or die( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    <span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;</span><br><span class="line">        <span class="comment">// Display values</span></span><br><span class="line">        $first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">        $last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        echo <span class="string">&quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// This is used later on in the index.php page</span></span><br><span class="line"><span class="comment">// Setting it here so we can close the database connection in here like in the rest of the source scripts</span></span><br><span class="line">$query  = <span class="string">&quot;SELECT COUNT(*) FROM users;&quot;</span>;</span><br><span class="line">$result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>],  $query ) or die( <span class="string">&#x27;&lt;pre&gt;&#x27;</span> . ((is_object($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>])) ? mysqli_error($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : <span class="literal">false</span>)) . <span class="string">&#x27;&lt;/pre&gt;&#x27;</span> );</span><br><span class="line">$number_of_rows = mysqli_fetch_row( $result )[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]);</span><br><span class="line">?&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;代码和初级有所不同，在获取id传入数据后，调用mysqli_real_escape_string函数将x00，\n，\r，\，’，”，x1a这些特殊字符转义，防SQL注入。同时查询语句中id直接作为数字传入，没有单引号。<br>&emsp;&emsp;DVWA中中级显示如下，这次连输入框都没有了，通过下拉列表来实现id传入。</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Middle/1.png" width="350" height="130"></div>
+
+<h2 id="漏洞复现-1"><a href="#漏洞复现-1" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>&emsp;&emsp;在下拉列表中选择1，并点击Submit提交，获取到如下信息：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Middle/2.png" width="350" height="171"></div>
+
+<p>&emsp;&emsp;此时我们的url也没有发生变化，因此找不到注入点。我们通过burpsuit抓包看看：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Middle/3.png" width="600" height="321"></div>
+
+<p>&emsp;&emsp;发现Submit是通过POST方法提交的，post传入的数据为id=1&amp;Submit=Submit。因此我们可以更改post传入的id值来进行注入，使用hackbar插件，直接填充post的数据：<br>&emsp;&emsp;Submit=Submit&amp;id=1 union select 1,2</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Middle/4.png" width="600" height="172"></div>
+
+<p><br></p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Middle/5.png" width="350" height="223"></div>
+
+<p>&emsp;&emsp;剩余步骤和级别low相同，一步步找出数据库名、表名、列名，最后获得用户和密码。需要注意的是单引号等特殊字符被转义，因此不能使用，当我们需要使用’dvwa’或者’users’时，可以使用16进制来绕过：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1 union select 1,group_concat(schema_name) from information_schema.schemata#</span><br><span class="line">1 union select 1,group_concat(table_name) from information_schema.tables where table_schema=0x64767761#      0x64767761是dvwa的16进制</span><br><span class="line">1 union select 1,group_concat(column_name) from information_schema.columns where table_name=0x7573657273#   0x7573657273是users的16进制</span><br><span class="line">1 union select user,password from users#</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;最后结果如下：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Middle/6.png" width="600" height="175"></div>
+
+<p><br></p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/Middle/7.png" width="350" height="412"></div>
+
+<h1 id="安全级别High"><a href="#安全级别High" class="headerlink" title="安全级别High"></a>安全级别High</h1><h2 id="源码分析-2"><a href="#源码分析-2" class="headerlink" title="源码分析"></a>源码分析</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( isset( $_SESSION [ <span class="string">&#x27;id&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_SESSION[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Check database</span></span><br><span class="line">    $query  = <span class="string">&quot;SELECT first_name, last_name FROM users WHERE user_id = &#x27;$id&#x27; LIMIT 1;&quot;</span>;</span><br><span class="line">    $result = mysqli_query($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>], $query ) or die( <span class="string">&#x27;&lt;pre&gt;Something went wrong.&lt;/pre&gt;&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get results</span></span><br><span class="line">    <span class="keyword">while</span>( $row = mysqli_fetch_assoc( $result ) ) &#123;</span><br><span class="line">        <span class="comment">// Get values</span></span><br><span class="line">        $first = $row[<span class="string">&quot;first_name&quot;</span>];</span><br><span class="line">        $last  = $row[<span class="string">&quot;last_name&quot;</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Feedback for end user</span></span><br><span class="line">        echo <span class="string">&quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ((is_null($___mysqli_res = mysqli_close($GLOBALS[<span class="string">&quot;___mysqli_ston&quot;</span>]))) ? <span class="literal">false</span> : $___mysqli_res);        </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;DVWA中高级显示如下，点击”here to change your ID”，页面自动跳转，防御了自动化的SQL注入。分析源码可可知，对参数没有做防御，和级别low类似。</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/High/1.png" width="350" height="95"></div>
+
+<p>&emsp;&emsp;点击链接后：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/High/2.png" width="300" height="143"></div>
+
+<h2 id="漏洞复现-2"><a href="#漏洞复现-2" class="headerlink" title="漏洞复现"></a>漏洞复现</h2><p>&emsp;&emsp;在输入框中输入1’ union select 1,2#，可以直接执行，结果如下：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/DVWA/SQL_Injection/High/3.png" width="350" height="217"></div>
+
+<p>&emsp;&emsp;因此使用和low一样的步骤，可以依次得到数据库、表、列等数据，这里不再演示。</p>
+<h1 id="安全级别Impossible"><a href="#安全级别Impossible" class="headerlink" title="安全级别Impossible"></a>安全级别Impossible</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>( isset( $_GET[ <span class="string">&#x27;Submit&#x27;</span> ] ) ) &#123;</span><br><span class="line">    <span class="comment">// Check Anti-CSRF token</span></span><br><span class="line">    checkToken( $_REQUEST[ <span class="string">&#x27;user_token&#x27;</span> ], $_SESSION[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Get input</span></span><br><span class="line">    $id = $_GET[ <span class="string">&#x27;id&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Was a number entered?</span></span><br><span class="line">    <span class="keyword">if</span>(is_numeric( $id )) &#123;</span><br><span class="line">        <span class="comment">// Check the database</span></span><br><span class="line">        $data = $db-&gt;prepare( <span class="string">&#x27;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#x27;</span> );</span><br><span class="line">        $data-&gt;bindParam( <span class="string">&#x27;:id&#x27;</span>, $id, <span class="attr">PDO</span>::PARAM_INT );</span><br><span class="line">        $data-&gt;execute();</span><br><span class="line">        $row = $data-&gt;fetch();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Make sure only 1 result is returned</span></span><br><span class="line">        <span class="keyword">if</span>( $data-&gt;rowCount() == <span class="number">1</span> ) &#123;</span><br><span class="line">            <span class="comment">// Get values</span></span><br><span class="line">            $first = $row[ <span class="string">&#x27;first_name&#x27;</span> ];</span><br><span class="line">            $last  = $row[ <span class="string">&#x27;last_name&#x27;</span> ];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Feedback for end user</span></span><br><span class="line">            echo <span class="string">&quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Generate Anti-CSRF token</span></span><br><span class="line">generateSessionToken();</span><br><span class="line"></span><br><span class="line">?&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;impossible中使用了两处安全防护措施：</p>
+<ol>
+<li>Anti-CSRF token</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Check Anti-CSRF token</span></span><br><span class="line">checkToken( $_REQUEST[ <span class="string">&#x27;user_token&#x27;</span> ], $_SESSION[ <span class="string">&#x27;session_token&#x27;</span> ], <span class="string">&#x27;index.php&#x27;</span> );</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;使用token验证用户，防止CSRF攻击</p>
+<ol>
+<li>数字检查</li>
+</ol>
+<p>&emsp;&emsp;使用is_numeric( $id )判断输入的id是数字还是字符串，只有输入为数字才执行sql查询。</p>
+<ol>
+<li>sql预处理</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$data = $db-&gt;prepare( <span class="string">&#x27;SELECT first_name, last_name FROM users WHERE user_id = (:id) LIMIT 1;&#x27;</span> );</span><br><span class="line">$data-&gt;bindParam( <span class="string">&#x27;:id&#x27;</span>, $id, <span class="attr">PDO</span>::PARAM_INT );</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;预处理和PDO会将传入的id值当做一个整体来处理，在运行时才替换参数，因此就算id中使用了引号或者sql语句，执行时会将其当做一整个字符串，不会有拼接动作，也就不能sql注入。<br>&emsp;&emsp;同时最后使用了$data-&gt;rowCount() == 1，限制查询结果为一条时才输出，有效防止信息泄露。</p>
+            
+
+
+            <!-- 添加的部分 -->
+            <!-- copyright -->
+            
+                <div class="article-footer-copyright">
+    <!--
+    <p><span>本文标题:</span><href="/%20"> DVWA(七)：SQL-Injection（sql注入）</a></p>
+    <p><span>文章作者:</span><a href="/" title="访问 YWZ的个人博客">YWZ</a></p>
+    <p><span>发布时间:</span>2021年06月28日 - 21:22</p>
+    <p><span>最后更新:</span>2021年10月09日 - 20:28</p>
+    <p><span>原始链接:</span><a href="/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/" title="DVWA(七)：SQL-Injection（sql注入）">https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/"  aria-label="复制成功！"></i></span>
+    </p>
+    <p><span>许可协议:</span><i class="fab fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+     -->
+    <p>文章作者:<a href="/" title="访问 YWZ的个人博客">YWZ</a>
+    <br>该文章是本人原创，转载请注明出处
+    <br>本文链接地址: <a href="/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/" title="DVWA(七)：SQL-Injection（sql注入）">https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/</a></p>
+</div>
+
+            
+            <!-- copyright -->
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">标签</span><br>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/DVWA/" rel="tag">DVWA</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/sql%E6%B3%A8%E5%85%A5/" rel="tag">sql注入</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/06/28/DVWA-%E5%85%AB-%EF%BC%9ASQL-Injection%EF%BC%88Blind%E7%9B%B2%E6%B3%A8%EF%BC%89/" data-tooltip="DVWA(八)：SQL-Injection（Blind盲注）" aria-label="上一篇: DVWA(八)：SQL-Injection（Blind盲注）">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/06/21/DVWA-%E4%B8%80-%EF%BC%9ABrute-Force%EF%BC%88%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3%EF%BC%89/" data-tooltip="DVWA(一)：Brute Force（暴力破解）" aria-label="下一篇: DVWA(一)：Brute Force（暴力破解）">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/&amp;title=DVWA(七)：SQL-Injection（sql注入）" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-qq" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/" title="分享到 Qzone" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/" title="分享到 Weibo" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="目录">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+</style>
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',  
+        appId: 'zigmtQSTyuJK9u3TgCdBu7lE-MdYXbMMI',
+        appKey: 'As1hAM6sIKBtmAPYIM0OOrQN', 
+        placeholder: 'ヾﾉ≧∀≦)o欢迎发表意见!' ,
+        notify: 'false',
+        verity: '',
+        path: window.location.pathname,
+        avatar: 'robohash',
+        meta: ['nick','mail','link'],
+        pageSize: '10',
+        lang: 'zh-cn',
+        visitor: 'false',
+        highlight: '',
+        serverURLs: 'https://zigmtqst.api.lncldglobal.com'
+    });
+</script>
+<span id="/2021/06/28/DVWA-七-：SQL-Injection（sql注入）/" class="leancloud_visitors" data-flag-title="Your Article Title">
+    <em class="post-meta-item-text">阅读量 </em>
+    <i class="leancloud-visitors-count">1000000</i>
+</span>  
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2022 <a href="https://yiwenzhe.com">YWZ</a>. All Rights Reserved.
+    </span>
+    <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("10/11/2020 14:56:39");//在此处修改你的建站时间，格式：月/日/年 时:分:秒
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+setInterval("createtime()",250);
+</script>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/06/28/DVWA-%E5%85%AB-%EF%BC%9ASQL-Injection%EF%BC%88Blind%E7%9B%B2%E6%B3%A8%EF%BC%89/" data-tooltip="DVWA(八)：SQL-Injection（Blind盲注）" aria-label="上一篇: DVWA(八)：SQL-Injection（Blind盲注）">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/06/21/DVWA-%E4%B8%80-%EF%BC%9ABrute-Force%EF%BC%88%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3%EF%BC%89/" data-tooltip="DVWA(一)：Brute Force（暴力破解）" aria-label="下一篇: DVWA(一)：Brute Force（暴力破解）">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/&amp;title=DVWA(七)：SQL-Injection（sql注入）" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-qq" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/" title="分享到 Qzone" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/" title="分享到 Weibo" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="目录">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/&amp;title=DVWA(七)：SQL-Injection（sql注入）" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-qq" aria-hidden="true"></i><span>分享到 QQ</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                        <i class="fa fa-star" aria-hidden="true"></i><span>分享到 Qzone</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/06/28/DVWA-%E4%B8%83-%EF%BC%9ASQL-Injection%EF%BC%88sql%E6%B3%A8%E5%85%A5%EF%BC%89/" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-weibo" aria-hidden="true"></i><span>分享到 Weibo</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <a href="https://yiwenzhe.com">
+            <img id="about-card-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+            </a>
+        
+            <a href="https://yiwenzhe.com">
+            <h4 id="about-card-name">YWZ</h4>
+            </a>
+        
+            <div id="about-card-bio"><p>一个无聊的程序员</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>武汉大学在读研究生</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                湖北武汉
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-mxznsv1n7nz3zrfuls87amiraudckgmxncavgf1ucci53txgionftndw0zwt.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

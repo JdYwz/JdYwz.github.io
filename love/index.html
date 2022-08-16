@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Our Love Story</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<style type="text/css">
+		@font-face {
+			font-family: digit;
+			src: url('digital-7_mono.ttf') format("truetype");
+		}
+	</style>
+	<link href="css/default.css" type="text/css" rel="stylesheet">
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/garden.js"></script>
+    <script type="text/javascript" src="js/functions.js"></script>
+</head>
+
+<body>
+	<div id="mainDiv">
+		<div id="content">
+			<div id="code">
+				在2020年5月29日，我们相识于阿鹿和李先生的微信群。<br />
+				到现在，我们一起度过了许多美好的时光：<br />
+				<span class="space"/>2020年的夏季，我们在广州白云机场首次见面，在青岛的海滩感受海风。</span><br />
+				<span class="space"/>2021年的春季，我们再次相见，去长隆看动物，去吃海鲜。</span><br />
+				<span class="space"/>2021年的圣诞节，我们相约于武汉，去了极地海洋世界，喝到了茶颜悦色，吃到了武汉正宗热干面。虽只相聚一天，但也足够。</span><br />
+				<br />
+				我们异地度过了第一个<span class="keyword">七夕</span>、第一个<span class="keyword">圣诞节</span>、
+				第一个<span class="keyword">元旦</span>、第一个<span class="keyword">新年</span>、
+				第一个<span class="keyword">情人节</span>，我的20岁生日，还有我们的<span class="keyword">一周年</span>。<br />
+				一周年，我收到了你送的招财猫和贺卡，很是惊喜，我这次没有送礼物，但我之后一定会想方设法补偿回来。<br />
+				<br />
+				<span class="comments">我将此页作为爱情的记录(๑•̀ ω •́ ๑)</span><br />
+				<span class="comments">记录每一件微小却让我深感温暖的事</span><br />
+				<span class="comments">(〃•ω‹〃)一个wink♡</span><br />
+			</div>
+			<div id="loveHeart">
+				<canvas id="garden"></canvas>
+				<div id="words">
+					<div id="messages">
+						YXJ，我们已经相识了：
+						<div id="elapseClock"></div>
+					</div>
+					<div id="loveu">
+						我会永远永远爱着你。<br/>
+						<div class="signature">- YWZ</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var offsetX = $("#loveHeart").width() / 2;
+		var offsetY = $("#loveHeart").height() / 2 - 55;
+		var together = new Date();
+		together.setFullYear(2020, 4, 29);  //java月份从0开始
+		together.setHours(19);
+		together.setMinutes(50);
+		together.setSeconds(0);
+		together.setMilliseconds(0);
+		
+		if (!document.createElement('canvas').getContext) {
+			var msg = document.createElement("div");
+			msg.id = "errorMsg";
+			msg.innerHTML = "Your browser doesn't support HTML5!<br/>Recommend use Chrome 14+/IE 9+/Firefox 7+/Safari 4+"; 
+			document.body.appendChild(msg);
+			$("#code").css("display", "none")
+			$("#copyright").css("position", "absolute");
+			$("#copyright").css("bottom", "10px");
+		    document.execCommand("stop");
+		} else {
+			setTimeout(function () {
+				startHeartAnimation();
+			}, 5000);
+
+			timeElapse(together);
+			setInterval(function () {
+				timeElapse(together);
+			}, 500);
+
+			adjustCodePosition();
+			$("#code").typewriter();
+		}
+	</script>
+</body>
+</html>

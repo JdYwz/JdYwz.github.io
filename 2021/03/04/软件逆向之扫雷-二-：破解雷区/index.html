@@ -1,0 +1,691 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="YWZ">
+    <title>软件逆向之扫雷(二)：破解雷区 - YWZ</title>
+    <meta name="author" content="YWZ">
+    
+    
+        <link rel="icon" href="https://yiwenzhe.com/assets/images/favicon.ico">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg"},"articleBody":"\n问题导入&emsp;&emsp;上一节中我们通过修改注册表修改了扫雷英雄榜，自行改动了榜上的昵称和时间。然而这只是表面工作，没有解决扫雷游戏的本质：找出所有雷区。这一节我们分析雷区的存储方式和位置，人工破解雷区。\n雷区分析&emsp;&emsp;扫雷的界面是一个n*m的矩形雷区，每个小方块代表一个位置，和矩阵十分类似。因此我们猜想是通过二维矩阵来存储数据，将矩阵中特定位置标记为雷区，而每次点击非雷区时会出现数字，即计算点击位置周边八个块的地雷数目，然后显示在块上。&emsp;&emsp;将矩阵转化成扫雷的界面则需要调用几个API函数，比较常用的就是BitBlt函数。BitBlt将某一内存块的数据传送到另一内存块，前一内存块被称为”源”，后一内存块被称为”目标”。使用该函数我们可以将矩阵进行变换，从而显示出来。\n逆向分析&emsp;&emsp;使用OllyDBG打开扫雷程序winmine.exe，查看调用的API函数。\n\n\n&emsp;&emsp;可以看到从GDI32.dll导入的函数很多与作图有关，如SetLayout、CreatePen等。我们选中BitBlt函数，在每个参考上设置断点，然后运行至断点处。&emsp;&emsp;第一个断点处，整个扫雷界面都未加载完成，而且我们也没有进行点击，故不是所需代码块，取消该出断点，继续运行。&emsp;&emsp;图像界面显示出来，程序停止了运行，表示程序还未运行到第二个断点，可能在等待用户点击鼠标。我们选择雷区任意一个位置点击，程序运行到第二个断点处停止。\n\n&emsp;&emsp;BitBlt所需参数均在图中标识出来，现在我们需要分析这些参数，找到二维矩阵的内存位置。\n&emsp;&emsp;首先我们要知道矩阵位置的计算，对于一维矩阵，a[n]，a[i]的内存位置=基址(a[0])+i\\*sizeof(单个数据内存大小)。对于二维矩阵a[m][n]，a[i][j]的内存位置=基址+i\\*n\\*sizeof(单个数据内存大小)+j\\*sizeof(单个数据内存大小)。\n\n\n&emsp;&emsp;函数中刚好有两条类似的寻址语句。[edx+eax+01005340h]和[edx*4+105A20]。第一条是mov操作，并且更符合二维数组寻址，因此我们猜测01005340h是数组基址。\n\n\n&emsp;&emsp;在左下角数据窗口使用ctrl+G，输入01005340h，跳转到该位置。查看数据窗口内容。\n\n\n&emsp;&emsp;数据窗口一开始全是10，有33个。由于我们使用的是高级模式，扫雷界面是16*32，初步猜测10代表边界。然后是大量0F和少量8F。前七个数据是六个0F和一个8F，那我们点击扫雷第一排前七个格子。前七个均没有雷，第八个是雷。\n\n\n&emsp;&emsp;查看数据区内容是否发生变化：\n\n\n&emsp;&emsp;前五个格子为空，数据由0F变为40；第六个格子是数字1，数据由0F变为41。同时数字2、3对应数据也分别变为42、43。得出结论：未点开非雷区数据为0F，点开的非雷区数字x的数据为4x。&emsp;&emsp;第七个格子是我们点中的雷，数据由8F变为CC；而第八个格子我们未点中的雷由8F变为8A。得出结论：原数据8F即表示该位置是雷。&emsp;&emsp;除此之外，扫雷还有两个符号，旗子和问号，现在我们再次尝试，分别在雷区和非雷区标上旗子和问号，查看数据。\n\n\n\n\n&emsp;&emsp;标上旗子，雷区数据由8F变成8E，非雷区数据由0F变成0E；标上问号，雷区数据由8F变成8D，非雷区数据由0F变成0D。由此可得雷区最高位为1，不论是8（1000）还是C（1010），最高位都是1；非雷区最高位为0。&emsp;&emsp;由以上情况作出总结：雷区（最高位为1）：&emsp;&emsp;1.未点开为8F&emsp;&emsp;2.点开为CC，其他为8A&emsp;&emsp;3.标上旗子为8E&emsp;&emsp;4.标上问号为8D非雷区（最高位为0）：&emsp;&emsp;1.未点开为0F&emsp;&emsp;2.点开为4x（x代表格子显示数字）&emsp;&emsp;3.标上旗子为0E&emsp;&emsp;4.标上问号为0D当然我们也可以人为修改数据达到各种效果，如初始化是雷区却不爆雷等。","dateCreated":"2021-03-04T15:35:25+08:00","dateModified":"2021-10-09T19:48:02+08:00","datePublished":"2021-03-04T15:35:25+08:00","description":"分析扫雷的雷区存储位置和设计方法，人工破解雷区。","headline":"软件逆向之扫雷(二)：破解雷区","image":["https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/top.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg","logo":{"@type":"ImageObject","url":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg"}},"url":"https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/","keywords":"软件逆向","thumbnailUrl":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/top.png"}</script>
+    <meta name="description" content="分析扫雷的雷区存储位置和设计方法，人工破解雷区。">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="软件逆向之扫雷(二)：破解雷区">
+<meta property="og:url" content="https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/index.html">
+<meta property="og:site_name" content="YWZ">
+<meta property="og:description" content="分析扫雷的雷区存储位置和设计方法，人工破解雷区。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/1.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/2.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/3.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/4.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/5.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/6.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/7.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/8.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/9.png">
+<meta property="article:published_time" content="2021-03-04T07:35:25.000Z">
+<meta property="article:modified_time" content="2021-10-09T11:48:02.171Z">
+<meta property="article:author" content="YWZ">
+<meta property="article:tag" content="软件逆向">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/1.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg">
+    
+    
+        <meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/top.png">
+        <meta class="swiftype" name="image" data-type="enum" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/top.png">
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-5ctctel0cuzrmzotlasreim3qgxouuqpfme70vruknhdpfxw6enuh6pympnk.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+    <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?003fd62f149a30bc5f172a1ed42483c3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/" aria-label>
+            YWZ
+        </a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about" aria-label="打开链接: /#about">
+        
+        
+            <img class="header-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about" aria-label="阅读有关作者的更多信息">
+                    <img class="sidebar-profile-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+                </a>
+                <h4 class="sidebar-profile-name">YWZ</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>一个无聊的程序员</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/" rel="noopener" title="首页">
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">首页</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-categories" rel="noopener" title="分类">
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">分类</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" rel="noopener" title="标签">
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">标签</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" rel="noopener" title="归档">
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">归档</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link open-algolia-search" href="/search" rel="noopener" title="搜索">
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">搜索</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/shuoshuo" rel="noopener" title="说说">
+                        <i class="sidebar-button-icon fas fa-comments" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">说说</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="#about" rel="noopener" title="关于">
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">关于</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://github.com/" target="_blank" rel="external nofollow noopener noreferrer" title="GitHub">
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="http://stackoverflow.com/users" target="_blank" rel="external nofollow noopener noreferrer" title="Stack Overflow">
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://twitter.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Twitter">
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://facebook.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Facebook">
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://google.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Google">
+                        <i class="sidebar-button-icon fab fa-google" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="mailto:2410776350@qq.com" target="_blank" rel="external nofollow noopener noreferrer" title="邮箱">
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">邮箱</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/atom.xml" rel="noopener" title="RSS">
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4" style="background-color: rgba(255, 255, 255, 0.85);" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            软件逆向之扫雷(二)：破解雷区
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2021-03-04T15:35:25+08:00">
+	
+		    2021 年 03 月 04 日
+    	
+    </time>
+    
+        <span>发布在 </span>
+        
+    <a class="category-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+
+
+    
+    
+        &nbsp;|&nbsp; 更新于
+        <time itemprop="dateUpdated" content="Sat Oct 09 2021 19:48:02 GMT+0800">
+        
+		    2021 年 10 月 09 日
+    	
+        </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt --><br><h1 id="table-of-contents">目录</h1><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%AF%BC%E5%85%A5"><span class="toc-text">问题导入</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9B%B7%E5%8C%BA%E5%88%86%E6%9E%90"><span class="toc-text">雷区分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%86%E5%90%91%E5%88%86%E6%9E%90"><span class="toc-text">逆向分析</span></a></li></ol><p></p>
+<h1 id="问题导入"><a href="#问题导入" class="headerlink" title="问题导入"></a>问题导入</h1><p>&emsp;&emsp;上一节中我们通过修改注册表修改了扫雷英雄榜，自行改动了榜上的昵称和时间。然而这只是表面工作，没有解决扫雷游戏的本质：找出所有雷区。这一节我们分析雷区的存储方式和位置，人工破解雷区。</p>
+<h1 id="雷区分析"><a href="#雷区分析" class="headerlink" title="雷区分析"></a>雷区分析</h1><p>&emsp;&emsp;扫雷的界面是一个n*m的矩形雷区，每个小方块代表一个位置，和矩阵十分类似。因此我们猜想是通过二维矩阵来存储数据，将矩阵中特定位置标记为雷区，而每次点击非雷区时会出现数字，即计算点击位置周边八个块的地雷数目，然后显示在块上。<br>&emsp;&emsp;将矩阵转化成扫雷的界面则需要调用几个API函数，比较常用的就是BitBlt函数。BitBlt将某一内存块的数据传送到另一内存块，前一内存块被称为”源”，后一内存块被称为”目标”。使用该函数我们可以将矩阵进行变换，从而显示出来。</p>
+<h1 id="逆向分析"><a href="#逆向分析" class="headerlink" title="逆向分析"></a>逆向分析</h1><p>&emsp;&emsp;使用OllyDBG打开扫雷程序winmine.exe，查看调用的API函数。</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/1.png" width="400" height="325"></div>
+
+<p>&emsp;&emsp;可以看到从GDI32.dll导入的函数很多与作图有关，如SetLayout、CreatePen等。我们选中BitBlt函数，在每个参考上设置断点，然后运行至断点处。<br>&emsp;&emsp;第一个断点处，整个扫雷界面都未加载完成，而且我们也没有进行点击，故不是所需代码块，取消该出断点，继续运行。<br>&emsp;&emsp;图像界面显示出来，程序停止了运行，表示程序还未运行到第二个断点，可能在等待用户点击鼠标。我们选择雷区任意一个位置点击，程序运行到第二个断点处停止。</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/2.png"></div>
+&emsp;&emsp;BitBlt所需参数均在图中标识出来，现在我们需要分析这些参数，找到二维矩阵的内存位置。
+&emsp;&emsp;首先我们要知道矩阵位置的计算，对于一维矩阵，a[n]，a[i]的内存位置=基址(a[0])+i\*sizeof(单个数据内存大小)。对于二维矩阵a[m][n]，a[i][j]的内存位置=基址+i\*n\*sizeof(单个数据内存大小)+j\*sizeof(单个数据内存大小)。
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/3.png" width="300" height="110"></div>
+
+<p>&emsp;&emsp;函数中刚好有两条类似的寻址语句。[edx+eax+01005340h]和[edx*4+105A20]。第一条是mov操作，并且更符合二维数组寻址，因此我们猜测01005340h是数组基址。</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/4.png" width="600" height="203"></div>
+
+<p>&emsp;&emsp;在左下角数据窗口使用ctrl+G，输入01005340h，跳转到该位置。查看数据窗口内容。</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/5.png" width="500" height="217"></div>
+
+<p>&emsp;&emsp;数据窗口一开始全是10，有33个。由于我们使用的是高级模式，扫雷界面是16*32，初步猜测10代表边界。然后是大量0F和少量8F。前七个数据是六个0F和一个8F，那我们点击扫雷第一排前七个格子。前七个均没有雷，第八个是雷。</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/6.png" width="300" height="221"></div>
+
+<p>&emsp;&emsp;查看数据区内容是否发生变化：</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/7.png" width="500" height="111"></div>
+
+<p>&emsp;&emsp;前五个格子为空，数据由0F变为40；第六个格子是数字1，数据由0F变为41。同时数字2、3对应数据也分别变为42、43。得出结论：未点开非雷区数据为0F，点开的非雷区数字x的数据为4x。<br>&emsp;&emsp;第七个格子是我们点中的雷，数据由8F变为CC；而第八个格子我们未点中的雷由8F变为8A。得出结论：原数据8F即表示该位置是雷。<br>&emsp;&emsp;除此之外，扫雷还有两个符号，旗子和问号，现在我们再次尝试，分别在雷区和非雷区标上旗子和问号，查看数据。</p>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/8.png" width="300" height="219"></div>
+<br>
+<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/9.png" width="500" height="82"></div>
+
+<p>&emsp;&emsp;标上旗子，雷区数据由8F变成8E，非雷区数据由0F变成0E；标上问号，雷区数据由8F变成8D，非雷区数据由0F变成0D。由此可得雷区最高位为1，不论是8（1000）还是C（1010），最高位都是1；非雷区最高位为0。<br>&emsp;&emsp;由以上情况作出总结：<br>雷区（最高位为1）：<br>&emsp;&emsp;1.未点开为8F<br>&emsp;&emsp;2.点开为CC，其他为8A<br>&emsp;&emsp;3.标上旗子为8E<br>&emsp;&emsp;4.标上问号为8D<br>非雷区（最高位为0）：<br>&emsp;&emsp;1.未点开为0F<br>&emsp;&emsp;2.点开为4x（x代表格子显示数字）<br>&emsp;&emsp;3.标上旗子为0E<br>&emsp;&emsp;4.标上问号为0D<br>当然我们也可以人为修改数据达到各种效果，如初始化是雷区却不爆雷等。</p>
+            
+
+
+            <!-- 添加的部分 -->
+            <!-- copyright -->
+            
+                <div class="article-footer-copyright">
+    <!--
+    <p><span>本文标题:</span><href="/%20"> 软件逆向之扫雷(二)：破解雷区</a></p>
+    <p><span>文章作者:</span><a href="/" title="访问 YWZ的个人博客">YWZ</a></p>
+    <p><span>发布时间:</span>2021年03月04日 - 15:35</p>
+    <p><span>最后更新:</span>2021年10月09日 - 19:48</p>
+    <p><span>原始链接:</span><a href="/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/" title="软件逆向之扫雷(二)：破解雷区">https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/"  aria-label="复制成功！"></i></span>
+    </p>
+    <p><span>许可协议:</span><i class="fab fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+     -->
+    <p>文章作者:<a href="/" title="访问 YWZ的个人博客">YWZ</a>
+    <br>该文章是本人原创，转载请注明出处
+    <br>本文链接地址: <a href="/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/" title="软件逆向之扫雷(二)：破解雷区">https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/</a></p>
+</div>
+
+            
+            <!-- copyright -->
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">标签</span><br>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91/" rel="tag">软件逆向</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/05/24/20%E5%B2%81/" data-tooltip="20岁" aria-label="上一篇: 20岁">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/" data-tooltip="软件逆向之扫雷(一)：修改扫雷成绩" aria-label="下一篇: 软件逆向之扫雷(一)：修改扫雷成绩">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/&amp;title=软件逆向之扫雷(二)：破解雷区" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-qq" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/" title="分享到 Qzone" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/" title="分享到 Weibo" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="目录">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <style>
+    .valine-card {
+        margin: 1.5rem auto;
+    }
+    .valine-card .card-content {
+        padding: 20px 20px 5px 20px;
+    }
+</style>
+<div class="card valine-card" data-aos="fade-up">
+    <div class="comment_headling" style="font-size: 20px; font-weight: 700; position: relative; left: 20px; top: 15px; padding-bottom: 5px;">
+        <i class="fas fa-comments fa-fw" aria-hidden="true"></i>
+        <span>评论</span>
+    </div>
+    <div id="vcomments" class="card-content" style="display: grid">
+    </div>
+</div>
+
+<script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+<script>
+    new Valine({
+        el: '#vcomments',  
+        appId: 'zigmtQSTyuJK9u3TgCdBu7lE-MdYXbMMI',
+        appKey: 'As1hAM6sIKBtmAPYIM0OOrQN', 
+        placeholder: 'ヾﾉ≧∀≦)o欢迎发表意见!' ,
+        notify: 'false',
+        verity: '',
+        path: window.location.pathname,
+        avatar: 'robohash',
+        meta: ['nick','mail','link'],
+        pageSize: '10',
+        lang: 'zh-cn',
+        visitor: 'false',
+        highlight: '',
+        serverURLs: 'https://zigmtqst.api.lncldglobal.com'
+    });
+</script>
+<span id="/2021/03/04/软件逆向之扫雷-二-：破解雷区/" class="leancloud_visitors" data-flag-title="Your Article Title">
+    <em class="post-meta-item-text">阅读量 </em>
+    <i class="leancloud-visitors-count">1000000</i>
+</span>  
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2022 <a href="https://yiwenzhe.com">YWZ</a>. All Rights Reserved.
+    </span>
+    <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("10/11/2020 14:56:39");//在此处修改你的建站时间，格式：月/日/年 时:分:秒
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+setInterval("createtime()",250);
+</script>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/05/24/20%E5%B2%81/" data-tooltip="20岁" aria-label="上一篇: 20岁">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/" data-tooltip="软件逆向之扫雷(一)：修改扫雷成绩" aria-label="下一篇: 软件逆向之扫雷(一)：修改扫雷成绩">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/&amp;title=软件逆向之扫雷(二)：破解雷区" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-qq" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/" title="分享到 Qzone" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/" title="分享到 Weibo" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="目录">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/&amp;title=软件逆向之扫雷(二)：破解雷区" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-qq" aria-hidden="true"></i><span>分享到 QQ</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                        <i class="fa fa-star" aria-hidden="true"></i><span>分享到 Qzone</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-weibo" aria-hidden="true"></i><span>分享到 Weibo</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <a href="https://yiwenzhe.com">
+            <img id="about-card-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+            </a>
+        
+            <a href="https://yiwenzhe.com">
+            <h4 id="about-card-name">YWZ</h4>
+            </a>
+        
+            <div id="about-card-bio"><p>一个无聊的程序员</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>武汉大学在读研究生</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                湖北武汉
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-mxznsv1n7nz3zrfuls87amiraudckgmxncavgf1ucci53txgionftndw0zwt.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
