@@ -17,7 +17,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"Website","@id":"https://yiwenzhe.com","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg"},"name":"YWZ","description":"私人博客 YWZ's Private Blog","url":"https://yiwenzhe.com"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"Website","@id":"https://yiwenzhe.com","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg"},"name":"YWZ","description":"私人博客 YWZ's Private Blog","url":"https://yiwenzhe.com"}</script>
     <meta name="description" content="私人博客 YWZ&#39;s Private Blog">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="YWZ">
@@ -32,7 +32,7 @@
         
     
     
-        <meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg">
+        <meta property="og:image" content="https://yiwenzhe.com/assets/images/picture.jpg">
     
     
     
@@ -82,7 +82,7 @@
             <a class="header-right-picture " href="#about" aria-label="打开链接: /#about">
         
         
-            <img class="header-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+            <img class="header-picture" src="/assets/images/picture.jpg" alt="作者的图片">
         
         </a>
     
@@ -100,7 +100,7 @@
         
             <div class="sidebar-profile">
                 <a href="/#about" aria-label="阅读有关作者的更多信息">
-                    <img class="sidebar-profile-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+                    <img class="sidebar-profile-picture" src="/assets/images/picture.jpg" alt="作者的图片">
                 </a>
                 <h4 class="sidebar-profile-name">YWZ</h4>
                 
@@ -264,9 +264,9 @@
     
     
         &nbsp;|&nbsp; 更新于
-        <time itemprop="dateUpdated" content="Thu Feb 25 2021 18:58:21 GMT+0800">
+        <time itemprop="dateUpdated" content="Mon Sep 19 2022 17:50:00 GMT+0800">
         
-		    2021 年 02 月 25 日
+		    2022 年 09 月 19 日
     	
         </time>
     
@@ -275,14 +275,14 @@
             </div>
             
                 <div class="postShorten-excerpt">
-                    <p>博客说明<br>
+                    <p>博客说明</p>
                     
                         <a href="/2021/01/19/%E7%BD%AE%E9%A1%B6%E8%AF%B4%E6%98%8E/" class="postShorten-excerpt_link link" aria-label=": 置顶说明">
                             阅读全文
                         </a>
                         
                     
-                </p></div>
+                </div>
             
         </div>
         
@@ -836,7 +836,7 @@ setInterval("createtime()",250);
         </div>
         
             <a href="https://yiwenzhe.com">
-            <img id="about-card-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+            <img id="about-card-picture" src="/assets/images/picture.jpg" alt="作者的图片">
             </a>
         
             <a href="https://yiwenzhe.com">
@@ -866,7 +866,7 @@ setInterval("createtime()",250);
 
         
         
-<div id="cover" style="background-image:url('https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/cover.jpg');"></div>
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 
 <script src="/assets/js/script-mxznsv1n7nz3zrfuls87amiraudckgmxncavgf1ucci53txgionftndw0zwt.min.js"></script>
@@ -877,5 +877,20 @@ setInterval("createtime()",250);
 
 
 
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>

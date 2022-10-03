@@ -17,7 +17,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg"},"articleBody":"\n经验误差与过拟合&emsp;&emsp;错误率：分类错误的样本数占样本总数的比例。m个样本中有a个样本分类错误，则错误率E=a/m。&emsp;&emsp;精度：分类正确的样本数占样本总数的比例。精度=1-错误率。&emsp;&emsp;误差：学习器实际预测的输出与样本的真实输出之间的差异。训练集上的误差称为“训练误差”或“经验误差”，在新样本上的误差称为“泛化误差”。&emsp;&emsp;过拟合：把训练样本自身的一些特点当做所有样本的一般性质，泛化性能下降。&emsp;&emsp;欠拟合：对训练样本的一般性质尚未学好，学习能力过低。\n&emsp;&emsp;我们的目标是在新样本上表现好的学习器，即泛化误差小。当学习器把训练样本学的太好时，可能会出现过拟合情况。欠拟合比较容易客服，如增加训练轮数等，而过拟合是无法彻底避免的，只能缓解或者说减小其风险。&emsp;&emsp;面对具体任务时，往往有多种算法可供选择，以及不同的参数配置。选择算法、配置参数的过程就叫做“模型选择”。理想的解决方案是对候选模型的泛化误差进行评估，选择泛化误差最小的模型。\n评估方法&emsp;&emsp;训练集：用来训练学习器的数据集。&emsp;&emsp;测试集：用来测试学习器对新样本判别能力的数据集。在测试集上的“测试误差”将作为泛化误差的近似。测试集应尽可能与训练集互斥。&emsp;&emsp;现有包含m个样例的数据集D={(x1,y1), (x2,y2), …, (xm,ym)}，既要训练又要测试，将D分为训练集S和测试T。\n留出法交叉验证法自助法性能度量比较检验偏差与方差","dateCreated":"2021-02-13T17:38:20+08:00","dateModified":"2021-09-29T14:40:13+08:00","datePublished":"2021-02-13T17:38:20+08:00","description":"周志华《机器学习》学习笔记：第2章 模型评估与选择","headline":"机器学习笔记(一)：模型评估与选择","image":["https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/Machine_Learing/Machine_Learning.jpg"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/02/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg","logo":{"@type":"ImageObject","url":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg"}},"url":"https://yiwenzhe.com/2021/02/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/","keywords":"机器学习","thumbnailUrl":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/Machine_Learing/Machine_Learning.jpg"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg"},"articleBody":"\n经验误差与过拟合&emsp;&emsp;错误率：分类错误的样本数占样本总数的比例。m个样本中有a个样本分类错误，则错误率E=a/m。&emsp;&emsp;精度：分类正确的样本数占样本总数的比例。精度=1-错误率。&emsp;&emsp;误差：学习器实际预测的输出与样本的真实输出之间的差异。训练集上的误差称为“训练误差”或“经验误差”，在新样本上的误差称为“泛化误差”。&emsp;&emsp;过拟合：把训练样本自身的一些特点当做所有样本的一般性质，泛化性能下降。&emsp;&emsp;欠拟合：对训练样本的一般性质尚未学好，学习能力过低。\n&emsp;&emsp;我们的目标是在新样本上表现好的学习器，即泛化误差小。当学习器把训练样本学的太好时，可能会出现过拟合情况。欠拟合比较容易客服，如增加训练轮数等，而过拟合是无法彻底避免的，只能缓解或者说减小其风险。&emsp;&emsp;面对具体任务时，往往有多种算法可供选择，以及不同的参数配置。选择算法、配置参数的过程就叫做“模型选择”。理想的解决方案是对候选模型的泛化误差进行评估，选择泛化误差最小的模型。\n评估方法&emsp;&emsp;训练集：用来训练学习器的数据集。&emsp;&emsp;测试集：用来测试学习器对新样本判别能力的数据集。在测试集上的“测试误差”将作为泛化误差的近似。测试集应尽可能与训练集互斥。&emsp;&emsp;现有包含m个样例的数据集D={(x1,y1), (x2,y2), …, (xm,ym)}，既要训练又要测试，将D分为训练集S和测试T。\n留出法交叉验证法自助法性能度量比较检验偏差与方差","dateCreated":"2021-02-13T17:38:20+08:00","dateModified":"2021-09-29T14:40:13+08:00","datePublished":"2021-02-13T17:38:20+08:00","description":"周志华《机器学习》学习笔记：第2章 模型评估与选择","headline":"机器学习笔记(一)：模型评估与选择","image":["https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/Machine_Learing/Machine_Learning.jpg"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/02/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg","logo":{"@type":"ImageObject","url":"picture.jpg"}},"url":"https://yiwenzhe.com/2021/02/13/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E4%B8%80-%EF%BC%9A%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/","keywords":"机器学习","thumbnailUrl":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/Machine_Learing/Machine_Learning.jpg"}</script>
     <meta name="description" content="周志华《机器学习》学习笔记：第2章 模型评估与选择">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="机器学习笔记(一)：模型评估与选择">
@@ -37,7 +37,7 @@
         
     
     
-        <meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg">
+        <meta property="og:image" content="https://yiwenzhe.com/assets/images/picture.jpg">
     
     
         <meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/Machine_Learing/Machine_Learning.jpg">
@@ -92,7 +92,7 @@
             <a class="header-right-picture " href="#about" aria-label="打开链接: /#about">
         
         
-            <img class="header-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+            <img class="header-picture" src="/assets/images/picture.jpg" alt="作者的图片">
         
         </a>
     
@@ -110,7 +110,7 @@
         
             <div class="sidebar-profile">
                 <a href="/#about" aria-label="阅读有关作者的更多信息">
-                    <img class="sidebar-profile-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+                    <img class="sidebar-profile-picture" src="/assets/images/picture.jpg" alt="作者的图片">
                 </a>
                 <h4 class="sidebar-profile-name">YWZ</h4>
                 
@@ -359,7 +359,7 @@
     </nav>
     <ul class="post-actions post-action-share">
         <li class="post-action hide-lg hide-md hide-sm">
-            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
         </li>
@@ -503,7 +503,7 @@ setInterval("createtime()",250);
     </nav>
     <ul class="post-actions post-action-share">
         <li class="post-action hide-lg hide-md hide-sm">
-            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
         </li>
@@ -596,7 +596,7 @@ setInterval("createtime()",250);
         </div>
         
             <a href="https://yiwenzhe.com">
-            <img id="about-card-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+            <img id="about-card-picture" src="/assets/images/picture.jpg" alt="作者的图片">
             </a>
         
             <a href="https://yiwenzhe.com">
@@ -626,7 +626,7 @@ setInterval("createtime()",250);
 
         
         
-<div id="cover" style="background-image:url('https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/cover.jpg');"></div>
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 
 <script src="/assets/js/script-mxznsv1n7nz3zrfuls87amiraudckgmxncavgf1ucci53txgionftndw0zwt.min.js"></script>
@@ -639,5 +639,20 @@ setInterval("createtime()",250);
 
 
 
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>

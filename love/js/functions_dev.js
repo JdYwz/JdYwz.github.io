@@ -93,8 +93,15 @@ function startHeartAnimation() {
 })(jQuery);
 
 function timeElapse(date){
-	var current = Date();
-	var seconds = (Date.parse(current) - Date.parse(date)) / 1000;
+	var the_end = new Date();
+	the_end.setFullYear(2022, 7, 11);  //java月份从0开始
+	the_end.setHours(20);
+	the_end.setMinutes(44);
+	the_end.setSeconds(0);
+	the_end.setMilliseconds(0);
+	var seconds = (Date.parse(the_end) - Date.parse(date)) / 1000;
+	// var current = Date();
+	// var seconds = (Date.parse(current) - Date.parse(date)) / 1000;
 	var days = Math.floor(seconds / (3600 * 24));
 	seconds = seconds % (3600 * 24);
 	var hours = Math.floor(seconds / 3600);

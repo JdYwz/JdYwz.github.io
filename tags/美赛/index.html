@@ -32,7 +32,7 @@
         
     
     
-        <meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg">
+        <meta property="og:image" content="https://yiwenzhe.com/assets/images/picture.jpg">
     
     
     
@@ -82,7 +82,7 @@
             <a class="header-right-picture " href="#about" aria-label="打开链接: /#about">
         
         
-            <img class="header-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+            <img class="header-picture" src="/assets/images/picture.jpg" alt="作者的图片">
         
         </a>
     
@@ -100,7 +100,7 @@
         
             <div class="sidebar-profile">
                 <a href="/#about" aria-label="阅读有关作者的更多信息">
-                    <img class="sidebar-profile-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+                    <img class="sidebar-profile-picture" src="/assets/images/picture.jpg" alt="作者的图片">
                 </a>
                 <h4 class="sidebar-profile-name">YWZ</h4>
                 
@@ -397,7 +397,7 @@ setInterval("createtime()",250);
         </div>
         
             <a href="https://yiwenzhe.com">
-            <img id="about-card-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+            <img id="about-card-picture" src="/assets/images/picture.jpg" alt="作者的图片">
             </a>
         
             <a href="https://yiwenzhe.com">
@@ -427,7 +427,7 @@ setInterval("createtime()",250);
 
         
         
-<div id="cover" style="background-image:url('https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/cover.jpg');"></div>
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 
 <script src="/assets/js/script-mxznsv1n7nz3zrfuls87amiraudckgmxncavgf1ucci53txgionftndw0zwt.min.js"></script>
@@ -438,5 +438,20 @@ setInterval("createtime()",250);
 
 
 
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>

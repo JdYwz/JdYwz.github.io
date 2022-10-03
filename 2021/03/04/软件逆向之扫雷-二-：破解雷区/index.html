@@ -17,7 +17,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg"},"articleBody":"\n问题导入&emsp;&emsp;上一节中我们通过修改注册表修改了扫雷英雄榜，自行改动了榜上的昵称和时间。然而这只是表面工作，没有解决扫雷游戏的本质：找出所有雷区。这一节我们分析雷区的存储方式和位置，人工破解雷区。\n雷区分析&emsp;&emsp;扫雷的界面是一个n*m的矩形雷区，每个小方块代表一个位置，和矩阵十分类似。因此我们猜想是通过二维矩阵来存储数据，将矩阵中特定位置标记为雷区，而每次点击非雷区时会出现数字，即计算点击位置周边八个块的地雷数目，然后显示在块上。&emsp;&emsp;将矩阵转化成扫雷的界面则需要调用几个API函数，比较常用的就是BitBlt函数。BitBlt将某一内存块的数据传送到另一内存块，前一内存块被称为”源”，后一内存块被称为”目标”。使用该函数我们可以将矩阵进行变换，从而显示出来。\n逆向分析&emsp;&emsp;使用OllyDBG打开扫雷程序winmine.exe，查看调用的API函数。\n\n\n&emsp;&emsp;可以看到从GDI32.dll导入的函数很多与作图有关，如SetLayout、CreatePen等。我们选中BitBlt函数，在每个参考上设置断点，然后运行至断点处。&emsp;&emsp;第一个断点处，整个扫雷界面都未加载完成，而且我们也没有进行点击，故不是所需代码块，取消该出断点，继续运行。&emsp;&emsp;图像界面显示出来，程序停止了运行，表示程序还未运行到第二个断点，可能在等待用户点击鼠标。我们选择雷区任意一个位置点击，程序运行到第二个断点处停止。\n\n&emsp;&emsp;BitBlt所需参数均在图中标识出来，现在我们需要分析这些参数，找到二维矩阵的内存位置。\n&emsp;&emsp;首先我们要知道矩阵位置的计算，对于一维矩阵，a[n]，a[i]的内存位置=基址(a[0])+i\\*sizeof(单个数据内存大小)。对于二维矩阵a[m][n]，a[i][j]的内存位置=基址+i\\*n\\*sizeof(单个数据内存大小)+j\\*sizeof(单个数据内存大小)。\n\n\n&emsp;&emsp;函数中刚好有两条类似的寻址语句。[edx+eax+01005340h]和[edx*4+105A20]。第一条是mov操作，并且更符合二维数组寻址，因此我们猜测01005340h是数组基址。\n\n\n&emsp;&emsp;在左下角数据窗口使用ctrl+G，输入01005340h，跳转到该位置。查看数据窗口内容。\n\n\n&emsp;&emsp;数据窗口一开始全是10，有33个。由于我们使用的是高级模式，扫雷界面是16*32，初步猜测10代表边界。然后是大量0F和少量8F。前七个数据是六个0F和一个8F，那我们点击扫雷第一排前七个格子。前七个均没有雷，第八个是雷。\n\n\n&emsp;&emsp;查看数据区内容是否发生变化：\n\n\n&emsp;&emsp;前五个格子为空，数据由0F变为40；第六个格子是数字1，数据由0F变为41。同时数字2、3对应数据也分别变为42、43。得出结论：未点开非雷区数据为0F，点开的非雷区数字x的数据为4x。&emsp;&emsp;第七个格子是我们点中的雷，数据由8F变为CC；而第八个格子我们未点中的雷由8F变为8A。得出结论：原数据8F即表示该位置是雷。&emsp;&emsp;除此之外，扫雷还有两个符号，旗子和问号，现在我们再次尝试，分别在雷区和非雷区标上旗子和问号，查看数据。\n\n\n\n\n&emsp;&emsp;标上旗子，雷区数据由8F变成8E，非雷区数据由0F变成0E；标上问号，雷区数据由8F变成8D，非雷区数据由0F变成0D。由此可得雷区最高位为1，不论是8（1000）还是C（1010），最高位都是1；非雷区最高位为0。&emsp;&emsp;由以上情况作出总结：雷区（最高位为1）：&emsp;&emsp;1.未点开为8F&emsp;&emsp;2.点开为CC，其他为8A&emsp;&emsp;3.标上旗子为8E&emsp;&emsp;4.标上问号为8D非雷区（最高位为0）：&emsp;&emsp;1.未点开为0F&emsp;&emsp;2.点开为4x（x代表格子显示数字）&emsp;&emsp;3.标上旗子为0E&emsp;&emsp;4.标上问号为0D当然我们也可以人为修改数据达到各种效果，如初始化是雷区却不爆雷等。","dateCreated":"2021-03-04T15:35:25+08:00","dateModified":"2021-10-09T19:48:02+08:00","datePublished":"2021-03-04T15:35:25+08:00","description":"分析扫雷的雷区存储位置和设计方法，人工破解雷区。","headline":"软件逆向之扫雷(二)：破解雷区","image":["https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/top.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg","logo":{"@type":"ImageObject","url":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg"}},"url":"https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/","keywords":"软件逆向","thumbnailUrl":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/top.png"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg"},"articleBody":"\n问题导入&emsp;&emsp;上一节中我们通过修改注册表修改了扫雷英雄榜，自行改动了榜上的昵称和时间。然而这只是表面工作，没有解决扫雷游戏的本质：找出所有雷区。这一节我们分析雷区的存储方式和位置，人工破解雷区。\n雷区分析&emsp;&emsp;扫雷的界面是一个n*m的矩形雷区，每个小方块代表一个位置，和矩阵十分类似。因此我们猜想是通过二维矩阵来存储数据，将矩阵中特定位置标记为雷区，而每次点击非雷区时会出现数字，即计算点击位置周边八个块的地雷数目，然后显示在块上。&emsp;&emsp;将矩阵转化成扫雷的界面则需要调用几个API函数，比较常用的就是BitBlt函数。BitBlt将某一内存块的数据传送到另一内存块，前一内存块被称为”源”，后一内存块被称为”目标”。使用该函数我们可以将矩阵进行变换，从而显示出来。\n逆向分析&emsp;&emsp;使用OllyDBG打开扫雷程序winmine.exe，查看调用的API函数。\n\n\n&emsp;&emsp;可以看到从GDI32.dll导入的函数很多与作图有关，如SetLayout、CreatePen等。我们选中BitBlt函数，在每个参考上设置断点，然后运行至断点处。&emsp;&emsp;第一个断点处，整个扫雷界面都未加载完成，而且我们也没有进行点击，故不是所需代码块，取消该出断点，继续运行。&emsp;&emsp;图像界面显示出来，程序停止了运行，表示程序还未运行到第二个断点，可能在等待用户点击鼠标。我们选择雷区任意一个位置点击，程序运行到第二个断点处停止。\n\n&emsp;&emsp;BitBlt所需参数均在图中标识出来，现在我们需要分析这些参数，找到二维矩阵的内存位置。\n&emsp;&emsp;首先我们要知道矩阵位置的计算，对于一维矩阵，a[n]，a[i]的内存位置=基址(a[0])+i\\*sizeof(单个数据内存大小)。对于二维矩阵a[m][n]，a[i][j]的内存位置=基址+i\\*n\\*sizeof(单个数据内存大小)+j\\*sizeof(单个数据内存大小)。\n\n\n&emsp;&emsp;函数中刚好有两条类似的寻址语句。[edx+eax+01005340h]和[edx*4+105A20]。第一条是mov操作，并且更符合二维数组寻址，因此我们猜测01005340h是数组基址。\n\n\n&emsp;&emsp;在左下角数据窗口使用ctrl+G，输入01005340h，跳转到该位置。查看数据窗口内容。\n\n\n&emsp;&emsp;数据窗口一开始全是10，有33个。由于我们使用的是高级模式，扫雷界面是16*32，初步猜测10代表边界。然后是大量0F和少量8F。前七个数据是六个0F和一个8F，那我们点击扫雷第一排前七个格子。前七个均没有雷，第八个是雷。\n\n\n&emsp;&emsp;查看数据区内容是否发生变化：\n\n\n&emsp;&emsp;前五个格子为空，数据由0F变为40；第六个格子是数字1，数据由0F变为41。同时数字2、3对应数据也分别变为42、43。得出结论：未点开非雷区数据为0F，点开的非雷区数字x的数据为4x。&emsp;&emsp;第七个格子是我们点中的雷，数据由8F变为CC；而第八个格子我们未点中的雷由8F变为8A。得出结论：原数据8F即表示该位置是雷。&emsp;&emsp;除此之外，扫雷还有两个符号，旗子和问号，现在我们再次尝试，分别在雷区和非雷区标上旗子和问号，查看数据。\n\n\n\n\n&emsp;&emsp;标上旗子，雷区数据由8F变成8E，非雷区数据由0F变成0E；标上问号，雷区数据由8F变成8D，非雷区数据由0F变成0D。由此可得雷区最高位为1，不论是8（1000）还是C（1010），最高位都是1；非雷区最高位为0。&emsp;&emsp;由以上情况作出总结：雷区（最高位为1）：&emsp;&emsp;1.未点开为8F&emsp;&emsp;2.点开为CC，其他为8A&emsp;&emsp;3.标上旗子为8E&emsp;&emsp;4.标上问号为8D非雷区（最高位为0）：&emsp;&emsp;1.未点开为0F&emsp;&emsp;2.点开为4x（x代表格子显示数字）&emsp;&emsp;3.标上旗子为0E&emsp;&emsp;4.标上问号为0D当然我们也可以人为修改数据达到各种效果，如初始化是雷区却不爆雷等。","dateCreated":"2021-03-04T15:35:25+08:00","dateModified":"2021-10-09T19:48:02+08:00","datePublished":"2021-03-04T15:35:25+08:00","description":"分析扫雷的雷区存储位置和设计方法，人工破解雷区。","headline":"软件逆向之扫雷(二)：破解雷区","image":["https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/top.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg","logo":{"@type":"ImageObject","url":"picture.jpg"}},"url":"https://yiwenzhe.com/2021/03/04/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%BA%8C-%EF%BC%9A%E7%A0%B4%E8%A7%A3%E9%9B%B7%E5%8C%BA/","keywords":"软件逆向","thumbnailUrl":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/top.png"}</script>
     <meta name="description" content="分析扫雷的雷区存储位置和设计方法，人工破解雷区。">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="软件逆向之扫雷(二)：破解雷区">
@@ -45,7 +45,7 @@
         
     
     
-        <meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg">
+        <meta property="og:image" content="https://yiwenzhe.com/assets/images/picture.jpg">
     
     
         <meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/2/top.png">
@@ -100,7 +100,7 @@
             <a class="header-right-picture " href="#about" aria-label="打开链接: /#about">
         
         
-            <img class="header-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+            <img class="header-picture" src="/assets/images/picture.jpg" alt="作者的图片">
         
         </a>
     
@@ -118,7 +118,7 @@
         
             <div class="sidebar-profile">
                 <a href="/#about" aria-label="阅读有关作者的更多信息">
-                    <img class="sidebar-profile-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+                    <img class="sidebar-profile-picture" src="/assets/images/picture.jpg" alt="作者的图片">
                 </a>
                 <h4 class="sidebar-profile-name">YWZ</h4>
                 
@@ -392,7 +392,7 @@
     </nav>
     <ul class="post-actions post-action-share">
         <li class="post-action hide-lg hide-md hide-sm">
-            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
         </li>
@@ -536,7 +536,7 @@ setInterval("createtime()",250);
     </nav>
     <ul class="post-actions post-action-share">
         <li class="post-action hide-lg hide-md hide-sm">
-            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
                 <i class="fa fa-share-alt" aria-hidden="true"></i>
             </a>
         </li>
@@ -629,7 +629,7 @@ setInterval("createtime()",250);
         </div>
         
             <a href="https://yiwenzhe.com">
-            <img id="about-card-picture" src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/picture.jpg" alt="作者的图片">
+            <img id="about-card-picture" src="/assets/images/picture.jpg" alt="作者的图片">
             </a>
         
             <a href="https://yiwenzhe.com">
@@ -659,7 +659,7 @@ setInterval("createtime()",250);
 
         
         
-<div id="cover" style="background-image:url('https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/cover.jpg');"></div>
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
         <!--SCRIPTS-->
 
 <script src="/assets/js/script-mxznsv1n7nz3zrfuls87amiraudckgmxncavgf1ucci53txgionftndw0zwt.min.js"></script>
@@ -672,5 +672,20 @@ setInterval("createtime()",250);
 
 
 
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
