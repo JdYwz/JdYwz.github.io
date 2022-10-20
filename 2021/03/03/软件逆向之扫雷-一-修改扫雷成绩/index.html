@@ -17,7 +17,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg"},"articleBody":"\n问题导入&emsp;&emsp;扫雷的游戏目标是在最短的时间内根据点击格子出现的数字找出所有非雷格子，同时避免踩雷，踩到一个雷即全盘皆输。如果用时破纪录，则会在扫雷英雄榜上留下昵称和用时记录。现在我们通过逆向分析来人为修改这一记录。\n使用工具&emsp;&emsp;Ollydbg：通常称作OD，是反汇编工作的常用工具。本人使用的是看雪学院的优化版OD：OllyICE，可在看雪学院官网进行下载。\n逆向分析&emsp;&emsp;下图为游戏菜单栏，可以看出扫雷英雄榜的点击链接在“菜单栏”-“游戏”-“扫雷英雄榜”，菜单项会响应鼠标点击并显示出英雄榜信息。\n\n\n\n\n\n&emsp;&emsp;可以看到英雄榜初始化昵称均为匿名，时间均为999。当扫雷在不同电脑运行时，该英雄榜均会初始化，因此该数据应该不是存储在exe中，可能是电脑某个文件，如软件注册表。&lt;/br&gt;&emsp;&emsp;用Ollydbg打开winmine.exe，得到如下调试界面：\n\n&emsp;&emsp;现在我们需要找到注册表位置，也就是找到注册表相关函数，这些函数都是exe从外部dll库调入的。在反汇编窗口点击右键，选择“查找”-“当前模块中的名称（标签）”，得到exe的导入库函数。\n\n&emsp;&emsp;点击地址字段排序，最前面几个函数均是从ADVAPI32.dll导入的，和注册表有关。\n\n\n&emsp;&emsp;RegCreateKeyExw函数功能为创建或打开注册表项。默认为创建，当注册表中有此项时，为打开。我们左键选中该函数，右键选择在“每个参考上设置断点”，这样调用该函数位置均会加上断点。\n\n&emsp;&emsp;返回反汇编窗口，快捷键F9（fn+F9）运行程序到断点位置。右下角堆栈窗口即有函数调用的参数信息，可以看到注册表位置路径“Software\\Microsoft\\winmine”。\n\n\n&emsp;&emsp;使用Win+R打开电脑运行，输入regedit打开注册表。\n\n\n&emsp;&emsp;在HKEY_CURRENT_USER下寻找路径software\\Microsoft\\winmine，找到英雄榜相关信息如下：\n\n&emsp;&emsp;可以看到Name、Time字段，Name都是匿名，Time都是999，与之前看到的英雄榜数据相同，接下来修改相应字段即可。修改后打开扫雷，查看英雄榜，可见信息已经被修改。\n","dateCreated":"2021-03-03T22:56:47+08:00","dateModified":"2021-10-09T19:36:47+08:00","datePublished":"2021-03-03T22:56:47+08:00","description":"大三上学期学过软件安全，接触了一点软件逆向知识，大三下学期选择了软件逆向分析课程来深入学习。第一节课老师便让我们逆向分析扫雷(winmine.exe)，因此做下记录。","headline":"软件逆向之扫雷(一)：修改扫雷成绩","image":["https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/top.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg","logo":{"@type":"ImageObject","url":"picture.jpg"}},"url":"https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/","keywords":"软件逆向","thumbnailUrl":"https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/top.png"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg"},"articleBody":"\n问题导入&emsp;&emsp;扫雷的游戏目标是在最短的时间内根据点击格子出现的数字找出所有非雷格子，同时避免踩雷，踩到一个雷即全盘皆输。如果用时破纪录，则会在扫雷英雄榜上留下昵称和用时记录。现在我们通过逆向分析来人为修改这一记录。\n使用工具&emsp;&emsp;Ollydbg：通常称作OD，是反汇编工作的常用工具。本人使用的是看雪学院的优化版OD：OllyICE，可在看雪学院官网进行下载。\n逆向分析&emsp;&emsp;下图为游戏菜单栏，可以看出扫雷英雄榜的点击链接在“菜单栏”-“游戏”-“扫雷英雄榜”，菜单项会响应鼠标点击并显示出英雄榜信息。\n\n\n\n\n\n&emsp;&emsp;可以看到英雄榜初始化昵称均为匿名，时间均为999。当扫雷在不同电脑运行时，该英雄榜均会初始化，因此该数据应该不是存储在exe中，可能是电脑某个文件，如软件注册表。&lt;/br&gt;&emsp;&emsp;用Ollydbg打开winmine.exe，得到如下调试界面：\n\n&emsp;&emsp;现在我们需要找到注册表位置，也就是找到注册表相关函数，这些函数都是exe从外部dll库调入的。在反汇编窗口点击右键，选择“查找”-“当前模块中的名称（标签）”，得到exe的导入库函数。\n\n&emsp;&emsp;点击地址字段排序，最前面几个函数均是从ADVAPI32.dll导入的，和注册表有关。\n\n\n&emsp;&emsp;RegCreateKeyExw函数功能为创建或打开注册表项。默认为创建，当注册表中有此项时，为打开。我们左键选中该函数，右键选择在“每个参考上设置断点”，这样调用该函数位置均会加上断点。\n\n&emsp;&emsp;返回反汇编窗口，快捷键F9（fn+F9）运行程序到断点位置。右下角堆栈窗口即有函数调用的参数信息，可以看到注册表位置路径“Software\\Microsoft\\winmine”。\n\n\n&emsp;&emsp;使用Win+R打开电脑运行，输入regedit打开注册表。\n\n\n&emsp;&emsp;在HKEY_CURRENT_USER下寻找路径software\\Microsoft\\winmine，找到英雄榜相关信息如下：\n\n&emsp;&emsp;可以看到Name、Time字段，Name都是匿名，Time都是999，与之前看到的英雄榜数据相同，接下来修改相应字段即可。修改后打开扫雷，查看英雄榜，可见信息已经被修改。\n","dateCreated":"2021-03-03T22:56:47+08:00","dateModified":"2022-10-20T13:56:44+08:00","datePublished":"2021-03-03T22:56:47+08:00","description":"大三上学期学过软件安全，接触了一点软件逆向知识，大三下学期选择了软件逆向分析课程来深入学习。第一节课老师便让我们逆向分析扫雷(winmine.exe)，因此做下记录。","headline":"软件逆向之扫雷(一)：修改扫雷成绩","image":["top.png"],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg","logo":{"@type":"ImageObject","url":"picture.jpg"}},"url":"https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/","keywords":"软件逆向","thumbnailUrl":"top.png"}</script>
     <meta name="description" content="大三上学期学过软件安全，接触了一点软件逆向知识，大三下学期选择了软件逆向分析课程来深入学习。第一节课老师便让我们逆向分析扫雷(winmine.exe)，因此做下记录。">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="软件逆向之扫雷(一)：修改扫雷成绩">
@@ -25,22 +25,22 @@
 <meta property="og:site_name" content="YWZ">
 <meta property="og:description" content="大三上学期学过软件安全，接触了一点软件逆向知识，大三下学期选择了软件逆向分析课程来深入学习。第一节课老师便让我们逆向分析扫雷(winmine.exe)，因此做下记录。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/1.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/2.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/3.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/4.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/5.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/6.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/7.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/8.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/9.png">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/10.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/1.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/2.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/3.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/4.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/5.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/6.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/7.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/8.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/9.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/10.png">
 <meta property="article:published_time" content="2021-03-03T14:56:47.000Z">
-<meta property="article:modified_time" content="2021-10-09T11:36:47.106Z">
+<meta property="article:modified_time" content="2022-10-20T05:56:44.412Z">
 <meta property="article:author" content="YWZ">
 <meta property="article:tag" content="软件逆向">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/1.png">
+<meta name="twitter:image" content="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/1.png">
     
     
         
@@ -49,8 +49,8 @@
         <meta property="og:image" content="https://yiwenzhe.com/assets/images/picture.jpg">
     
     
-        <meta property="og:image" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/top.png">
-        <meta class="swiftype" name="image" data-type="enum" content="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/top.png">
+        <meta property="og:image" content="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/top.png">
+        <meta class="swiftype" name="image" data-type="enum" content="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/top.png">
     
     
     
@@ -288,9 +288,9 @@
     
     
         &nbsp;|&nbsp; 更新于
-        <time itemprop="dateUpdated" content="Sat Oct 09 2021 19:36:47 GMT+0800">
+        <time itemprop="dateUpdated" content="Thu Oct 20 2022 13:56:44 GMT+0800">
         
-		    2021 年 10 月 09 日
+		    2022 年 10 月 20 日
     	
         </time>
     
@@ -306,30 +306,30 @@
 <h1 id="问题导入"><a href="#问题导入" class="headerlink" title="问题导入"></a>问题导入</h1><p>&emsp;&emsp;扫雷的游戏目标是在最短的时间内根据点击格子出现的数字找出所有非雷格子，同时避免踩雷，踩到一个雷即全盘皆输。如果用时破纪录，则会在扫雷英雄榜上留下昵称和用时记录。现在我们通过逆向分析来人为修改这一记录。</p>
 <h1 id="使用工具"><a href="#使用工具" class="headerlink" title="使用工具"></a>使用工具</h1><p>&emsp;&emsp;Ollydbg：通常称作OD，是反汇编工作的常用工具。本人使用的是看雪学院的优化版OD：OllyICE，可在看雪学院官网进行下载。</p>
 <h1 id="逆向分析"><a href="#逆向分析" class="headerlink" title="逆向分析"></a>逆向分析</h1><p>&emsp;&emsp;下图为游戏菜单栏，可以看出扫雷英雄榜的点击链接在“菜单栏”-“游戏”-“扫雷英雄榜”，菜单项会响应鼠标点击并显示出英雄榜信息。</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/1.png" width="200" height="265"></div>
+<div align="center"><img src="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/1.png" width="200" height="265"></div>
 <br>
 
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/2.png" width="200" height="110"></div>
+<div align="center"><img src="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/2.png" width="200" height="110"></div>
 
 <p>&emsp;&emsp;可以看到英雄榜初始化昵称均为匿名，时间均为999。当扫雷在不同电脑运行时，该英雄榜均会初始化，因此该数据应该不是存储在exe中，可能是电脑某个文件，如软件注册表。<br>&lt;/br&gt;<br>&emsp;&emsp;用Ollydbg打开winmine.exe，得到如下调试界面：</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/3.png"></div>
+<div align="center"><img src="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/3.png"></div>
 &emsp;&emsp;现在我们需要找到注册表位置，也就是找到注册表相关函数，这些函数都是exe从外部dll库调入的。在反汇编窗口点击右键，选择“查找”-“当前模块中的名称（标签）”，得到exe的导入库函数。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/4.png"></div>
+<div align="center"><img src="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/4.png"></div>
 &emsp;&emsp;点击地址字段排序，最前面几个函数均是从ADVAPI32.dll导入的，和注册表有关。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/5.png" width="400" height="108"></div>
+<div align="center"><img src="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/5.png" width="400" height="108"></div>
 
 <p>&emsp;&emsp;RegCreateKeyExw函数功能为创建或打开注册表项。默认为创建，当注册表中有此项时，为打开。我们左键选中该函数，右键选择在“每个参考上设置断点”，这样调用该函数位置均会加上断点。</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/6.png"></div>
+<div align="center"><img src="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/6.png"></div>
 &emsp;&emsp;返回反汇编窗口，快捷键F9（fn+F9）运行程序到断点位置。右下角堆栈窗口即有函数调用的参数信息，可以看到注册表位置路径“Software\Microsoft\winmine”。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/7.png" width="400" height="101"></div>
+<div align="center"><img src="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/7.png" width="400" height="101"></div>
 
 <p>&emsp;&emsp;使用Win+R打开电脑运行，输入regedit打开注册表。</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/8.png" width="300" height="155"></div>
+<div align="center"><img src="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/8.png" width="300" height="155"></div>
 
 <p>&emsp;&emsp;在HKEY_CURRENT_USER下寻找路径software\Microsoft\winmine，找到英雄榜相关信息如下：</p>
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/9.png"></div>
+<div align="center"><img src="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/9.png"></div>
 &emsp;&emsp;可以看到Name、Time字段，Name都是匿名，Time都是999，与之前看到的英雄榜数据相同，接下来修改相应字段即可。修改后打开扫雷，查看英雄榜，可见信息已经被修改。
-<div align="center"><img src="https://cdn.jsdelivr.net/gh/JdYwz/CDN/image/winmine/1/10.png" width="250" height="135"></div>
+<div align="center"><img src="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/10.png" width="250" height="135"></div>
             
 
 
@@ -341,7 +341,7 @@
     <p><span>本文标题:</span><href="/%20"> 软件逆向之扫雷(一)：修改扫雷成绩</a></p>
     <p><span>文章作者:</span><a href="/" title="访问 YWZ的个人博客">YWZ</a></p>
     <p><span>发布时间:</span>2021年03月03日 - 22:56</p>
-    <p><span>最后更新:</span>2021年10月09日 - 19:36</p>
+    <p><span>最后更新:</span>2022年10月20日 - 13:56</p>
     <p><span>原始链接:</span><a href="/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/" title="软件逆向之扫雷(一)：修改扫雷成绩">https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/</a>
     <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://yiwenzhe.com/2021/03/03/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91%E4%B9%8B%E6%89%AB%E9%9B%B7-%E4%B8%80-%E4%BF%AE%E6%94%B9%E6%89%AB%E9%9B%B7%E6%88%90%E7%BB%A9/"  aria-label="复制成功！"></i></span>
     </p>
