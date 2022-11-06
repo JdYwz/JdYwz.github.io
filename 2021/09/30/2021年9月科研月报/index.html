@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="YWZ">
-    <title>科研周报6 - YWZ</title>
+    <title>2021年9月科研月报 - YWZ</title>
     <meta name="author" content="YWZ">
     
     
@@ -17,27 +17,24 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg"},"articleBody":"\n本学期科研规划&emsp;&emsp;在fabric区块链中使用sgx技术，将chaincode放入enclave中运行，保护智能合约运行安全。\n本周工作情况和进展&emsp;&emsp;上周提出的镜像问题已经解决，在docker镜像池中找到了安装sgx的镜像，镜像中不能安装sgx驱动设备，需要将本机的sgx驱动传递到运行的镜像中。&emsp;&emsp;本周简单画了几个原理图，还需要后续完善：\n\nfabric原理图 \n\n项目运行架构图 \n\n静态原理图 \n\n&emsp;&emsp;静态原理图太过于简单，直接就是在chaincode上套上chaincode，后续还需要重新改进。因为程序运行时会创建容器，所以运行图会凸显出容器之间的交互，更为详细，后续需要再添加一些细节。&emsp;&emsp;本周对fabric的运行进行了简单评估。hyperledger下有一个caliper项目，专门用来测试区块链的性能，如延迟Latency、吞吐率Throughput、CPU占用率、内存等，如下：\n\n存在的问题&emsp;&emsp;该评估需要编写脚本来测试，因此后续可以测试创建、查询、修改账本的各种性能。&emsp;&emsp;程序运行时间可以通过/usr/bin/time来获取链码安装、调用的时间信息。\n下周工作计划&emsp;&emsp;学习caliper使用方法，完善fabric性能测试。","dateCreated":"2021-11-12T15:28:20+08:00","dateModified":"2022-11-06T09:55:18+08:00","datePublished":"2021-11-12T15:28:20+08:00","description":"本次周期为2021/11/08 – 2021/11/14。","headline":"科研周报6","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg","logo":{"@type":"ImageObject","url":"picture.jpg"}},"url":"https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/","keywords":"Hyperledger Fabric, SGX, EGo, 区块链"}</script>
-    <meta name="description" content="本次周期为2021&#x2F;11&#x2F;08 – 2021&#x2F;11&#x2F;14。">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg"},"articleBody":"\n\n本学期的科研计划&emsp;&emsp;本学期的科研项目为使用SGX保护hyperledger-fabric区块链，目前已经成功部署fabric网络和SGX，对二者进行测试使用。&emsp;&emsp;初步计划在年底前实现简单地将chaincode放入SGX的enclave中运行（在fabric中称为链码chaincode，等同于其他区块链中的智能合约Smart contract）。为实现该想法，首先需要打通fabric链码由go语言编写和SGX由C语言编写的限制，通过阅读ego的实现方法，模拟ego，为go语言编写的chaincode创造enclave，保护其运行。&emsp;&emsp;在上述计划完成后，分析多种针对fabric的攻击方式，目前已经调研了Sybil攻击、Rollback攻击，改进以上方案，抵御至少一种攻击行为。\n本周工作情况和进展\nchaincode是如何安装和运行的?&emsp;&emsp;在fabric中，chaincode是通过如下命令安装到网络中的：\n1peer lifecycle chaincode install mycc.tar.gz\n&emsp;&emsp;其中peer是fabric操作的指令，mycc.tar.gz就是chaincode的压缩包，其中包含一个json文件和go文件。&emsp;&emsp;在安装后，peer实例化该chaincode时，peer命令会创建一个docker文件，为chaincode创建容器，编译go文件，并将编译后的二进制文件放入容器中运行。之后peer便会通过chaincode中的接口（Init、Invoke、Query）来与之交互。\n\nEGo&emsp;&emsp;ego官网：https://docs.edgeless.systems/ego/#/&emsp;&emsp;ego-go，一个经过改进的Go编译器，可以从给定的Go项目中构建与enclave兼容的可执行文件——同时提供与原始Go编译器相同的CLI。&emsp;&emsp;ego，一个CLI工具，可以处理所有与enclave相关的任务，如签名和创建enclave。&emsp;&emsp;ego使用如下：\n123ego-go build helloworld.go  //编译一个go程序ego sign helloworld         //创建enclave.json配置文件和公私密钥对ego run helloworld          //在enclave中运行（此处是在仿真模式运行）\n\n\n针对fabric提出三种方案&emsp;&emsp;A方案：&emsp;&emsp;使用ego，设法在运行时替换go为ego，并使用ego run运行chaincode。&emsp;&emsp;问题：chaincode不是独立的运行程序，需要与peer程序交互，因此无法直接使用ego run运行。&emsp;&emsp;B方案：&emsp;&emsp;自己编写chaincode，将chaincode划分为两部分，交互的接口部分使用go语言编写，实际运行部分使用c语言编写，并启动enclave运行。&emsp;&emsp;问题：go语言如何与C语言交互？go程序会被peer编译，c语言如何被fabric编译运行？并且该方案也不实用，用户每次都需要重新编写chaincode。&emsp;&emsp;C方案：&emsp;&emsp;阅读ego源码，模仿ego为go程序创建enclave功能的实现，在网络中直接为chaincode创建enclave。&emsp;&emsp;该方案较为实用，用户只需要和之前一样编写go语言的chaincode即可。难点在于ego源码的阅读和实现。\n\n\n存在的问题\n源码理解问题&emsp;&emsp;fabric源码、sgx实现方法、ego源码均需要时间去理解，fabric源码量较大，因此可以选择chaincode的部分先着重分析。而网络中关于ego的解释文件很少，官网也只是粗略地介绍使用方法，因此源码阅读很有难度，只能通过cmakefile来理清文件结构。同时fabric都是使用go语言编写，我未系统地学习go语言，因此也需要花时间了解go语法。\n\n二者交互问题&emsp;&emsp;整个科研方案最大的问题就是go语言和c语言的结合问题，fabric只支持go语言，sgx只能通过C语言编写，因此将二者结合就是一个难点。目前还没有较好的解决方案。\n\n\n下周工作计划\n继续ego源码阅读\nsgx相关文件阅读，并充分学会编写sgx程序\n尝试编写go语言的enclave代码（模仿ego）（可能需要多周实现）\n","dateCreated":"2021-09-30T16:28:35+08:00","dateModified":"2022-11-06T13:00:55+08:00","datePublished":"2021-09-30T16:28:35+08:00","description":"导师让我们将每周的工作用科研周报的形式汇报给她，在此同步记录。\n本次周期为2021/09/26—2021/10/01。","headline":"2021年9月科研月报","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg","logo":{"@type":"ImageObject","url":"picture.jpg"}},"url":"https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/","keywords":"Hyperledger Fabric, SGX, EGo, 区块链"}</script>
+    <meta name="description" content="导师让我们将每周的工作用科研周报的形式汇报给她，在此同步记录。 本次周期为2021&#x2F;09&#x2F;26—2021&#x2F;10&#x2F;01。">
 <meta property="og:type" content="blog">
-<meta property="og:title" content="科研周报6">
-<meta property="og:url" content="https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/index.html">
+<meta property="og:title" content="2021年9月科研月报">
+<meta property="og:url" content="https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/index.html">
 <meta property="og:site_name" content="YWZ">
-<meta property="og:description" content="本次周期为2021&#x2F;11&#x2F;08 – 2021&#x2F;11&#x2F;14。">
+<meta property="og:description" content="导师让我们将每周的工作用科研周报的形式汇报给她，在此同步记录。 本次周期为2021&#x2F;09&#x2F;26—2021&#x2F;10&#x2F;01。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/1.png">
-<meta property="og:image" content="https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/2.png">
-<meta property="og:image" content="https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/3.png">
-<meta property="og:image" content="https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/4.png">
-<meta property="article:published_time" content="2021-11-12T07:28:20.000Z">
-<meta property="article:modified_time" content="2022-11-06T01:55:18.583Z">
+<meta property="og:image" content="https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/ego.png">
+<meta property="article:published_time" content="2021-09-30T08:28:35.000Z">
+<meta property="article:modified_time" content="2022-11-06T05:00:55.113Z">
 <meta property="article:author" content="YWZ">
 <meta property="article:tag" content="Hyperledger Fabric">
 <meta property="article:tag" content="SGX">
 <meta property="article:tag" content="EGo">
 <meta property="article:tag" content="区块链">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/1.png">
+<meta name="twitter:image" content="https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/ego.png">
     
     
         
@@ -263,14 +260,14 @@
         <div class="post-header main-content-wrap text-left">
     
         <h1 class="post-title">
-            科研周报6
+            2021年9月科研月报
         </h1>
     
     
         <div class="post-meta">
-    <time datetime="2021-11-12T15:28:20+08:00">
+    <time datetime="2021-09-30T16:28:35+08:00">
 	
-		    2021 年 11 月 12 日
+		    2021 年 09 月 30 日
     	
     </time>
     
@@ -282,7 +279,7 @@
     
     
         &nbsp;|&nbsp; 更新于
-        <time itemprop="dateUpdated" content="Sun Nov 06 2022 09:55:18 GMT+0800">
+        <time itemprop="dateUpdated" content="Sun Nov 06 2022 13:00:55 GMT+0800">
         
 		    2022 年 11 月 06 日
     	
@@ -296,20 +293,32 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <!-- excerpt --><br><h1 id="table-of-contents">目录</h1><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AC%E5%AD%A6%E6%9C%9F%E7%A7%91%E7%A0%94%E8%A7%84%E5%88%92"><span class="toc-text">本学期科研规划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AC%E5%91%A8%E5%B7%A5%E4%BD%9C%E6%83%85%E5%86%B5%E5%92%8C%E8%BF%9B%E5%B1%95"><span class="toc-text">本周工作情况和进展</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">存在的问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%8B%E5%91%A8%E5%B7%A5%E4%BD%9C%E8%AE%A1%E5%88%92"><span class="toc-text">下周工作计划</span></a></li></ol><p></p>
-<h1 id="本学期科研规划"><a href="#本学期科研规划" class="headerlink" title="本学期科研规划"></a>本学期科研规划</h1><p>&emsp;&emsp;在fabric区块链中使用sgx技术，将chaincode放入enclave中运行，保护智能合约运行安全。</p>
-<h1 id="本周工作情况和进展"><a href="#本周工作情况和进展" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h1><p>&emsp;&emsp;上周提出的镜像问题已经解决，在docker镜像池中找到了安装sgx的镜像，镜像中不能安装sgx驱动设备，需要将本机的sgx驱动传递到运行的镜像中。<br>&emsp;&emsp;本周简单画了几个原理图，还需要后续完善：</p>
-<p><div align="center"><img src="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/1.png" width="500" height="287"></div></p>
-<center style="font-size:16px;color:#000000f;text-decoration:underline">fabric原理图</center> 
-<div align="center"><img src="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/2.png" width="500" height="215"></div>
-<center style="font-size:16px;color:#000000f;text-decoration:underline">项目运行架构图</center> 
-<div align="center"><img src="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/3.png" width="500" height="301"></div>
-<center style="font-size:16px;color:#000000f;text-decoration:underline">静态原理图</center> 
-
-<p>&emsp;&emsp;静态原理图太过于简单，直接就是在chaincode上套上chaincode，后续还需要重新改进。因为程序运行时会创建容器，所以运行图会凸显出容器之间的交互，更为详细，后续需要再添加一些细节。<br>&emsp;&emsp;本周对fabric的运行进行了简单评估。hyperledger下有一个caliper项目，专门用来测试区块链的性能，如延迟Latency、吞吐率Throughput、CPU占用率、内存等，如下：</p>
-<p><div align="center"><img src="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/4.png"></div></p>
-<h1 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h1><p>&emsp;&emsp;该评估需要编写脚本来测试，因此后续可以测试创建、查询、修改账本的各种性能。<br>&emsp;&emsp;程序运行时间可以通过/usr/bin/time来获取链码安装、调用的时间信息。</p>
-<h1 id="下周工作计划"><a href="#下周工作计划" class="headerlink" title="下周工作计划"></a>下周工作计划</h1><p>&emsp;&emsp;学习caliper使用方法，完善fabric性能测试。</p>
+            <!-- excerpt -->
+<h1 id="table-of-contents">目录</h1><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AC%E5%AD%A6%E6%9C%9F%E7%9A%84%E7%A7%91%E7%A0%94%E8%AE%A1%E5%88%92"><span class="toc-text">本学期的科研计划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AC%E5%91%A8%E5%B7%A5%E4%BD%9C%E6%83%85%E5%86%B5%E5%92%8C%E8%BF%9B%E5%B1%95"><span class="toc-text">本周工作情况和进展</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">存在的问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%8B%E5%91%A8%E5%B7%A5%E4%BD%9C%E8%AE%A1%E5%88%92"><span class="toc-text">下周工作计划</span></a></li></ol>
+<h1 id="本学期的科研计划"><a href="#本学期的科研计划" class="headerlink" title="本学期的科研计划"></a>本学期的科研计划</h1><p>&emsp;&emsp;本学期的科研项目为使用SGX保护hyperledger-fabric区块链，目前已经成功部署fabric网络和SGX，对二者进行测试使用。<br>&emsp;&emsp;初步计划在年底前实现简单地将chaincode放入SGX的enclave中运行（在fabric中称为链码chaincode，等同于其他区块链中的智能合约Smart contract）。为实现该想法，首先需要打通fabric链码由go语言编写和SGX由C语言编写的限制，通过阅读ego的实现方法，模拟ego，为go语言编写的chaincode创造enclave，保护其运行。<br>&emsp;&emsp;在上述计划完成后，分析多种针对fabric的攻击方式，目前已经调研了Sybil攻击、Rollback攻击，改进以上方案，抵御至少一种攻击行为。</p>
+<h1 id="本周工作情况和进展"><a href="#本周工作情况和进展" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h1><ol>
+<li><p>chaincode是如何安装和运行的?<br>&emsp;&emsp;在fabric中，chaincode是通过如下命令安装到网络中的：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">peer lifecycle chaincode install mycc.tar.gz</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;其中peer是fabric操作的指令，mycc.tar.gz就是chaincode的压缩包，其中包含一个json文件和go文件。<br>&emsp;&emsp;在安装后，peer实例化该chaincode时，peer命令会创建一个docker文件，为chaincode创建容器，编译go文件，并将编译后的二进制文件放入容器中运行。之后peer便会通过chaincode中的接口（Init、Invoke、Query）来与之交互。<br><br></p>
+</li>
+<li><p>EGo<br>&emsp;&emsp;ego官网：<a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.edgeless.systems/ego/#/">https://docs.edgeless.systems/ego/#/</a><br>&emsp;&emsp;ego-go，一个经过改进的Go编译器，可以从给定的Go项目中构建与enclave兼容的可执行文件——同时提供与原始Go编译器相同的CLI。<br>&emsp;&emsp;ego，一个CLI工具，可以处理所有与enclave相关的任务，如签名和创建enclave。<br>&emsp;&emsp;ego使用如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ego-go build helloworld.go  //编译一个go程序</span><br><span class="line">ego sign helloworld         //创建enclave.json配置文件和公私密钥对</span><br><span class="line">ego run helloworld          //在enclave中运行（此处是在仿真模式运行）</span><br></pre></td></tr></table></figure>
+<p><div align="center"><img src="/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/ego.png"></div><br><br></p>
+</li>
+<li><p>针对fabric提出三种方案<br>&emsp;&emsp;A方案：<br>&emsp;&emsp;使用ego，设法在运行时替换go为ego，并使用ego run运行chaincode。<br>&emsp;&emsp;问题：chaincode不是独立的运行程序，需要与peer程序交互，因此无法直接使用ego run运行。<br><br>&emsp;&emsp;B方案：<br>&emsp;&emsp;自己编写chaincode，将chaincode划分为两部分，交互的接口部分使用go语言编写，实际运行部分使用c语言编写，并启动enclave运行。<br>&emsp;&emsp;问题：go语言如何与C语言交互？go程序会被peer编译，c语言如何被fabric编译运行？并且该方案也不实用，用户每次都需要重新编写chaincode。<br><br>&emsp;&emsp;C方案：<br>&emsp;&emsp;阅读ego源码，模仿ego为go程序创建enclave功能的实现，在网络中直接为chaincode创建enclave。<br>&emsp;&emsp;该方案较为实用，用户只需要和之前一样编写go语言的chaincode即可。难点在于ego源码的阅读和实现。</p>
+</li>
+</ol>
+<h1 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h1><ol>
+<li><p>源码理解问题<br>&emsp;&emsp;fabric源码、sgx实现方法、ego源码均需要时间去理解，fabric源码量较大，因此可以选择chaincode的部分先着重分析。而网络中关于ego的解释文件很少，官网也只是粗略地介绍使用方法，因此源码阅读很有难度，只能通过cmakefile来理清文件结构。同时fabric都是使用go语言编写，我未系统地学习go语言，因此也需要花时间了解go语法。</p>
+</li>
+<li><p>二者交互问题<br>&emsp;&emsp;整个科研方案最大的问题就是go语言和c语言的结合问题，fabric只支持go语言，sgx只能通过C语言编写，因此将二者结合就是一个难点。目前还没有较好的解决方案。</p>
+</li>
+</ol>
+<h1 id="下周工作计划"><a href="#下周工作计划" class="headerlink" title="下周工作计划"></a>下周工作计划</h1><ol>
+<li>继续ego源码阅读</li>
+<li>sgx相关文件阅读，并充分学会编写sgx程序</li>
+<li>尝试编写go语言的enclave代码（模仿ego）（可能需要多周实现）</li>
+</ol>
             
 
 
@@ -318,18 +327,18 @@
             
                 <div class="article-footer-copyright">
     <!--
-    <p><span>本文标题:</span><href="/%20"> 科研周报6</a></p>
+    <p><span>本文标题:</span><href="/%20"> 2021年9月科研月报</a></p>
     <p><span>文章作者:</span><a href="/" title="访问 YWZ的个人博客">YWZ</a></p>
-    <p><span>发布时间:</span>2021年11月12日 - 15:28</p>
-    <p><span>最后更新:</span>2022年11月06日 - 09:55</p>
-    <p><span>原始链接:</span><a href="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/" title="科研周报6">https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/</a>
-    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/"  aria-label="复制成功！"></i></span>
+    <p><span>发布时间:</span>2021年09月30日 - 16:28</p>
+    <p><span>最后更新:</span>2022年11月06日 - 13:00</p>
+    <p><span>原始链接:</span><a href="/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="2021年9月科研月报">https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/"  aria-label="复制成功！"></i></span>
     </p>
     <p><span>许可协议:</span><i class="fab fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
      -->
     <p>文章作者:<a href="/" title="访问 YWZ的个人博客">YWZ</a>
     <br>该文章是本人原创，转载请注明出处
-    <br>本文链接地址: <a href="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/" title="科研周报6">https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/</a></p>
+    <br>本文链接地址: <a href="/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="2021年9月科研月报">https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/</a></p>
 </div>
 
             
@@ -352,7 +361,7 @@
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2022/03/12/%E6%8D%A2%E6%96%B0%E6%89%8B%E6%9C%BA%E6%9C%89%E6%84%9F/" data-tooltip="换新手机有感" aria-label="上一篇: 换新手机有感">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/11/02/2021%E5%B9%B410%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" data-tooltip="2021年10月科研月报" aria-label="上一篇: 2021年10月科研月报">
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
@@ -361,7 +370,7 @@
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A5%E8%AF%B4%E6%98%8E/" data-tooltip="科研周报说明" aria-label="下一篇: 科研周报说明">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/09/29/%E4%BF%9D%E7%A0%94%E7%BB%93%E6%9D%9F%E6%9C%89%E6%84%9F/" data-tooltip="保研结束有感" aria-label="下一篇: 保研结束有感">
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
                         <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -379,7 +388,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/&amp;title=科研周报6" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/&amp;title=2021年9月科研月报" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-qq" aria-hidden="true"></i>
                 </a>
             </li>
@@ -387,7 +396,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/" title="分享到 Qzone" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="分享到 Qzone" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
                     <i class="fa fa-star" aria-hidden="true"></i>
                 </a>
             </li>
@@ -395,7 +404,7 @@
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/" title="分享到 Weibo" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="分享到 Weibo" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -455,7 +464,7 @@ setInterval("createtime()",250);
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2022/03/12/%E6%8D%A2%E6%96%B0%E6%89%8B%E6%9C%BA%E6%9C%89%E6%84%9F/" data-tooltip="换新手机有感" aria-label="上一篇: 换新手机有感">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/11/02/2021%E5%B9%B410%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" data-tooltip="2021年10月科研月报" aria-label="上一篇: 2021年10月科研月报">
                     
                         <i class="fa fa-angle-left" aria-hidden="true"></i>
                         <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
@@ -464,7 +473,7 @@ setInterval("createtime()",250);
             <li class="post-action">
                 
                     
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A5%E8%AF%B4%E6%98%8E/" data-tooltip="科研周报说明" aria-label="下一篇: 科研周报说明">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/09/29/%E4%BF%9D%E7%A0%94%E7%BB%93%E6%9D%9F%E6%9C%89%E6%84%9F/" data-tooltip="保研结束有感" aria-label="下一篇: 保研结束有感">
                     
                         <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
                         <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -482,7 +491,7 @@ setInterval("createtime()",250);
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/&amp;title=科研周报6" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/&amp;title=2021年9月科研月报" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-qq" aria-hidden="true"></i>
                 </a>
             </li>
@@ -490,7 +499,7 @@ setInterval("createtime()",250);
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/" title="分享到 Qzone" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="分享到 Qzone" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
                     <i class="fa fa-star" aria-hidden="true"></i>
                 </a>
             </li>
@@ -498,7 +507,7 @@ setInterval("createtime()",250);
             
             
             <li class="post-action hide-xs">
-                <a class="post-action-btn btn btn--default" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/" title="分享到 Weibo" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="分享到 Weibo" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
                     <i class="fab fa-weibo" aria-hidden="true"></i>
                 </a>
             </li>
@@ -526,7 +535,7 @@ setInterval("createtime()",250);
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/&amp;title=科研周报6" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/&amp;title=2021年9月科研月报" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-qq" aria-hidden="true"></i><span>分享到 QQ</span>
                     </a>
                 </li>
@@ -534,7 +543,7 @@ setInterval("createtime()",250);
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
                         <i class="fa fa-star" aria-hidden="true"></i><span>分享到 Qzone</span>
                     </a>
                 </li>
@@ -542,7 +551,7 @@ setInterval("createtime()",250);
                 
                 
                 <li class="share-option">
-                    <a class="share-option-btn" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                    <a class="share-option-btn" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
                         <i class="fab fa-weibo" aria-hidden="true"></i><span>分享到 Weibo</span>
                     </a>
                 </li>
@@ -610,20 +619,5 @@ setInterval("createtime()",250);
 
 
 
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-</body>
+    </body>
 </html>

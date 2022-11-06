@@ -1,0 +1,642 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="YWZ">
+    <title>2021年11月科研月报 - YWZ</title>
+    <meta name="author" content="YWZ">
+    
+    
+        <link rel="icon" href="https://yiwenzhe.com/assets/images/favicon.ico">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg"},"articleBody":"\n本学期科研规划&emsp;&emsp;在fabric区块链中使用sgx技术，将chaincode放入enclave中运行，保护智能合约运行安全。\n第一周 2021/11/01 – 2021/11/07本周工作情况和进展&emsp;&emsp;本周在上周的基础上，实现ego启动chaincode，让chaincode在enclave中运行。\n\nFabric链码关键命令12345peer lifecycle chaincode package mycc.tar.gz --path abstore --lang golang --label myccpeer lifecycle chaincode install mycc.tar.gzpeer lifecycle chaincode approveformyorgpeer lifecycle chaincode commitpeer chaincode invoke\n&emsp;&emsp;fabric2.0使用lifecycle生命周期，命令和fabric1.0差距很大，下图为二者的区别：\n链码打包1peer lifecycle chaincode package mycc.tar.gz --path abstore --lang golang --label mycc\n&emsp;&emsp;链码打包命令如上图，mycc.tar.gz是打包后的的压缩包，path指明链码路径，lang指明链码语言，lable即链码标签。压缩包内容如下：&emsp;&emsp;以go语言为例，压缩包中有code.tar.gz，就是go语言的源码，metadata.json记录链码的语言等信息，内容如下：1&#123;&quot;path&quot;:&quot;github.com/hyperledger/fabric-samples/chaincode/abstore&quot;,&quot;type&quot;:&quot;golang&quot;,&quot;label&quot;:&quot;mycc&quot;&#125;\n链码安装、编译、运行1peer lifecycle chaincode install mycc.tar.gz\n&emsp;&emsp;上述命令会安装链码、编译并运行。安装过程会将链码包复制重命名，将mycc.tar.gz重命名，放入peer容器的/var/hyperledger/production/lifecycle/chaincodes路径下：&emsp;&emsp;编译过程首先使用第一个镜像，peer会运行hyperledger/fabric-ccenv:latest镜像，启动一个容器编译链码工程，编译后的可执行文件都命名为chaincode，编译脚本如下：12cd chaincode/input/srcGO111MODULE=on go build -v -mod=vendor -ldflags &quot;-linkmode external -extldflags &#x27;-static&#x27;&quot; -o chaincode/output/chaincode    github.com/archive/chaincode-go\n&emsp;&emsp;因此需要在fabric-ccenv镜像中集成ego编译器，使用ego编译，使可执行程序适配enclave。&emsp;&emsp;然后使用第二个镜像，通过hyperledger/fabric-baseos:latest构建以dev开头的镜像，将可执行程序放入/usr/local/bin下&emsp;&emsp;Dockerfile如下：12345FROM hyperledger/fabric-baseos:latestADD binpackage.tar /usr/local/binLABEL org.hyperledger.fabric.chaincode.type=&quot;GOLANG&quot; \\   org.hyperledger.fabric.version=&quot;latest&quot;ENV CORE_CHAINCODE_BUILDLEVEL=latest\n&emsp;&emsp;最后peer在dev镜像的基础上创建容器，设置环境变量，运行chaincode：1chaincode -peer.address=peer0.org1.example.com:7052\n&emsp;&emsp;运行后链码会注册到peer上，并建立grpc通信，流程如下图：&emsp;&emsp;因此我将该运行指令进行扩展，先使用ego签名，再ego run运行chaincode。编写如下脚本：&emsp;&emsp;重要的一点是，由于enclave中的环境变量和文件与外界不通用，所以需要使用配置文件将密钥文件进行挂载，将环境变量传递到enclave中。\n\n存在的问题&emsp;&emsp;由于在自己虚拟机上没有sgx，使用仿真模式运行的，镜像中都没有安装sgx，所以可以成功。但在装配sgx的实机运行时发现镜像中也要安装sgx，运行失败。所以需要再挑选一个配备sgx的镜像或者在镜像中安装sgx，再进行运行测试。&emsp;&emsp;在dockerhub上，有许多配备sgx的ubuntu镜像，单独运行sgx实例可以成功，但在安装ego后便报错，因此需要解决。&emsp;&emsp;在单独的ubuntu镜像上安装sgx驱动时，linux-header中缺少一些文件，导致安装失败。\n下周工作计划\n在docker镜像池中挑选sgx的镜像，或者在ubuntu镜像中安装sgx\n根据fabric框架和ego框架，画出本工程的框架图\n对该工程进行性能测试\n\n个人反思&emsp;&emsp;到现在项目终于快完成了，接下来就是评估测试和调研攻击方法，写一篇完整的论文。时间也比较紧，要在12月底前将论文完成。&emsp;&emsp;能够完成到这一步真的让我很开心，我马上联系了导师，希望能和她汇报一下。导师肯定了我的成果，提出了很多建议，导师也愿意把共同一作或者共同通讯作者给我。能得到赞赏总归是开心的，每次在和导师沟通后我都能开心很久，也有了继续的动力，尤其是这一切都是我踏踏实实做出来的，是我自己的努力。希望接下来能继续完成吧\n第二周 2021/11/08 – 2021/11/14本周工作情况和进展&emsp;&emsp;上周提出的镜像问题已经解决，在docker镜像池中找到了安装sgx的镜像，镜像中不能安装sgx驱动设备，需要将本机的sgx驱动传递到运行的镜像中。&emsp;&emsp;本周简单画了几个原理图，还需要后续完善：\n\nfabric原理图 \n\n项目运行架构图 \n\n静态原理图 \n\n&emsp;&emsp;静态原理图太过于简单，直接就是在chaincode上套上chaincode，后续还需要重新改进。因为程序运行时会创建容器，所以运行图会凸显出容器之间的交互，更为详细，后续需要再添加一些细节。\n&emsp;&emsp;本周对fabric的运行进行了简单评估。hyperledger下有一个caliper项目，专门用来测试区块链的性能，如延迟Latency、吞吐率Throughput、CPU占用率、内存等，如下：\n\n\n\n存在的问题&emsp;&emsp;该评估需要编写脚本来测试，因此后续可以测试创建、查询、修改账本的各种性能。&emsp;&emsp;程序运行时间可以通过/usr/bin/time来获取链码安装、调用的时间信息。\n下周工作计划&emsp;&emsp;学习caliper使用方法，完善fabric性能测试。","dateCreated":"2021-12-01T15:28:20+08:00","dateModified":"2022-11-06T13:47:54+08:00","datePublished":"2021-12-01T15:28:20+08:00","description":"2021年11月周报汇总。","headline":"2021年11月科研月报","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg","logo":{"@type":"ImageObject","url":"picture.jpg"}},"url":"https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/","keywords":"Hyperledger Fabric, SGX, EGo, 区块链"}</script>
+    <meta name="description" content="2021年11月周报汇总。">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="2021年11月科研月报">
+<meta property="og:url" content="https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/index.html">
+<meta property="og:site_name" content="YWZ">
+<meta property="og:description" content="2021年11月周报汇总。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/1.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/2.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/3.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/4.jpg">
+<meta property="og:image" content="https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/5.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/6.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/7.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/8.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/9.png">
+<meta property="og:image" content="https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/10.png">
+<meta property="article:published_time" content="2021-12-01T07:28:20.000Z">
+<meta property="article:modified_time" content="2022-11-06T05:47:54.003Z">
+<meta property="article:author" content="YWZ">
+<meta property="article:tag" content="Hyperledger Fabric">
+<meta property="article:tag" content="SGX">
+<meta property="article:tag" content="EGo">
+<meta property="article:tag" content="区块链">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/1.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://yiwenzhe.com/assets/images/picture.jpg">
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-5ctctel0cuzrmzotlasreim3qgxouuqpfme70vruknhdpfxw6enuh6pympnk.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+    <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?003fd62f149a30bc5f172a1ed42483c3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/" aria-label>
+            YWZ
+        </a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about" aria-label="打开链接: /#about">
+        
+        
+            <img class="header-picture" src="/assets/images/picture.jpg" alt="作者的图片">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about" aria-label="阅读有关作者的更多信息">
+                    <img class="sidebar-profile-picture" src="/assets/images/picture.jpg" alt="作者的图片">
+                </a>
+                <h4 class="sidebar-profile-name">YWZ</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>一个无聊的程序员</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/" rel="noopener" title="首页">
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">首页</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-categories" rel="noopener" title="分类">
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">分类</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" rel="noopener" title="标签">
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">标签</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" rel="noopener" title="归档">
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">归档</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link open-algolia-search" href="/search" rel="noopener" title="搜索">
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">搜索</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/shuoshuo" rel="noopener" title="说说">
+                        <i class="sidebar-button-icon fas fa-comments" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">说说</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="#about" rel="noopener" title="关于">
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">关于</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://github.com/" target="_blank" rel="external nofollow noopener noreferrer" title="GitHub">
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="http://stackoverflow.com/users" target="_blank" rel="external nofollow noopener noreferrer" title="Stack Overflow">
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://twitter.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Twitter">
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://facebook.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Facebook">
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://google.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Google">
+                        <i class="sidebar-button-icon fab fa-google" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="mailto:2410776350@qq.com" target="_blank" rel="external nofollow noopener noreferrer" title="邮箱">
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">邮箱</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/atom.xml" rel="noopener" title="RSS">
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4" style="background-color: rgba(255, 255, 255, 0.85);" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            2021年11月科研月报
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2021-12-01T15:28:20+08:00">
+	
+		    2021 年 12 月 01 日
+    	
+    </time>
+    
+        <span>发布在 </span>
+        
+    <a class="category-link" href="/categories/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A5/">科研周报</a>
+
+
+    
+    
+        &nbsp;|&nbsp; 更新于
+        <time itemprop="dateUpdated" content="Sun Nov 06 2022 13:47:54 GMT+0800">
+        
+		    2022 年 11 月 06 日
+    	
+        </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt --><br><h1 id="table-of-contents">目录</h1><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AC%E5%AD%A6%E6%9C%9F%E7%A7%91%E7%A0%94%E8%A7%84%E5%88%92"><span class="toc-text">本学期科研规划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E5%91%A8-2021-11-01-%E2%80%93-2021-11-07"><span class="toc-text">第一周 2021&#x2F;11&#x2F;01 – 2021&#x2F;11&#x2F;07</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%91%A8%E5%B7%A5%E4%BD%9C%E6%83%85%E5%86%B5%E5%92%8C%E8%BF%9B%E5%B1%95"><span class="toc-text">本周工作情况和进展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">存在的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E5%91%A8%E5%B7%A5%E4%BD%9C%E8%AE%A1%E5%88%92"><span class="toc-text">下周工作计划</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E5%8F%8D%E6%80%9D"><span class="toc-text">个人反思</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E5%91%A8-2021-11-08-%E2%80%93-2021-11-14"><span class="toc-text">第二周 2021&#x2F;11&#x2F;08 – 2021&#x2F;11&#x2F;14</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%91%A8%E5%B7%A5%E4%BD%9C%E6%83%85%E5%86%B5%E5%92%8C%E8%BF%9B%E5%B1%95-1"><span class="toc-text">本周工作情况和进展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98-1"><span class="toc-text">存在的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E5%91%A8%E5%B7%A5%E4%BD%9C%E8%AE%A1%E5%88%92-1"><span class="toc-text">下周工作计划</span></a></li></ol></li></ol><p></p>
+<h1 id="本学期科研规划"><a href="#本学期科研规划" class="headerlink" title="本学期科研规划"></a>本学期科研规划</h1><p>&emsp;&emsp;在fabric区块链中使用sgx技术，将chaincode放入enclave中运行，保护智能合约运行安全。</p>
+<h1 id="第一周-2021-11-01-–-2021-11-07"><a href="#第一周-2021-11-01-–-2021-11-07" class="headerlink" title="第一周 2021/11/01 – 2021/11/07"></a>第一周 2021/11/01 – 2021/11/07</h1><h2 id="本周工作情况和进展"><a href="#本周工作情况和进展" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h2><p>&emsp;&emsp;本周在上周的基础上，实现ego启动chaincode，让chaincode在enclave中运行。</p>
+<ol>
+<li>Fabric链码关键命令<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">peer lifecycle chaincode package mycc.tar.gz --path abstore --lang golang --label mycc</span><br><span class="line">peer lifecycle chaincode install mycc.tar.gz</span><br><span class="line">peer lifecycle chaincode approveformyorg</span><br><span class="line">peer lifecycle chaincode commit</span><br><span class="line">peer chaincode invoke</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;fabric2.0使用lifecycle生命周期，命令和fabric1.0差距很大，下图为二者的区别：<div align="center"><img src="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/1.png"></div></li>
+<li>链码打包<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">peer lifecycle chaincode package mycc.tar.gz --path abstore --lang golang --label mycc</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;链码打包命令如上图，mycc.tar.gz是打包后的的压缩包，path指明链码路径，lang指明链码语言，lable即链码标签。压缩包内容如下：<br><div align="center"><img src="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/2.png" width="300" height="126"></div><br>&emsp;&emsp;以go语言为例，压缩包中有code.tar.gz，就是go语言的源码，metadata.json记录链码的语言等信息，内容如下：<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">&quot;path&quot;</span>:<span class="string">&quot;github.com/hyperledger/fabric-samples/chaincode/abstore&quot;</span>,<span class="attr">&quot;type&quot;</span>:<span class="string">&quot;golang&quot;</span>,<span class="attr">&quot;label&quot;</span>:<span class="string">&quot;mycc&quot;</span>&#125;</span><br></pre></td></tr></table></figure></li>
+<li>链码安装、编译、运行<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">peer lifecycle chaincode install mycc.tar.gz</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;上述命令会安装链码、编译并运行。安装过程会将链码包复制重命名，将mycc.tar.gz重命名，放入peer容器的/var/hyperledger/production/lifecycle/chaincodes路径下：<br><div align="center"><img src="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/3.png"></div><br>&emsp;&emsp;编译过程首先使用第一个镜像，peer会运行hyperledger/fabric-ccenv:latest镜像，启动一个容器编译链码工程，编译后的可执行文件都命名为chaincode，编译脚本如下：<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd chaincode/input/src</span><br><span class="line">GO111MODULE=on go build -v -mod=vendor -ldflags &quot;-linkmode external -extldflags &#x27;-static&#x27;&quot; -o chaincode/output/chaincode    github.com/archive/chaincode-go</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;因此需要在fabric-ccenv镜像中集成ego编译器，使用ego编译，使可执行程序适配enclave。<br>&emsp;&emsp;然后使用第二个镜像，通过hyperledger/fabric-baseos:latest构建以dev开头的镜像，将可执行程序放入/usr/local/bin下<br>&emsp;&emsp;Dockerfile如下：<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> hyperledger/fabric-baseos:latest</span><br><span class="line"><span class="keyword">ADD</span><span class="bash"> binpackage.tar /usr/<span class="built_in">local</span>/bin</span></span><br><span class="line"><span class="keyword">LABEL</span><span class="bash"> org.hyperledger.fabric.chaincode.type=<span class="string">&quot;GOLANG&quot;</span> \</span></span><br><span class="line"><span class="bash">   org.hyperledger.fabric.version=<span class="string">&quot;latest&quot;</span></span></span><br><span class="line"><span class="keyword">ENV</span> CORE_CHAINCODE_BUILDLEVEL=latest</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;最后peer在dev镜像的基础上创建容器，设置环境变量，运行chaincode：<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chaincode -peer.address=peer0.org1.example.com:7052</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;运行后链码会注册到peer上，并建立grpc通信，流程如下图：<br><div align="center"><img src="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/4.jpg" width="300" height="411"></div><br>&emsp;&emsp;因此我将该运行指令进行扩展，先使用ego签名，再ego run运行chaincode。编写如下脚本：<br><div align="center"><img src="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/5.png" width="300" height="443"></div><br><div align="center"><img src="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/6.png" width="300" height="85"></div><br>&emsp;&emsp;重要的一点是，由于enclave中的环境变量和文件与外界不通用，所以需要使用配置文件将密钥文件进行挂载，将环境变量传递到enclave中。</li>
+</ol>
+<h2 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h2><p>&emsp;&emsp;由于在自己虚拟机上没有sgx，使用仿真模式运行的，镜像中都没有安装sgx，所以可以成功。但在装配sgx的实机运行时发现镜像中也要安装sgx，运行失败。所以需要再挑选一个配备sgx的镜像或者在镜像中安装sgx，再进行运行测试。<br>&emsp;&emsp;在dockerhub上，有许多配备sgx的ubuntu镜像，单独运行sgx实例可以成功，但在安装ego后便报错，因此需要解决。<br>&emsp;&emsp;在单独的ubuntu镜像上安装sgx驱动时，linux-header中缺少一些文件，导致安装失败。</p>
+<h2 id="下周工作计划"><a href="#下周工作计划" class="headerlink" title="下周工作计划"></a>下周工作计划</h2><ol>
+<li>在docker镜像池中挑选sgx的镜像，或者在ubuntu镜像中安装sgx</li>
+<li>根据fabric框架和ego框架，画出本工程的框架图</li>
+<li>对该工程进行性能测试</li>
+</ol>
+<h2 id="个人反思"><a href="#个人反思" class="headerlink" title="个人反思"></a>个人反思</h2><p>&emsp;&emsp;到现在项目终于快完成了，接下来就是评估测试和调研攻击方法，写一篇完整的论文。时间也比较紧，要在12月底前将论文完成。<br>&emsp;&emsp;能够完成到这一步真的让我很开心，我马上联系了导师，希望能和她汇报一下。导师肯定了我的成果，提出了很多建议，导师也愿意把共同一作或者共同通讯作者给我。能得到赞赏总归是开心的，每次在和导师沟通后我都能开心很久，也有了继续的动力，尤其是这一切都是我踏踏实实做出来的，是我自己的努力。希望接下来能继续完成吧</p>
+<h1 id="第二周-2021-11-08-–-2021-11-14"><a href="#第二周-2021-11-08-–-2021-11-14" class="headerlink" title="第二周 2021/11/08 – 2021/11/14"></a>第二周 2021/11/08 – 2021/11/14</h1><h2 id="本周工作情况和进展-1"><a href="#本周工作情况和进展-1" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h2><p>&emsp;&emsp;上周提出的镜像问题已经解决，在docker镜像池中找到了安装sgx的镜像，镜像中不能安装sgx驱动设备，需要将本机的sgx驱动传递到运行的镜像中。<br>&emsp;&emsp;本周简单画了几个原理图，还需要后续完善：</p>
+<div align="center"><img src="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/7.png" width="500" height="287"></div>
+<center style="font-size:16px;color:#000000f;text-decoration:underline">fabric原理图</center> 
+<div align="center"><img src="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/8.png" width="500" height="215"></div>
+<center style="font-size:16px;color:#000000f;text-decoration:underline">项目运行架构图</center> 
+<div align="center"><img src="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/9.png" width="500" height="301"></div>
+<center style="font-size:16px;color:#000000f;text-decoration:underline">静态原理图</center> 
+
+&emsp;&emsp;静态原理图太过于简单，直接就是在chaincode上套上chaincode，后续还需要重新改进。因为程序运行时会创建容器，所以运行图会凸显出容器之间的交互，更为详细，后续需要再添加一些细节。
+&emsp;&emsp;本周对fabric的运行进行了简单评估。hyperledger下有一个caliper项目，专门用来测试区块链的性能，如延迟Latency、吞吐率Throughput、CPU占用率、内存等，如下：
+
+<div align="center"><img src="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/10.png"></div>
+
+<h2 id="存在的问题-1"><a href="#存在的问题-1" class="headerlink" title="存在的问题"></a>存在的问题</h2><p>&emsp;&emsp;该评估需要编写脚本来测试，因此后续可以测试创建、查询、修改账本的各种性能。<br>&emsp;&emsp;程序运行时间可以通过/usr/bin/time来获取链码安装、调用的时间信息。</p>
+<h2 id="下周工作计划-1"><a href="#下周工作计划-1" class="headerlink" title="下周工作计划"></a>下周工作计划</h2><p>&emsp;&emsp;学习caliper使用方法，完善fabric性能测试。</p>
+            
+
+
+            <!-- 添加的部分 -->
+            <!-- copyright -->
+            
+                <div class="article-footer-copyright">
+    <!--
+    <p><span>本文标题:</span><href="/%20"> 2021年11月科研月报</a></p>
+    <p><span>文章作者:</span><a href="/" title="访问 YWZ的个人博客">YWZ</a></p>
+    <p><span>发布时间:</span>2021年12月01日 - 15:28</p>
+    <p><span>最后更新:</span>2022年11月06日 - 13:47</p>
+    <p><span>原始链接:</span><a href="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="2021年11月科研月报">https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/"  aria-label="复制成功！"></i></span>
+    </p>
+    <p><span>许可协议:</span><i class="fab fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+     -->
+    <p>文章作者:<a href="/" title="访问 YWZ的个人博客">YWZ</a>
+    <br>该文章是本人原创，转载请注明出处
+    <br>本文链接地址: <a href="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="2021年11月科研月报">https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/</a></p>
+</div>
+
+            
+            <!-- copyright -->
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">标签</span><br>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/EGo/" rel="tag">EGo</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/Hyperledger-Fabric/" rel="tag">Hyperledger Fabric</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/SGX/" rel="tag">SGX</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2022/03/12/%E6%8D%A2%E6%96%B0%E6%89%8B%E6%9C%BA%E6%9C%89%E6%84%9F/" data-tooltip="换新手机有感" aria-label="上一篇: 换新手机有感">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A5%E8%AF%B4%E6%98%8E/" data-tooltip="科研周报说明" aria-label="下一篇: 科研周报说明">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/&amp;title=2021年11月科研月报" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-qq" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="分享到 Qzone" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="分享到 Weibo" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="目录">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2022 <a href="https://yiwenzhe.com">YWZ</a>. All Rights Reserved.
+    </span>
+    <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("10/11/2020 14:56:39");//在此处修改你的建站时间，格式：月/日/年 时:分:秒
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+setInterval("createtime()",250);
+</script>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2022/03/12/%E6%8D%A2%E6%96%B0%E6%89%8B%E6%9C%BA%E6%9C%89%E6%84%9F/" data-tooltip="换新手机有感" aria-label="上一篇: 换新手机有感">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A5%E8%AF%B4%E6%98%8E/" data-tooltip="科研周报说明" aria-label="下一篇: 科研周报说明">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/&amp;title=2021年11月科研月报" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-qq" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="分享到 Qzone" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="分享到 Weibo" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="目录">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/&amp;title=2021年11月科研月报" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-qq" aria-hidden="true"></i><span>分享到 QQ</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                        <i class="fa fa-star" aria-hidden="true"></i><span>分享到 Qzone</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-weibo" aria-hidden="true"></i><span>分享到 Weibo</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <a href="https://yiwenzhe.com">
+            <img id="about-card-picture" src="/assets/images/picture.jpg" alt="作者的图片">
+            </a>
+        
+            <a href="https://yiwenzhe.com">
+            <h4 id="about-card-name">YWZ</h4>
+            </a>
+        
+            <div id="about-card-bio"><p>一个无聊的程序员</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>武汉大学在读研究生</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                湖北武汉
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-mxznsv1n7nz3zrfuls87amiraudckgmxncavgf1ucci53txgionftndw0zwt.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    </body>
+</html>
