@@ -264,7 +264,7 @@
     
     
         &nbsp;|&nbsp; 更新于
-        <time itemprop="dateUpdated" content="Sun Nov 06 2022 10:01:17 GMT+0800">
+        <time itemprop="dateUpdated" content="Sun Nov 06 2022 11:34:33 GMT+0800">
         
 		    2022 年 11 月 06 日
     	
@@ -275,14 +275,14 @@
             </div>
             
                 <div class="postShorten-excerpt">
-                    <p>关于科研周报更新的说明<br>
+                    <p>关于科研周报更新的说明</p>
                     
                         <a href="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A5%E8%AF%B4%E6%98%8E/" class="postShorten-excerpt_link link" aria-label=": 科研周报说明">
                             阅读全文
                         </a>
                         
                     
-                </p></div>
+                </div>
             
         </div>
         
@@ -840,5 +840,20 @@ setInterval("createtime()",250);
 
 
 
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
