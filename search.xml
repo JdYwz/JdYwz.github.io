@@ -690,8 +690,13 @@
   <entry>
     <title>科研周报说明</title>
     <url>/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A5%E8%AF%B4%E6%98%8E/</url>
-    <content><![CDATA[<p>由于现在所做工作还未发表，相关论文正在撰写中，所以项目内容目前不能发布在网络上，现已将所有科研周报删除。在论文发表后我会第一时间更新回来。</p>
-]]></content>
+    <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
+<p>之前做的区块链工作已经发表了，虽然遇到了种种磨难，但也算是好事吧，所以将之前的科研周报陆陆续续放上来。因为一直很忙，所以会更新地很慢，将word一个个转化为markdown也挺麻烦的，业余时间就慢慢放上来吧。</p>
+<p>现在已经换到神经网络隐私保护方向了，不再是孤身一人，而是成为一个小组，挺开心的。因为这个工作是一个连续的过程，也不太好将科研周报放上来，担心泄密（虽然没有多少人看这个博客）。希望以后能多做一些工作吧。</p>
+<p>最后附上区块链工作发表的论文链接与PDF。</p>
+<p>虽然只是一个中文核心，但也算自己的心血了。</p>
+<p>论文知网链接：<a href="https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CJFD&amp;dbname=CJFDLAST2022&amp;filename=XXAQ202207009&amp;uniplatform=NZKPT&amp;v=IzPIW9wyo3h7oRjmsS4mn-pIDmP4wAHdNVoeELxZSNn0Zcc5iSXXOI3td7yC7m_a">一种基于SGX的轻量Fabric链码可信执行环境构建方法</a></p>
+<p>PDF文件：<a href="一种基于SGX的轻量Fabric链码可信执行环境构建方法.pdf">一种基于SGX的轻量Fabric链码可信执行环境构建方法</a></p>]]></content>
   </entry>
   <entry>
     <title>换新手机有感</title>
@@ -754,6 +759,176 @@
       </categories>
       <tags>
         <tag>生活</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>科研周报1</title>
+    <url>/2021/09/30/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A51/</url>
+    <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
+<h1 id="本学期的科研计划"><a href="#本学期的科研计划" class="headerlink" title="本学期的科研计划"></a>本学期的科研计划</h1><p>&emsp;&emsp;本学期的科研项目为使用SGX保护hyperledger-fabric区块链，目前已经成功部署fabric网络和SGX，对二者进行测试使用。<br>&emsp;&emsp;初步计划在年底前实现简单地将chaincode放入SGX的enclave中运行（在fabric中称为链码chaincode，等同于其他区块链中的智能合约Smart contract）。为实现该想法，首先需要打通fabric链码由go语言编写和SGX由C语言编写的限制，通过阅读ego的实现方法，模拟ego，为go语言编写的chaincode创造enclave，保护其运行。<br>&emsp;&emsp;在上述计划完成后，分析多种针对fabric的攻击方式，目前已经调研了Sybil攻击、Rollback攻击，改进以上方案，抵御至少一种攻击行为。</p>
+<h1 id="本周工作情况和进展"><a href="#本周工作情况和进展" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h1><ol>
+<li>chaincode是如何安装和运行的?<br>&emsp;&emsp;在fabric中，chaincode是通过如下命令安装到网络中的：<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">peer lifecycle chaincode install mycc.tar.gz</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;其中peer是fabric操作的指令，mycc.tar.gz就是chaincode的压缩包，其中包含一个json文件和go文件。<br>&emsp;&emsp;在安装后，peer实例化该chaincode时，peer命令会创建一个docker文件，为chaincode创建容器，编译go文件，并将编译后的二进制文件放入容器中运行。之后peer便会通过chaincode中的接口（Init、Invoke、Query）来与之交互。<br><br></li>
+<li>EGo<br>&emsp;&emsp;ego官网：<a href="https://docs.edgeless.systems/ego/#/">https://docs.edgeless.systems/ego/#/</a><br>&emsp;&emsp;ego-go，一个经过改进的Go编译器，可以从给定的Go项目中构建与enclave兼容的可执行文件——同时提供与原始Go编译器相同的CLI。<br>&emsp;&emsp;ego，一个CLI工具，可以处理所有与enclave相关的任务，如签名和创建enclave。<br>&emsp;&emsp;ego使用如下：<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ego-go build helloworld.go  //编译一个go程序</span><br><span class="line">ego sign helloworld         //创建enclave.json配置文件和公私密钥对</span><br><span class="line">ego run helloworld          //在enclave中运行（此处是在仿真模式运行）</span><br></pre></td></tr></table></figure>
+<div align="center"><img src="/2021/09/30/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A51/ego.png"></div><br><br></li>
+<li>针对fabric提出三种方案<br>&emsp;&emsp;A方案：<br>&emsp;&emsp;使用ego，设法在运行时替换go为ego，并使用ego run运行chaincode。<br>&emsp;&emsp;问题：chaincode不是独立的运行程序，需要与peer程序交互，因此无法直接使用ego run运行。<br><br>&emsp;&emsp;B方案：<br>&emsp;&emsp;自己编写chaincode，将chaincode划分为两部分，交互的接口部分使用go语言编写，实际运行部分使用c语言编写，并启动enclave运行。<br>&emsp;&emsp;问题：go语言如何与C语言交互？go程序会被peer编译，c语言如何被fabric编译运行？并且该方案也不实用，用户每次都需要重新编写chaincode。<br><br>&emsp;&emsp;C方案：<br>&emsp;&emsp;阅读ego源码，模仿ego为go程序创建enclave功能的实现，在网络中直接为chaincode创建enclave。<br>&emsp;&emsp;该方案较为实用，用户只需要和之前一样编写go语言的chaincode即可。难点在于ego源码的阅读和实现。</li>
+</ol>
+<h1 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h1><ol>
+<li><p>源码理解问题<br>&emsp;&emsp;fabric源码、sgx实现方法、ego源码均需要时间去理解，fabric源码量较大，因此可以选择chaincode的部分先着重分析。而网络中关于ego的解释文件很少，官网也只是粗略地介绍使用方法，因此源码阅读很有难度，只能通过cmakefile来理清文件结构。同时fabric都是使用go语言编写，我未系统地学习go语言，因此也需要花时间了解go语法。</p>
+</li>
+<li><p>二者交互问题<br>&emsp;&emsp;整个科研方案最大的问题就是go语言和c语言的结合问题，fabric只支持go语言，sgx只能通过C语言编写，因此将二者结合就是一个难点。目前还没有较好的解决方案。</p>
+</li>
+</ol>
+<h1 id="下周工作计划"><a href="#下周工作计划" class="headerlink" title="下周工作计划"></a>下周工作计划</h1><ol>
+<li>继续ego源码阅读</li>
+<li>sgx相关文件阅读，并充分学会编写sgx程序</li>
+<li>尝试编写go语言的enclave代码（模仿ego）（可能需要多周实现）</li>
+</ol>]]></content>
+      <categories>
+        <category>科研周报</category>
+      </categories>
+      <tags>
+        <tag>Hyperledger Fabric</tag>
+        <tag>SGX</tag>
+        <tag>EGo</tag>
+        <tag>区块链</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>科研周报2</title>
+    <url>/2021/10/17/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A52/</url>
+    <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
+<h1 id="本学期科研规划"><a href="#本学期科研规划" class="headerlink" title="本学期科研规划"></a>本学期科研规划</h1><p>&emsp;&emsp;本学期的科研项目为使用SGX保护hyperledger-fabric区块链，目前已经成功部署fabric网络和SGX，对二者进行测试使用，并对fabric代码和SGX代码进行部分分析。<br>&emsp;&emsp;计划十月份-十一月份能够初步结合fabric和sgx，完成简单的chaincode（智能合约）保护。<br>&emsp;&emsp;在上述计划完成后，分析多种针对fabric的攻击方式，改进以上方案，抵御至少一种攻击行为。</p>
+<h1 id="本周工作情况和进展"><a href="#本周工作情况和进展" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h1><p>&emsp;&emsp;本周工作主要是阅读源码，包括ego、fabric的源码，理解编写细节。</p>
+<ol>
+<li>SGX文件分析<br>&emsp;&emsp;SGX最重要的几个文件：<br>&emsp;&emsp;EDL（Enclave Description Language）文件：声明可信函数和不可信函数，非可信区只能通过 ECALL 函数调用可信区内的函数。可信区只能通过 OCALL 函数调用非可信区的函数。<br><div align="center"><img src="/2021/10/17/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A52/1.png"></div><br>&emsp;&emsp;xml文件：enclave的配置文件，如堆栈大小、线程数、是否可debug。<br><div align="center"><img src="/2021/10/17/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A52/2.png"></div><br>&emsp;&emsp;sgx几个重要的工具（可执行文件，安装sgx时自动编译生成）：<br>&emsp;&emsp;sgx_edger8r：根据edl文件生成可信和不可信代码（c文件和头文件）<br>&emsp;&emsp;sgx_sign：为enclaves签名<br><br>&emsp;&emsp;除以上文件之外，在编写sgx程序时要将可信部分、不可信部分分开编写和编译，最后链接可信库和不可信库，然后链接成可执行文件。sgx程序的makefile往往很复杂，包括各种链接过程，因此是一个阅读难点。<br><br></li>
+<li><p>EGO源码分析<br>&emsp;&emsp;ego是edgeless system下的一个项目，edgeless system（<a href="https://www.edgeless.systems/">https://www.edgeless.systems/</a>）下都是可信计算相关的软件，如ego、edgelessDB、MarbleRun，以及edgeless RT（一个可信运行环境sdk）。<br>&emsp;&emsp;分析ego源码：<br>&emsp;&emsp;ego最重要的两个命令ego sign（为可执行文件签名）、ego run（为可执行文件创建enclave并运行）<br><br>&emsp;&emsp;ego sign + {exe可执行文件；json enclave配置文件；空} 三种类型文件<br>&emsp;&emsp;sign + exe 直接为可执行文件签名，首先会生成默认的json文件（enclave配置文件，和sgx的xml文件作用一致），然后生成公私密钥对，使用私钥进行签名。<br>&emsp;&emsp;sign + json或空<br>&emsp;&emsp;-&gt;调用readConfigJSONtoStruct -&gt;调用unmarshal反序列化json字符串，调用Validate检验json文件数据，PopulateContent加密<br>&emsp;&emsp;-&gt;调用signWithJSON 读取json文件 -&gt; 调用embedConfigAsPayload，将json文件嵌入exe文件中-&gt;调用createDefaultKeypair创建公私密钥对<br>&emsp;&emsp;-&gt;调用ego-oesign（原型openenclave的oesign）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">oesign sign -e ego-enclave -c enclave.conf -k private.pem --payload helloworld</span><br><span class="line">  -e, --enclave-image  path of an enclave image file.</span><br><span class="line">  -c, --config-file   [optional] configuration file specifying the enclave properties.</span><br><span class="line">  -k, --key-file    path to a private key file in PEM format to sign enclave image with</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;ego run 运行某一个特定的可执行文件<br>&emsp;&emsp;run + filename<br>&emsp;&emsp;使用ego-host（原型edgerless RT的erthost）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">erthost ego/share/ego-enclave:helloworld</span><br><span class="line"></span><br><span class="line">  Usage: ./ego-host enclave_image_path [enclave args...]</span><br><span class="line">  Set OE_SIMULATION=1 for simulation mode.</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;Erthost是一个用于运行飞地的工具。在开发期间，将飞地与ertdeventry连接起来。然后erthost将透明地将所有命令行参数和环境变量转发给enclave应用程序。飞地可以无限制地访问主机的文件系统<br>&emsp;&emsp;以上的可执行程序必须通过ertgo编译，不然无法生成enclave。<br>&emsp;&emsp;ertgo是一个经过改进的Go编译器，可以从给定的Go项目中构建与enclave兼容的可执行文件——同时提供与原始Go编译器相同的CLI。<br>&emsp;&emsp;ego和edgeless RT都是依靠openenclave sdk（<a href="https://github.com/openenclave/openenclave">https://github.com/openenclave/openenclave</a>），openenclave和sgx类似，也是有对应的工具oeedger8r、oesign，和sgx的sgx_edger8r、sgx_sign一致：<br><div align="center"><img src="/2021/10/17/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A52/3.png"></div><br>&emsp;&emsp;ego sign本质就是调用oesign，而ego run是调用edgeless RT的erthost，erthost是在openenclave基础上开发而来，为可执行程序创建运行时的enclave。erthost还未分析。<br><br></p>
+</li>
+<li>fabric源码分析<br>&emsp;&emsp;fabric安装和调用chaincode（智能合约）的命令如下：<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">peer lifecycle chaincode package mycc.tar.gz --path github.com/hyperledger/multiple-deployment/abstore --lang golang --label mycc</span><br><span class="line">//chaincode打包，打包结果为压缩文件，包含一个json文件（chaincode路径、语言、标签）和源码go文件</span><br><span class="line">peer lifecycle chaincode install mycc.tar.gz  //将chaincode安装到节点上</span><br><span class="line">peer chaincode invoke -c &#x27;&#123;&quot;Args&quot;:[&quot;Init&quot;,&quot;a&quot;,&quot;100&quot;,&quot;b&quot;,&quot;100&quot;]&#125;&#x27;  //调用Init初始化</span><br><span class="line">peer chaincode query -C mychannel -n mycc -c &#x27;&#123;&quot;Args&quot;:[&quot;query&quot;,&quot;a&quot;]&#125;&#x27; </span><br><span class="line">//调用query查询</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;初步分析了fabric相关的代码，安装chaincode时会根据语言类型创建dockerfile，并进行编译，在调用chaincode时也会先构建容器，将chaincode放入容器中运行，因此这部分需要着重理解并改进，目前还在分析中。</li>
+</ol>
+<h1 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h1><p>&emsp;&emsp;源码还未了解透彻，需要时间阅读。<br>&emsp;&emsp;ego可以直接为单独的go程序创建enclave，使整个程序在enclave中安全运行。而chaincode不是独立运行的程序，需要与peer节点进行交互，也就是存在一些函数调用，调用部分需要单独放入enclave中，因此无法直接将ego嵌入fabric中使用。<br>&emsp;&emsp;fabric对chaincode的载入、编译、容器构建都是集成在peer命令中，因此需要单独将该部分拿出重新分析和编写，并集成ertgo（改良的go编译器）和ego的功能。<br>&emsp;&emsp;fabric源码调用过程繁杂，分析过程比较耗时。</p>
+<h1 id="下周工作计划"><a href="#下周工作计划" class="headerlink" title="下周工作计划"></a>下周工作计划</h1><p>&emsp;&emsp;继续阅读源码，剖解fabric的peer命令，需要深入了解chaincode如何安装、怎么在内部编译和交互的。分析ego中erthost的原理，erthost直接为可执行程序创建enclave，需要将该功能改进成peer与chaincode交互时启动enclave。</p>
+<h1 id="个人反思"><a href="#个人反思" class="headerlink" title="个人反思"></a>个人反思</h1><p>&emsp;&emsp;项目目前还处于分析阶段，需要分析很多代码，ego、fabric、edgeless RT等，很花时间，尤其是fabric，工程量比较大，调用关系复杂。理解原理是一回事，分析代码就是另一回事了。<br>&emsp;&emsp;因此现在还理解不透彻，没有什么好的实践想法，进度较慢。<br>&emsp;&emsp;下一步规划是优先分析代码，理解代码编写过程后再上手改进。</p>
+<p>&emsp;&emsp;ps:以下想法未提交给老师看，个人吐槽。<br>&emsp;&emsp;整个实验都是留学生的毕业项目，我只是一个帮手，但是大部分都是我一个人做的，留学生来实验室的时间很少，经常就来几个小时，每天只看看原理，代码相关的实操根本不会。留学生学习能力很差，而且并不勤奋，对实验的付出不超过20%，而我却要累死累活地帮他做，每天要分析源码，思考解决方案，汇报做ppt。最后如果论文写出来了（虽然我觉得只靠我一个人做不出来），第一作者还是他的名字，我只能拿一个共同一作，因为他只有一作才能毕业。<br>&emsp;&emsp;唉，现在生活就很苦，我才来了两个半月，就要马上赶着发论文，现在时间紧迫，项目难度大，没有学长带，一个人孤军奋战，很是苦涩。</p>]]></content>
+      <categories>
+        <category>科研周报</category>
+      </categories>
+      <tags>
+        <tag>Hyperledger Fabric</tag>
+        <tag>SGX</tag>
+        <tag>EGo</tag>
+        <tag>区块链</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>科研周报3</title>
+    <url>/2021/11/02/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A53/</url>
+    <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
+<h1 id="本学期科研规划"><a href="#本学期科研规划" class="headerlink" title="本学期科研规划"></a>本学期科研规划</h1><p>&emsp;&emsp;使用sgx技术，给fabric的chaincode创造enclave，并安全运行，在该基础上改进框架，抵御针对区块链或者sgx的一些攻击。</p>
+<h1 id="本周工作情况和进展"><a href="#本周工作情况和进展" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h1><p>&emsp;&emsp;本周其他事情较多，并且在为新电脑配环境，因此没有什么新的进展。电脑的芯片支持sgx，但是主板不支持，因此在想办法和其他学长调换主板。<br>&emsp;&emsp;在分析ego和fabric时，突然有一个想法，将整个peer执行都放入ego的enclave中。因为上周分析过，ego只能为完整独立的可执行程序创建enclave，直接为chaincode这种需要交互的无法创建。而peer命令会与chaincode交互，也就是说peer运行过程是一个完整独立的过程，因此可以尝试使用ego run peer……来为整个peer运行创建enclave。虽然该方法并不是一个好的解决方案，但可以尝试一下。<br>&emsp;&emsp;首先需要使用改良的编译器ertgo来编译出peer可执行程序，然后用ego sign 为peer签名，使用ego run运行：</p>
+<p><div align="center"><img src="/2021/11/02/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A53/1.png"></div><br>&emsp;&emsp;由上图单独使用ego run peer是可以正常运行的，但在实际的fabric网络中：</p>
+<p><div align="center"><img src="/2021/11/02/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A53/2.png"></div><br>&emsp;&emsp;使用ego run peer来调用invoke，初始化ledger数据，但出错了，显示core文件找不到，core文件是fabric的配置文件，路径已经设置好了，找不到原因可能是enclave与外界隔离了，无法读取core文件。</p>
+<h1 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h1><p>&emsp;&emsp;目前项目还处于分析阶段，ego的原理还未解析清楚，因此工作进度过慢。</p>
+<h1 id="下周工作计划"><a href="#下周工作计划" class="headerlink" title="下周工作计划"></a>下周工作计划</h1><p>&emsp;&emsp;抽时间在新电脑上配置fabric和sgx的硬件运行环境<br>&emsp;&emsp;完成chaincode的enclave运行或者peer的enclave运行。</p>]]></content>
+      <categories>
+        <category>科研周报</category>
+      </categories>
+      <tags>
+        <tag>Hyperledger Fabric</tag>
+        <tag>SGX</tag>
+        <tag>EGo</tag>
+        <tag>区块链</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>科研周报4</title>
+    <url>/2021/11/02/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A54/</url>
+    <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
+<h1 id="本学期科研规划"><a href="#本学期科研规划" class="headerlink" title="本学期科研规划"></a>本学期科研规划</h1><p>&emsp;&emsp;本学期科研分为三部分：</p>
+<ol>
+<li>简单实现sgx和fabric的结合，并做一些测试</li>
+<li>调研fabric的攻击方法</li>
+<li>针对一种攻击方法，使用sgx进行防御</li>
+</ol>
+<h1 id="本周工作情况和进展"><a href="#本周工作情况和进展" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h1><p>&emsp;&emsp;本周在分析ego和fabric的工作原理后，发现了之前工作的误区。之前认为fabric的链码是需要交互的，无法单独使用ego运行。实际过程更为复杂，虽然结果看上去是peer调用了chaincode的函数，但实际上chaincode是一个独立的程序，它启动后会自动注册到peer上，建立gRPC链接来通信，然后peer调用chaincode中的函数功能，所以chaincode还是先自主启动，启动gRPC服务，再开始交互，这就说明可以使用ego run运行chaincode。<br>&emsp;&emsp;peer在安装链码时，会将整个链码包（tar.gz包，包含源代码.go和设置文件.json）复制到peer容器中，然后在初始化链码时，首先使用镜像fabric-ccenv来编译链码为可执行程序，然后使用镜像fabric-baseos来启动chaincode容器，运行链码，运行命令为</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chaincode -peer.address=saturn:7052</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;因此只要在两个镜像中集成ego，更改编译和运行方式即可。<br>&emsp;&emsp;接下来需完成ego启动的三步：ego-go编译，ego sign签名，ego run运行。<br>&emsp;&emsp;要修改镜像创建文件，安装ego和ertgo编译器。<br>&emsp;&emsp;修改镜像中编译go代码的部分，改为ego-go编译<br>&emsp;&emsp;修改chaincode启动代码部分，先签名，后启动。</p>
+<h1 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h1><p>&emsp;&emsp;目前没有什么问题，整个项目的问题就在于chaincode编译运行过程太过隐式，不在peer或者chaincode源码中设置，而是隐藏在镜像的代码中，很难去发现分析，因此查阅了很多资料，耗费时间。</p>
+<h1 id="下周工作计划"><a href="#下周工作计划" class="headerlink" title="下周工作计划"></a>下周工作计划</h1><p>&emsp;&emsp;实现在镜像中集成ego和ertgo编译器，修改镜像中编译和启动的代码，更改为ego-go编译，ego sign签名，ego run运行即可。<br>&emsp;&emsp;预计下周可以完成。</p>]]></content>
+      <categories>
+        <category>科研周报</category>
+      </categories>
+      <tags>
+        <tag>Hyperledger Fabric</tag>
+        <tag>SGX</tag>
+        <tag>EGo</tag>
+        <tag>区块链</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>科研周报5</title>
+    <url>/2021/11/05/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A55/</url>
+    <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
+<h1 id="本学期科研规划"><a href="#本学期科研规划" class="headerlink" title="本学期科研规划"></a>本学期科研规划</h1><p>&emsp;&emsp;在fabric区块链中使用sgx技术，将chaincode放入enclave中运行，保护智能合约运行安全。</p>
+<h1 id="本周工作情况和进展"><a href="#本周工作情况和进展" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h1><p>&emsp;&emsp;本周在上周的基础上，实现ego启动chaincode，让chaincode在enclave中运行。</p>
+<ol>
+<li>Fabric链码关键命令<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">peer lifecycle chaincode package mycc.tar.gz --path abstore --lang golang --label mycc</span><br><span class="line">peer lifecycle chaincode install mycc.tar.gz</span><br><span class="line">peer lifecycle chaincode approveformyorg</span><br><span class="line">peer lifecycle chaincode commit</span><br><span class="line">peer chaincode invoke</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;fabric2.0使用lifecycle生命周期，命令和fabric1.0差距很大，下图为二者的区别：<div align="center"><img src="/2021/11/05/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A55/1.png"></div></li>
+<li>链码打包<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">peer lifecycle chaincode package mycc.tar.gz --path abstore --lang golang --label mycc</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;链码打包命令如上图，mycc.tar.gz是打包后的的压缩包，path指明链码路径，lang指明链码语言，lable即链码标签。压缩包内容如下：<br><div align="center"><img src="/2021/11/05/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A55/2.png" width="300" height="126"></div><br>&emsp;&emsp;以go语言为例，压缩包中有code.tar.gz，就是go语言的源码，metadata.json记录链码的语言等信息，内容如下：<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;<span class="attr">&quot;path&quot;</span>:<span class="string">&quot;github.com/hyperledger/fabric-samples/chaincode/abstore&quot;</span>,<span class="attr">&quot;type&quot;</span>:<span class="string">&quot;golang&quot;</span>,<span class="attr">&quot;label&quot;</span>:<span class="string">&quot;mycc&quot;</span>&#125;</span><br></pre></td></tr></table></figure></li>
+<li>链码安装、编译、运行<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">peer lifecycle chaincode install mycc.tar.gz</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;上述命令会安装链码、编译并运行。安装过程会将链码包复制重命名，将mycc.tar.gz重命名，放入peer容器的/var/hyperledger/production/lifecycle/chaincodes路径下：<br><div align="center"><img src="/2021/11/05/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A55/3.png"></div><br>&emsp;&emsp;编译过程首先使用第一个镜像，peer会运行hyperledger/fabric-ccenv:latest镜像，启动一个容器编译链码工程，编译后的可执行文件都命名为chaincode，编译脚本如下：<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">cd chaincode/input/src</span><br><span class="line">GO111MODULE=on go build -v -mod=vendor -ldflags &quot;-linkmode external -extldflags &#x27;-static&#x27;&quot; -o chaincode/output/chaincode    github.com/archive/chaincode-go</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;因此需要在fabric-ccenv镜像中集成ego编译器，使用ego编译，使可执行程序适配enclave。<br>&emsp;&emsp;然后使用第二个镜像，通过hyperledger/fabric-baseos:latest构建以dev开头的镜像，将可执行程序放入/usr/local/bin下<br>&emsp;&emsp;Dockerfile如下：<figure class="highlight dockerfile"><table><tr><td class="code"><pre><span class="line"><span class="keyword">FROM</span> hyperledger/fabric-baseos:latest</span><br><span class="line"><span class="keyword">ADD</span><span class="bash"> binpackage.tar /usr/<span class="built_in">local</span>/bin</span></span><br><span class="line"><span class="keyword">LABEL</span><span class="bash"> org.hyperledger.fabric.chaincode.type=<span class="string">&quot;GOLANG&quot;</span> \</span></span><br><span class="line"><span class="bash">   org.hyperledger.fabric.version=<span class="string">&quot;latest&quot;</span></span></span><br><span class="line"><span class="keyword">ENV</span> CORE_CHAINCODE_BUILDLEVEL=latest</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;最后peer在dev镜像的基础上创建容器，设置环境变量，运行chaincode：<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">chaincode -peer.address=peer0.org1.example.com:7052</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;运行后链码会注册到peer上，并建立grpc通信，流程如下图：<br><div align="center"><img src="/2021/11/05/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A55/4.jpg" width="300" height="411"></div><br>&emsp;&emsp;因此我将该运行指令进行扩展，先使用ego签名，再ego run运行chaincode。编写如下脚本：<br><div align="center"><img src="/2021/11/05/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A55/5.png" width="300" height="443"></div><br><div align="center"><img src="/2021/11/05/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A55/6.png" width="300" height="85"></div><br>&emsp;&emsp;重要的一点是，由于enclave中的环境变量和文件与外界不通用，所以需要使用配置文件将密钥文件进行挂载，将环境变量传递到enclave中。</li>
+</ol>
+<h1 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h1><p>&emsp;&emsp;由于在自己虚拟机上没有sgx，使用仿真模式运行的，镜像中都没有安装sgx，所以可以成功。但在装配sgx的实机运行时发现镜像中也要安装sgx，运行失败。所以需要再挑选一个配备sgx的镜像或者在镜像中安装sgx，再进行运行测试。<br>&emsp;&emsp;在dockerhub上，有许多配备sgx的ubuntu镜像，单独运行sgx实例可以成功，但在安装ego后便报错，因此需要解决。<br>&emsp;&emsp;在单独的ubuntu镜像上安装sgx驱动时，linux-header中缺少一些文件，导致安装失败。</p>
+<h1 id="下周工作计划"><a href="#下周工作计划" class="headerlink" title="下周工作计划"></a>下周工作计划</h1><ol>
+<li>在docker镜像池中挑选sgx的镜像，或者在ubuntu镜像中安装sgx</li>
+<li>根据fabric框架和ego框架，画出本工程的框架图</li>
+<li>对该工程进行性能测试</li>
+</ol>
+<h1 id="个人反思"><a href="#个人反思" class="headerlink" title="个人反思"></a>个人反思</h1><p>&emsp;&emsp;到现在项目终于快完成了，接下来就是评估测试和调研攻击方法，写一篇完整的论文。时间也比较紧，要在12月底前将论文完成。<br>&emsp;&emsp;能够完成到这一步真的让我很开心，我马上联系了导师，希望能和她汇报一下。导师肯定了我的成果，提出了很多建议，导师也愿意把共同一作或者共同通讯作者给我。能得到赞赏总归是开心的，每次在和导师沟通后我都能开心很久，也有了继续的动力，尤其是这一切都是我踏踏实实做出来的，是我自己的努力。希望接下来能继续完成吧。</p>]]></content>
+      <categories>
+        <category>科研周报</category>
+      </categories>
+      <tags>
+        <tag>Hyperledger Fabric</tag>
+        <tag>SGX</tag>
+        <tag>EGo</tag>
+        <tag>区块链</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>科研周报6</title>
+    <url>/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/</url>
+    <content><![CDATA[<!-- excerpt --><br><!-- toc --></p>
+<h1 id="本学期科研规划"><a href="#本学期科研规划" class="headerlink" title="本学期科研规划"></a>本学期科研规划</h1><p>&emsp;&emsp;在fabric区块链中使用sgx技术，将chaincode放入enclave中运行，保护智能合约运行安全。</p>
+<h1 id="本周工作情况和进展"><a href="#本周工作情况和进展" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h1><p>&emsp;&emsp;上周提出的镜像问题已经解决，在docker镜像池中找到了安装sgx的镜像，镜像中不能安装sgx驱动设备，需要将本机的sgx驱动传递到运行的镜像中。<br>&emsp;&emsp;本周简单画了几个原理图，还需要后续完善：</p>
+<p><div align="center"><img src="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/1.png" width="500" height="287"></div></p>
+<center style="font-size:16px;color:#000000f;text-decoration:underline">fabric原理图</center> 
+<div align="center"><img src="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/2.png" width="500" height="215"></div>
+<center style="font-size:16px;color:#000000f;text-decoration:underline">项目运行架构图</center> 
+<div align="center"><img src="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/3.png" width="500" height="301"></div>
+<center style="font-size:16px;color:#000000f;text-decoration:underline">静态原理图</center> 
+
+<p>&emsp;&emsp;静态原理图太过于简单，直接就是在chaincode上套上chaincode，后续还需要重新改进。因为程序运行时会创建容器，所以运行图会凸显出容器之间的交互，更为详细，后续需要再添加一些细节。<br>&emsp;&emsp;本周对fabric的运行进行了简单评估。hyperledger下有一个caliper项目，专门用来测试区块链的性能，如延迟Latency、吞吐率Throughput、CPU占用率、内存等，如下：</p>
+<p><div align="center"><img src="/2021/11/12/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A56/4.png"></div></p>
+<h1 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h1><p>&emsp;&emsp;该评估需要编写脚本来测试，因此后续可以测试创建、查询、修改账本的各种性能。<br>&emsp;&emsp;程序运行时间可以通过/usr/bin/time来获取链码安装、调用的时间信息。</p>
+<h1 id="下周工作计划"><a href="#下周工作计划" class="headerlink" title="下周工作计划"></a>下周工作计划</h1><p>&emsp;&emsp;学习caliper使用方法，完善fabric性能测试。</p>]]></content>
+      <categories>
+        <category>科研周报</category>
+      </categories>
+      <tags>
+        <tag>Hyperledger Fabric</tag>
+        <tag>SGX</tag>
+        <tag>EGo</tag>
+        <tag>区块链</tag>
       </tags>
   </entry>
 </search>
