@@ -271,9 +271,9 @@
     
     
         &nbsp;|&nbsp; 更新于
-        <time itemprop="dateUpdated" content="Sun Nov 06 2022 17:08:10 GMT+0800">
+        <time itemprop="dateUpdated" content="Wed Nov 09 2022 18:44:34 GMT+0800">
         
-		    2022 年 11 月 06 日
+		    2022 年 11 月 09 日
     	
         </time>
     
@@ -282,14 +282,14 @@
             </div>
             
                 <div class="postShorten-excerpt">
-                    <p>2021年11月周报汇总。<br>
+                    <p>2021年11月周报汇总。</p>
                     
                         <a href="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" class="postShorten-excerpt_link link" aria-label=": 2021年11月科研月报">
                             阅读全文
                         </a>
                         
                     
-                </p></div>
+                </div>
             
         </div>
         
@@ -805,7 +805,7 @@
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2022 <a href="https://yiwenzhe.com">YWZ</a>. All Rights Reserved.
+        Copyrights &copy; 2023 <a href="https://yiwenzhe.com">YWZ</a>. All Rights Reserved.
     </span>
     <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
 <script>
@@ -884,5 +884,20 @@ setInterval("createtime()",250);
 
 
 
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
 </html>
