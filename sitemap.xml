@@ -2,13 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://yiwenzhe.com/2022/03/12/%E9%9E%AD%E7%AD%96%E4%B8%80%E5%88%99/</loc>
-    
-    <lastmod>2023-01-10</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://yiwenzhe.com/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/</loc>
     
     <lastmod>2022-11-09</lastmod>
@@ -207,7 +200,7 @@
 
   <url>
     <loc>https://yiwenzhe.com/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -215,98 +208,98 @@
   
   <url>
     <loc>https://yiwenzhe.com/tags/python/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/tags/%E7%94%9F%E6%B4%BB/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/tags/%E7%BE%8E%E8%B5%9B/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/tags/%E8%BD%AF%E4%BB%B6%E9%80%86%E5%90%91/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/tags/%E7%94%9F%E6%97%A5/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/tags/DVWA/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/tags/sql%E6%B3%A8%E5%85%A5/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/tags/sql%E7%9B%B2%E6%B3%A8/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/tags/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/tags/Hyperledger-Fabric/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/tags/SGX/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/tags/EGo/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -315,42 +308,42 @@
   
   <url>
     <loc>https://yiwenzhe.com/categories/%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/categories/%E7%94%9F%E6%B4%BB%E5%90%90%E6%A7%BD/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/categories/%E7%AB%9E%E8%B5%9B/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/categories/%E4%BA%BA%E7%94%9F%E5%8D%81%E5%B9%B4/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://yiwenzhe.com/categories/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A5/</loc>
-    <lastmod>2023-01-10</lastmod>
+    <lastmod>2023-04-01</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
