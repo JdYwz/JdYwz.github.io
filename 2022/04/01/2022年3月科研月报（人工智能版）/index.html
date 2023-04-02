@@ -1,0 +1,707 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="YWZ">
+    <title>2022年3月科研月报（人工智能版） - YWZ</title>
+    <meta name="author" content="YWZ">
+    
+    
+        <link rel="icon" href="https://yiwenzhe.com/assets/images/favicon.ico">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg"},"articleBody":"\n\n本学期科研规划&emsp;&emsp;学习《动手学深度学习》课程，尽快入门学会深度学习基本知识和编程。\n本月规划&emsp;&emsp;阅读深度学习论文，学习网课，学会CNN相关知识。\n第一周 2022/02/28 – 2021/03/06本周工作情况和进展\n写论文&emsp;&emsp;完善区块链论文（在本周报不展开说明）\n\n阅读论文&emsp;&emsp;本周阅读了三篇论文（上周遗留的一篇）：&emsp;&emsp;Machine Learning Models that Remember Too Much：利用网络隐藏信息，设计到部分信息隐藏知识&emsp;&emsp;Overlearning Reveals Sensitive Attributes：神经网络记录信息过多，包括各种敏感信息，可以利用特征推导敏感属性，或者将模型重训练来预测敏感属性&emsp;&emsp;Adversarial Learning of Privacy-Preserving and Task-Oriented Representations：对抗训练模型保护隐私，使解码器效果变差。\n\n运行实验&emsp;&emsp;本周初步运行了论文《Neural Network Inversion in Adversarial Setting via Background Knowledge Alignment》中的攻击实验。&emsp;&emsp;针对猜想：模型越小，反演攻击效果是否越差？进行三组实验，分别设置模型ndf为128（loss1橙色）、64（loss2蓝色）、5（loss5红色），进行100轮训练，损失变化和对比如下图：&emsp;&emsp;虽然随着模型变小，攻击的损失会增大，效果变差，但是差距不大，loss差距在0.002左右，并且图片对比差距也很小。因此得出初步结论：攻击效果与模型大小没有较强关系。\n\n\n二，存在的问题&emsp;&emsp;本周阅读论文、运行实验时，并不能很好理解代码和公式，尤其是CNN相关内容。缺乏CNN知识。\n三，下周工作计划\n学习CNN视频\n阅读新的论文\n运行上周论文实验\n\n第二周 2022/03/07 — 2022/03/13一，本周工作情况和进展\n阅读论文&emsp;&emsp;本周阅读了两篇论文：&emsp;&emsp;The Secret Revealer: Generative Model-Inversion Attacks Against Deep Neural Networks：通过GAN来生成图片，并恢复图像中的敏感数据。&emsp;&emsp;Model inversion attacks against collaborative inference：虽然标题是合作推理，但就是partition的场景下进行模型反演攻击，分别在白盒场景、可query黑盒场景、不可query黑盒场景下进行测试。\n\n学习网课&emsp;&emsp;本周学习了《动手学深度学习》16节-21节的内容，重点是卷积层，理解了图像卷积的操作，以及通道、填充、步幅、卷积核等超参数的作用。\n\n\n二，存在的问题&emsp;&emsp;第一篇论文中有多个loss公式没看懂。&emsp;&emsp;第二篇论文中。白盒场景虽然可以获得参数，但并没有使用，构造了x0，减少f(x0)和f(x)的loss（3a），同时使用（3b）公式计算图片的平滑度，从而使构造的x0逼近原输入x\n&emsp;&emsp;可是这样不还是黑盒吗？个人比较疑惑，可以在下周开会时进行探讨。\n三，下周工作计划\n继续学习CNN\n阅读论文\n能够改一改代码，跑实验\n\n第三周 2022/03/14 — 2022/03/20一，本周工作情况和进展\n阅读论文&emsp;&emsp;本周阅读了两篇论文：&emsp;&emsp;Property Inference Attacks Against GANs：对GAN进行属性推理攻击，分为全黑盒（输入随机）和部分黑盒（可以控制输入的特征向量）攻击，部分黑盒攻击时训练多个影子GAN模型，两种攻击都训练额外的分类器对GAN的输出进行分类，并根据分类结果推测属性占比。本论文的测试非常丰富，包含各种影响因素，如训练样本数、影子模型数、分类器结构和数据分布等。&emsp;&emsp;Attacking and Protecting Data Privacy in Edge–Cloud Collaborative Inference Systems：该篇论文和上周论文的理论部分完全一致，属于会议论文修改30%再投期刊，但两篇论文测试不同，本论文重点测试防御方法，如加噪音、在不同层采用丢弃法、模型分割位置等，在中间层加噪音、更深的层采用丢弃法、在更深的层进行分割（至少包含一个全连接层），防御效果更好。\n\n实验&emsp;&emsp;编写AlexNet，并对CIFAR10数据集进行测试。&emsp;&emsp;原AlexNet针对的是3x224x224的图片，卷积层会压缩到非常小，而CIFAR10是3x32x32的大小，需要更改网络参数。&emsp;&emsp;测试结果如下：&emsp;&emsp;训练50轮时会有严重的过拟合，训练到23轮左右可以得到最低的loss，准确率为70%。\n\n\n二，存在的问题&emsp;&emsp;第一篇论文是针对GAN的属性推理攻击，但在最后迁移到了成员推理攻击，该部分没看懂，尤其是三个公式。\n三，下周工作计划\n阅读论文\n学习自注意力机制\n\n第四周 2022/03/21 — 2022/03/27一，本周工作情况和进展\n阅读论文&emsp;&emsp;本周阅读了两篇论文：（任务有三篇，但截止到27号有一篇没看完）&emsp;&emsp;Updates-Leak: Data Set Inference and Reconstruction Attacks in Online Learning：在模型更新场景下窃取更新数据集label或者重构数据集。在黑盒场景下，设置四种攻击，单例更新集推测label，单例更新集重构，多例更新集推测label分布，多例更新集重构。四种攻击都采用了AutoEncoder类似架构，而在多例更新集重构中使用Generator作为Decoder，并使用聚类方法来进行选择重构图像。&emsp;&emsp;ActiveThief: Model Extraction Using Active Learning and Unannotated Public Data：使用与目标模型同类型同内容的公开数据集作为query数据，在query后使用四种子集选择策略选择下一次query的数据。\n\n实验&emsp;&emsp;本周使用了Attacking and Protecting Data Privacy in Edge–Cloud Collaborative Inference Systems论文中的Dropout防御方法，dropout用在vgg，并对dropout率进行测试，结果如下：\n\n\n\n\n\n\nDropout Rate\n分类准确率\n反演ssim\n\n\n\n\n0.5\n85.2\n0.6\n\n\n0.7\n84.26\n0.46\n\n\n0.8\n83.63\n0.36\n\n\n0.9\n81.84\n0.2\n\n\n\n\n\n网课学习&emsp;&emsp;本周匆忙地学习了注意力相关内容，初步了解相关含义，但注意力例子都是在seq2seq上的，transformer也是，因此不是很理解，需要补充seq2seq相关知识。\n\n二，存在的问题\nUpdates-Leak：多个更新集中，不理解推测label分布，获得各label数目？在多例更新重构中，Best-Match loss中前一个是交叉熵损失，越小越好，后一个是Discriminator判别结果，这个应该越大越好，不理解为什么是相加。\nActiveThief：只是添加了选择策略，loss使用目标网络和影子模型的label差异，感觉只是训练了一个功能相似的模型，对窃取的效果感到怀疑。\n\n三，下周工作计划\n学习网课\n完成论文阅读\n完成Dropout实验\n","dateCreated":"2022-04-01T19:00:00+08:00","dateModified":"2023-04-02T20:34:16+08:00","datePublished":"2022-04-01T19:00:00+08:00","description":"2022年3月周报汇总。（人工智能版）","headline":"2022年3月科研月报（人工智能版）","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg","logo":{"@type":"ImageObject","url":"picture.jpg"}},"url":"https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/","keywords":"Deep Learning, Trustworthy Machine Learning, Privacy"}</script>
+    <meta name="description" content="2022年3月周报汇总。（人工智能版）">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="2022年3月科研月报（人工智能版）">
+<meta property="og:url" content="https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/index.html">
+<meta property="og:site_name" content="YWZ">
+<meta property="og:description" content="2022年3月周报汇总。（人工智能版）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/1.jpg">
+<meta property="og:image" content="https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/2.jpg">
+<meta property="og:image" content="https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/3.jpg">
+<meta property="og:image" content="https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/4.jpg">
+<meta property="article:published_time" content="2022-04-01T11:00:00.000Z">
+<meta property="article:modified_time" content="2023-04-02T12:34:16.393Z">
+<meta property="article:author" content="YWZ">
+<meta property="article:tag" content="Deep Learning">
+<meta property="article:tag" content="Trustworthy Machine Learning">
+<meta property="article:tag" content="Privacy">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/1.jpg">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://yiwenzhe.com/assets/images/picture.jpg">
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-5ctctel0cuzrmzotlasreim3qgxouuqpfme70vruknhdpfxw6enuh6pympnk.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+    <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?003fd62f149a30bc5f172a1ed42483c3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/" aria-label>
+            YWZ
+        </a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about" aria-label="打开链接: /#about">
+        
+        
+            <img class="header-picture" src="/assets/images/picture.jpg" alt="作者的图片">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about" aria-label="阅读有关作者的更多信息">
+                    <img class="sidebar-profile-picture" src="/assets/images/picture.jpg" alt="作者的图片">
+                </a>
+                <h4 class="sidebar-profile-name">YWZ</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>一个无聊的程序员</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/" rel="noopener" title="首页">
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">首页</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-categories" rel="noopener" title="分类">
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">分类</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" rel="noopener" title="标签">
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">标签</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" rel="noopener" title="归档">
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">归档</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link open-algolia-search" href="/search" rel="noopener" title="搜索">
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">搜索</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/shuoshuo" rel="noopener" title="说说">
+                        <i class="sidebar-button-icon fas fa-comments" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">说说</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="#about" rel="noopener" title="关于">
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">关于</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://github.com/" target="_blank" rel="external nofollow noopener noreferrer" title="GitHub">
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="http://stackoverflow.com/users" target="_blank" rel="external nofollow noopener noreferrer" title="Stack Overflow">
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://twitter.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Twitter">
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://facebook.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Facebook">
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://google.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Google">
+                        <i class="sidebar-button-icon fab fa-google" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="mailto:2410776350@qq.com" target="_blank" rel="external nofollow noopener noreferrer" title="邮箱">
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">邮箱</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/atom.xml" rel="noopener" title="RSS">
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4" style="background-color: rgba(255, 255, 255, 0.85);" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            2022年3月科研月报（人工智能版）
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-04-01T19:00:00+08:00">
+	
+		    2022 年 04 月 01 日
+    	
+    </time>
+    
+        <span>发布在 </span>
+        
+    <a class="category-link" href="/categories/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A5/">科研周报</a>
+
+
+    
+    
+        &nbsp;|&nbsp; 更新于
+        <time itemprop="dateUpdated" content="Sun Apr 02 2023 20:34:16 GMT+0800">
+        
+		    2023 年 04 月 02 日
+    	
+        </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt -->
+<h1 id="table-of-contents">目录</h1><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AC%E5%AD%A6%E6%9C%9F%E7%A7%91%E7%A0%94%E8%A7%84%E5%88%92"><span class="toc-text">本学期科研规划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AC%E6%9C%88%E8%A7%84%E5%88%92"><span class="toc-text">本月规划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E5%91%A8-2022-02-28-%E2%80%93-2021-03-06"><span class="toc-text">第一周 2022&#x2F;02&#x2F;28 – 2021&#x2F;03&#x2F;06</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%91%A8%E5%B7%A5%E4%BD%9C%E6%83%85%E5%86%B5%E5%92%8C%E8%BF%9B%E5%B1%95"><span class="toc-text">本周工作情况和进展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%EF%BC%8C%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">二，存在的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%EF%BC%8C%E4%B8%8B%E5%91%A8%E5%B7%A5%E4%BD%9C%E8%AE%A1%E5%88%92"><span class="toc-text">三，下周工作计划</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E5%91%A8-2022-03-07-%E2%80%94-2022-03-13"><span class="toc-text">第二周 2022&#x2F;03&#x2F;07 — 2022&#x2F;03&#x2F;13</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%EF%BC%8C%E6%9C%AC%E5%91%A8%E5%B7%A5%E4%BD%9C%E6%83%85%E5%86%B5%E5%92%8C%E8%BF%9B%E5%B1%95"><span class="toc-text">一，本周工作情况和进展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%EF%BC%8C%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98-1"><span class="toc-text">二，存在的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%EF%BC%8C%E4%B8%8B%E5%91%A8%E5%B7%A5%E4%BD%9C%E8%AE%A1%E5%88%92-1"><span class="toc-text">三，下周工作计划</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E5%91%A8-2022-03-14-%E2%80%94-2022-03-20"><span class="toc-text">第三周 2022&#x2F;03&#x2F;14 — 2022&#x2F;03&#x2F;20</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%EF%BC%8C%E6%9C%AC%E5%91%A8%E5%B7%A5%E4%BD%9C%E6%83%85%E5%86%B5%E5%92%8C%E8%BF%9B%E5%B1%95-1"><span class="toc-text">一，本周工作情况和进展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%EF%BC%8C%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98-2"><span class="toc-text">二，存在的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%EF%BC%8C%E4%B8%8B%E5%91%A8%E5%B7%A5%E4%BD%9C%E8%AE%A1%E5%88%92-2"><span class="toc-text">三，下周工作计划</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E5%91%A8-2022-03-21-%E2%80%94-2022-03-27"><span class="toc-text">第四周 2022&#x2F;03&#x2F;21 — 2022&#x2F;03&#x2F;27</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%EF%BC%8C%E6%9C%AC%E5%91%A8%E5%B7%A5%E4%BD%9C%E6%83%85%E5%86%B5%E5%92%8C%E8%BF%9B%E5%B1%95-2"><span class="toc-text">一，本周工作情况和进展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%EF%BC%8C%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98-3"><span class="toc-text">二，存在的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%EF%BC%8C%E4%B8%8B%E5%91%A8%E5%B7%A5%E4%BD%9C%E8%AE%A1%E5%88%92-3"><span class="toc-text">三，下周工作计划</span></a></li></ol></li></ol>
+<h1 id="本学期科研规划"><a href="#本学期科研规划" class="headerlink" title="本学期科研规划"></a>本学期科研规划</h1><p>&emsp;&emsp;学习《动手学深度学习》课程，尽快入门学会深度学习基本知识和编程。</p>
+<h1 id="本月规划"><a href="#本月规划" class="headerlink" title="本月规划"></a>本月规划</h1><p>&emsp;&emsp;阅读深度学习论文，学习网课，学会CNN相关知识。</p>
+<h1 id="第一周-2022-02-28-–-2021-03-06"><a href="#第一周-2022-02-28-–-2021-03-06" class="headerlink" title="第一周 2022/02/28 – 2021/03/06"></a>第一周 2022/02/28 – 2021/03/06</h1><h2 id="本周工作情况和进展"><a href="#本周工作情况和进展" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h2><ol>
+<li><p>写论文<br>&emsp;&emsp;完善区块链论文（在本周报不展开说明）</p>
+</li>
+<li><p>阅读论文<br>&emsp;&emsp;本周阅读了三篇论文（上周遗留的一篇）：<br>&emsp;&emsp;Machine Learning Models that Remember Too Much：利用网络隐藏信息，设计到部分信息隐藏知识<br>&emsp;&emsp;Overlearning Reveals Sensitive Attributes：神经网络记录信息过多，包括各种敏感信息，可以利用特征推导敏感属性，或者将模型重训练来预测敏感属性<br>&emsp;&emsp;Adversarial Learning of Privacy-Preserving and Task-Oriented Representations：对抗训练模型保护隐私，使解码器效果变差。</p>
+</li>
+<li><p>运行实验<br>&emsp;&emsp;本周初步运行了论文《Neural Network Inversion in Adversarial Setting via Background Knowledge Alignment》中的攻击实验。<br>&emsp;&emsp;针对猜想：模型越小，反演攻击效果是否越差？进行三组实验，分别设置模型ndf为128（loss1橙色）、64（loss2蓝色）、5（loss5红色），进行100轮训练，损失变化和对比如下图：<br><div align="center"><img src="/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/1.jpg"></div><br>&emsp;&emsp;虽然随着模型变小，攻击的损失会增大，效果变差，但是差距不大，loss差距在0.002左右，并且图片对比差距也很小。因此得出初步结论：攻击效果与模型大小没有较强关系。</p>
+</li>
+</ol>
+<h2 id="二，存在的问题"><a href="#二，存在的问题" class="headerlink" title="二，存在的问题"></a>二，存在的问题</h2><p>&emsp;&emsp;本周阅读论文、运行实验时，并不能很好理解代码和公式，尤其是CNN相关内容。缺乏CNN知识。</p>
+<h2 id="三，下周工作计划"><a href="#三，下周工作计划" class="headerlink" title="三，下周工作计划"></a>三，下周工作计划</h2><ol>
+<li>学习CNN视频</li>
+<li>阅读新的论文</li>
+<li>运行上周论文实验</li>
+</ol>
+<h1 id="第二周-2022-03-07-—-2022-03-13"><a href="#第二周-2022-03-07-—-2022-03-13" class="headerlink" title="第二周 2022/03/07 — 2022/03/13"></a>第二周 2022/03/07 — 2022/03/13</h1><h2 id="一，本周工作情况和进展"><a href="#一，本周工作情况和进展" class="headerlink" title="一，本周工作情况和进展"></a>一，本周工作情况和进展</h2><ol>
+<li><p>阅读论文<br>&emsp;&emsp;本周阅读了两篇论文：<br>&emsp;&emsp;The Secret Revealer: Generative Model-Inversion Attacks Against Deep Neural Networks：通过GAN来生成图片，并恢复图像中的敏感数据。<br>&emsp;&emsp;Model inversion attacks against collaborative inference：虽然标题是合作推理，但就是partition的场景下进行模型反演攻击，分别在白盒场景、可query黑盒场景、不可query黑盒场景下进行测试。</p>
+</li>
+<li><p>学习网课<br>&emsp;&emsp;本周学习了《动手学深度学习》16节-21节的内容，重点是卷积层，理解了图像卷积的操作，以及通道、填充、步幅、卷积核等超参数的作用。</p>
+</li>
+</ol>
+<h2 id="二，存在的问题-1"><a href="#二，存在的问题-1" class="headerlink" title="二，存在的问题"></a>二，存在的问题</h2><p>&emsp;&emsp;第一篇论文中有多个loss公式没看懂。<br>&emsp;&emsp;第二篇论文中。白盒场景虽然可以获得参数，但并没有使用，构造了x<sub>0</sub>，减少f(x<sub>0</sub>)和f(x)的loss（3a），同时使用（3b）公式计算图片的平滑度，从而使构造的x<sub>0</sub>逼近原输入x</p>
+<p><div align="center"><img src="/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/2.jpg"></div><br>&emsp;&emsp;可是这样不还是黑盒吗？个人比较疑惑，可以在下周开会时进行探讨。</p>
+<h2 id="三，下周工作计划-1"><a href="#三，下周工作计划-1" class="headerlink" title="三，下周工作计划"></a>三，下周工作计划</h2><ol>
+<li>继续学习CNN</li>
+<li>阅读论文</li>
+<li>能够改一改代码，跑实验</li>
+</ol>
+<h1 id="第三周-2022-03-14-—-2022-03-20"><a href="#第三周-2022-03-14-—-2022-03-20" class="headerlink" title="第三周 2022/03/14 — 2022/03/20"></a>第三周 2022/03/14 — 2022/03/20</h1><h2 id="一，本周工作情况和进展-1"><a href="#一，本周工作情况和进展-1" class="headerlink" title="一，本周工作情况和进展"></a>一，本周工作情况和进展</h2><ol>
+<li><p>阅读论文<br>&emsp;&emsp;本周阅读了两篇论文：<br>&emsp;&emsp;Property Inference Attacks Against GANs：对GAN进行属性推理攻击，分为全黑盒（输入随机）和部分黑盒（可以控制输入的特征向量）攻击，部分黑盒攻击时训练多个影子GAN模型，两种攻击都训练额外的分类器对GAN的输出进行分类，并根据分类结果推测属性占比。本论文的测试非常丰富，包含各种影响因素，如训练样本数、影子模型数、分类器结构和数据分布等。<br>&emsp;&emsp;Attacking and Protecting Data Privacy in Edge–Cloud Collaborative Inference Systems：该篇论文和上周论文的理论部分完全一致，属于会议论文修改30%再投期刊，但两篇论文测试不同，本论文重点测试防御方法，如加噪音、在不同层采用丢弃法、模型分割位置等，在中间层加噪音、更深的层采用丢弃法、在更深的层进行分割（至少包含一个全连接层），防御效果更好。</p>
+</li>
+<li><p>实验<br>&emsp;&emsp;编写AlexNet，并对CIFAR10数据集进行测试。<br>&emsp;&emsp;原AlexNet针对的是3x224x224的图片，卷积层会压缩到非常小，而CIFAR10是3x32x32的大小，需要更改网络参数。<br>&emsp;&emsp;测试结果如下：<br><div align="center"><img src="/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/3.jpg"></div><br><div align="center"><img src="/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/4.jpg"></div><br>&emsp;&emsp;训练50轮时会有严重的过拟合，训练到23轮左右可以得到最低的loss，准确率为70%。</p>
+</li>
+</ol>
+<h2 id="二，存在的问题-2"><a href="#二，存在的问题-2" class="headerlink" title="二，存在的问题"></a>二，存在的问题</h2><p>&emsp;&emsp;第一篇论文是针对GAN的属性推理攻击，但在最后迁移到了成员推理攻击，该部分没看懂，尤其是三个公式。</p>
+<h2 id="三，下周工作计划-2"><a href="#三，下周工作计划-2" class="headerlink" title="三，下周工作计划"></a>三，下周工作计划</h2><ol>
+<li>阅读论文</li>
+<li>学习自注意力机制</li>
+</ol>
+<h1 id="第四周-2022-03-21-—-2022-03-27"><a href="#第四周-2022-03-21-—-2022-03-27" class="headerlink" title="第四周 2022/03/21 — 2022/03/27"></a>第四周 2022/03/21 — 2022/03/27</h1><h2 id="一，本周工作情况和进展-2"><a href="#一，本周工作情况和进展-2" class="headerlink" title="一，本周工作情况和进展"></a>一，本周工作情况和进展</h2><ol>
+<li><p>阅读论文<br>&emsp;&emsp;本周阅读了两篇论文：（任务有三篇，但截止到27号有一篇没看完）<br>&emsp;&emsp;Updates-Leak: Data Set Inference and Reconstruction Attacks in Online Learning：在模型更新场景下窃取更新数据集label或者重构数据集。在黑盒场景下，设置四种攻击，单例更新集推测label，单例更新集重构，多例更新集推测label分布，多例更新集重构。四种攻击都采用了AutoEncoder类似架构，而在多例更新集重构中使用Generator作为Decoder，并使用聚类方法来进行选择重构图像。<br>&emsp;&emsp;ActiveThief: Model Extraction Using Active Learning and Unannotated Public Data：使用与目标模型同类型同内容的公开数据集作为query数据，在query后使用四种子集选择策略选择下一次query的数据。</p>
+</li>
+<li><p>实验<br>&emsp;&emsp;本周使用了Attacking and Protecting Data Privacy in Edge–Cloud Collaborative Inference Systems论文中的Dropout防御方法，dropout用在vgg，并对dropout率进行测试，结果如下：</p>
+</li>
+</ol>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Dropout Rate</th>
+<th>分类准确率</th>
+<th>反演ssim</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.5</td>
+<td>85.2</td>
+<td>0.6</td>
+</tr>
+<tr>
+<td>0.7</td>
+<td>84.26</td>
+<td>0.46</td>
+</tr>
+<tr>
+<td>0.8</td>
+<td>83.63</td>
+<td>0.36</td>
+</tr>
+<tr>
+<td>0.9</td>
+<td>81.84</td>
+<td>0.2</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ol>
+<li>网课学习<br>&emsp;&emsp;本周匆忙地学习了注意力相关内容，初步了解相关含义，但注意力例子都是在seq2seq上的，transformer也是，因此不是很理解，需要补充seq2seq相关知识。</li>
+</ol>
+<h2 id="二，存在的问题-3"><a href="#二，存在的问题-3" class="headerlink" title="二，存在的问题"></a>二，存在的问题</h2><ol>
+<li>Updates-Leak：多个更新集中，不理解推测label分布，获得各label数目？在多例更新重构中，Best-Match loss中前一个是交叉熵损失，越小越好，后一个是Discriminator判别结果，这个应该越大越好，不理解为什么是相加。</li>
+<li>ActiveThief：只是添加了选择策略，loss使用目标网络和影子模型的label差异，感觉只是训练了一个功能相似的模型，对窃取的效果感到怀疑。</li>
+</ol>
+<h2 id="三，下周工作计划-3"><a href="#三，下周工作计划-3" class="headerlink" title="三，下周工作计划"></a>三，下周工作计划</h2><ol>
+<li>学习网课</li>
+<li>完成论文阅读</li>
+<li>完成Dropout实验</li>
+</ol>
+            
+
+
+            <!-- 添加的部分 -->
+            <!-- copyright -->
+            
+                <div class="article-footer-copyright">
+    <!--
+    <p><span>本文标题:</span><href="/%20"> 2022年3月科研月报（人工智能版）</a></p>
+    <p><span>文章作者:</span><a href="/" title="访问 YWZ的个人博客">YWZ</a></p>
+    <p><span>发布时间:</span>2022年04月01日 - 19:00</p>
+    <p><span>最后更新:</span>2023年04月02日 - 20:34</p>
+    <p><span>原始链接:</span><a href="/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/" title="2022年3月科研月报（人工智能版）">https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/"  aria-label="复制成功！"></i></span>
+    </p>
+    <p><span>许可协议:</span><i class="fab fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+     -->
+    <p>文章作者:<a href="/" title="访问 YWZ的个人博客">YWZ</a>
+    <br>该文章是本人原创，转载请注明出处
+    <br>本文链接地址: <a href="/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/" title="2022年3月科研月报（人工智能版）">https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/</a></p>
+</div>
+
+            
+            <!-- copyright -->
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">标签</span><br>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/Deep-Learning/" rel="tag">Deep Learning</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/Privacy/" rel="tag">Privacy</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/Trustworthy-Machine-Learning/" rel="tag">Trustworthy Machine Learning</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E5%8C%BA%E5%9D%97%E9%93%BE%E7%89%88%EF%BC%89/" data-tooltip="2022年3月科研月报（区块链版）" aria-label="上一篇: 2022年3月科研月报（区块链版）">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2022/03/12/%E6%8D%A2%E6%96%B0%E6%89%8B%E6%9C%BA%E6%9C%89%E6%84%9F/" data-tooltip="换新手机有感" aria-label="下一篇: 换新手机有感">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/&amp;title=2022年3月科研月报（人工智能版）" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-qq" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/" title="分享到 Qzone" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/" title="分享到 Weibo" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="目录">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 <a href="https://yiwenzhe.com">YWZ</a>. All Rights Reserved.
+    </span>
+    <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("10/11/2020 14:56:39");//在此处修改你的建站时间，格式：月/日/年 时:分:秒
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+setInterval("createtime()",250);
+</script>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E5%8C%BA%E5%9D%97%E9%93%BE%E7%89%88%EF%BC%89/" data-tooltip="2022年3月科研月报（区块链版）" aria-label="上一篇: 2022年3月科研月报（区块链版）">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2022/03/12/%E6%8D%A2%E6%96%B0%E6%89%8B%E6%9C%BA%E6%9C%89%E6%84%9F/" data-tooltip="换新手机有感" aria-label="下一篇: 换新手机有感">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/&amp;title=2022年3月科研月报（人工智能版）" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-qq" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/" title="分享到 Qzone" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/" title="分享到 Weibo" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="目录">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/&amp;title=2022年3月科研月报（人工智能版）" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-qq" aria-hidden="true"></i><span>分享到 QQ</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                        <i class="fa fa-star" aria-hidden="true"></i><span>分享到 Qzone</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%89%88%EF%BC%89/" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-weibo" aria-hidden="true"></i><span>分享到 Weibo</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <a href="https://yiwenzhe.com">
+            <img id="about-card-picture" src="/assets/images/picture.jpg" alt="作者的图片">
+            </a>
+        
+            <a href="https://yiwenzhe.com">
+            <h4 id="about-card-name">YWZ</h4>
+            </a>
+        
+            <div id="about-card-bio"><p>一个无聊的程序员</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>武汉大学在读研究生</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                湖北武汉
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-mxznsv1n7nz3zrfuls87amiraudckgmxncavgf1ucci53txgionftndw0zwt.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

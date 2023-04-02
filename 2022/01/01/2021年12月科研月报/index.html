@@ -1,0 +1,685 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="YWZ">
+    <title>2021年12月科研月报 - YWZ</title>
+    <meta name="author" content="YWZ">
+    
+    
+        <link rel="icon" href="https://yiwenzhe.com/assets/images/favicon.ico">
+    
+    
+        
+            <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+        
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg"},"articleBody":"\n\n本学期科研规划&emsp;&emsp;在fabric区块链中使用sgx技术，将chaincode放入enclave中运行，保护智能合约运行安全。\n本月规划&emsp;&emsp;调研针对fabric链码的攻击方法，并进行防御测试，15日前完成调研工作。月底前完成整体论文。\n第一周 2021/11/29 – 2021/12/05本周工作情况和进展\n链码修复工具&emsp;&emsp;上周调研后发现，针对链码的攻击都是从代码漏洞出发的，如全局变量、恶意跳转等。像以太坊、比特币的智能合约攻击也都是从代码编写层面考虑的，因此在阅读相关论文后，想添加一个自动修复fabric链码的功能。&emsp;&emsp;调研后发现fabric有revive^CC这个静态分析工具，只能对源码进行漏洞检测，会检查全局变量、多线程、随机数使用、读写冲突等情况，如下图：&emsp;&emsp;但该工具只是对源码进行检测，不能直接对可执行程序打补丁，所以不能直接用于我们的系统。\n\nfabric可视化&emsp;&emsp;因为要对链码进行攻击，使用终端查看很不方便，因此我想将fabric可视化，更直观地查看区块和交易情况。和之前测试工具caliper一样，Hyperledger社区内也有可视化工具。&emsp;&emsp;Hyperledger Explorer是一个简单，功能强大，易于使用，高度可维护的开源区块链浏览器，用于查看底层区块链网络上的活动。&emsp;&emsp;通过explorer可以看到网络中的区块信息和交易内容，使用后界面如下：\n\n\nsgx可视化&emsp;&emsp;在思考fabric可视化后，考虑到攻击enclave中的链码，需要能够“看到”enclave，因此搜索了enclave的可视化方法，找到了sgxtop项目，它可以列出enclave数目、整体enclave内存使用、分页速率和正在使用的enclave，以及它们的内存使用情况和所属进程的信息。&emsp;&emsp;因为该项目需要卸载原有的isgx driver，安装适配sgxtop的sgx驱动，因此我还没有在自己电脑上测试，官方的测试效果如下：\n\n\n针对链码的攻击面&emsp;&emsp;阅读使用sgx保护fabric相关论文和参考文献后，提到比较多的工作如下：[1] The Hyperledger Private Data Objects (PDOs)（Private Data Objects: an Overview）[2] Ekiden（Ekiden: A Platform for Confidentiality-Preserving, Trustworthy, and Performant Smart Contracts）[3] The R3 Corda distributed ledger platform（Corda: A distributed ledger）[4] Hawk（Hawk: The Blockchain Model of Cryptography and Privacy-Preserving Smart Contracts）[5] Coco framework（CCF: A Framework for Building Confidential Verifiable Replicated Services）&emsp;&emsp;这几篇论文都是与TEE或者sgx相关的，但都没有提到攻击方式，反倒是重点讲述隐私问题，以保护区块链、链码隐私开题，然后介绍加强执行过程的隐私保护。&emsp;&emsp;如：区块链数据是公开的。因此，现有的智能合约系统缺乏保密性或隐私性:它们无法安全地存储或计算敏感数据(例如，拍卖出价、金融交易)。&emsp;&emsp;因此我觉得找不到一个具体的攻击方法。这几篇论文倒是可以放到一起对比，然后写入related work部分。&emsp;&emsp;在调研过程中我发现了一篇浙江大学的硕士论文（基于区块链和TEE的可信计算平台设计与开发_钟雨涵），该论文和我们工作方向一致，并且作者是完全使用C语言编写sgx部分，使用cgo来与fabric链码go语言部分交互的，和之前提出的想法一样。而我们的工作与之相比就过于简单，所以画不出与他一样的框架图。该论文也没有提到攻击方法。\n\n\n存在的问题&emsp;&emsp;找不到与之相关的攻击方法，我觉得还是需要从隐私和执行保护入手。\n下周工作计划&emsp;&emsp;阅读上述五篇相关论文，写一篇方法对比报告。（准备毕业开题答辩ppt）\n第二周 2021/12/06 – 2021/12/12本周工作情况和进展&emsp;&emsp;因为上周调研工作不太完善，并且也没有总结好，本周继续进行攻击调研。\n\nsgx防护功能&emsp;&emsp;在攻击前先理清sgx防护功能。sgx保护enclave中的程序不被窃取、攻击，而智能合约代码是公开的，即智能合约运行的功能是已知的，sgx可以保护链码运行，保护运行中的计算过程不被窃取。而如果代码出现漏洞，恶意用户依然可以向enclave传入数据来触发漏洞。\n\nfabric和以太坊的区别&emsp;&emsp;在阐述攻击方法前，有必要先了解不同区块链的区别，因为有的攻击是针对特定区块链的，不具有通用性。1) 运行模式&emsp;&emsp;以太坊是公有链，fabric是私有链，因此fabric本身就更为安全，任何节点加入都需要批准，许多攻击无法进入fabric网络，并且恶意用户可以快速溯源。2) 货币&emsp;&emsp;以太坊上有加密货币Ether，执行智能合约也伴随有花费（gas），所以以太坊有算力的概念，而fabric是没有加密货币的。因此许多由算力、花费而带来的攻击并不适用于fabric，如51%攻击、双花攻击。 fabric共识机制不是采用POW算法，而是到order里排队处理，没有算力占优就可以决定链的现象。3) 运行环境&emsp;&emsp;以太坊运行在虚拟机（EVM）中，fabric节点运行在docker容器中，docker容器本身比虚拟机安全性更高。4) 智能合约语言&emsp;&emsp;以太坊是使用的solidity，fabric使用的是go语言（也支持java、nodejs）。编程语言类的漏洞也存在一些差异。\n\n代码漏洞&emsp;&emsp;此类漏洞是最常见的，去网上搜索智能合约漏洞，大多都是代码编写漏洞。针对fabric的代码漏洞有以下几类：1) Time库&emsp;&emsp;如果链码中有获取当前时间戳的操作，不同节点执行时就会产生差异。2) 全局变量&emsp;&emsp;fabric中是先执行链码，再进行背书，如果背书是需要两个节点的同意，但我只向一个节点发送请求，背书会失败，此时链码已经执行一次。那么该节点全局变量会发生变化，与其他节点的数值便不一致。3) 多线程4) 先写后读&emsp;&emsp;如果在一个操作中先改变账本的数值，然后又读取同一个值。因为是在同一个操作中，就会放入一个区块，产生读写冲突。&emsp;&emsp;总结来说代码漏洞层面的攻击很多，而且需要针对特定的功能。此类攻击无法防御，因为我们只是为链码创造可信执行环境，存在漏洞的代码依然会在enclave中执行，那么恶意用户便可以传入恶意构造数值，达到攻击。\n\nDoS攻击&emsp;&emsp;智能合约的状态改变依赖于外部函数执行的结果，又未对执行一直失败的情况做出防护，那么该智能合约就可能遭受DOS攻击而停止服务。&emsp;&emsp;垃圾流量占据整个区块链网络。用户的密钥被泄露，攻击者开始向网络发送大量事务垃圾邮件。&emsp;&emsp;此类攻击和代码或者网络相关，我认为也是无法防御的。\n\n重入攻击&emsp;&emsp;攻击者编写了对应的恶意智能合约，调用受害者的合约，同时利用自己的回调函数，循环地调用受害者合约的代码。由于是重复进入受害者合约执行对应的一段代码导致漏洞。如下图：&emsp;&emsp;此类漏洞主要发生在以太坊中，以太坊在花费后有回调函数，容易触发。而Fabric作为私有链，安装链码需要批准，用户可以设置各种批准策略，因此难度更高。如果恶意链码可以安装，我们的sgx也无法防御，enclave中的合约调用外部函数依然会触发重入。\n\n回滚攻击&emsp;&emsp;攻击者得到最终区块结果后，回滚到之前的状态，调整输入，创造新的有利结果如：在得到彩票结果后，回滚到未开奖状态，重新下注。这种攻击资料较少，不知道利用什么漏洞来触发回滚。假设可以触发攻击，sgx本身就容易受到回滚攻击，sgx不对输入输出进行检查，只是安全执行，因此无法防御该漏洞。\n\n隐私问题&emsp;&emsp;目前所有关于TEE保护sgx的论文都是以保护智能合约隐私为目的。区块链数据是公开的。因此，现有的智能合约系统缺乏保密性或隐私性:它们无法安全地存储或计算敏感数据(例如，拍卖出价、金融交易)。&emsp;&emsp;Sgx保护三种数据：&emsp;&emsp;静态数据：直接获取的数据（如数据库、账本）&emsp;&emsp;传递数据：传递在网络中的数据（节点间信息传递）&emsp;&emsp;运行数据：运行的程序代码，参与计算（运行中的链码）&emsp;&emsp;sgx可以对以上三种情况进行保护，也是所有关于sgx保护区块链论文所讨论强调的问题。我们的项目可以保护运行中的数据。\n\n链码网络安全问题（该问题来源于fabric1.0版本）1) 窃听:通过欺骗GRPC连接和观察事务调用以及提议响应而实现。2) peer假冒攻击:这可以通过改变链码进程的配置，诱使它连接到一个假装是peer的恶意进程来实现。3) 链码假冒攻击:这可以通过诱使对等端相信所连接的进程是一个合法的链码，但实际上它是一个恶意进程来实现。&emsp;&emsp;我们可以添加远程认证，当链码在enclave中运行后向peer节点发送证明，证明自己在可信环境中，那么就可以防御链码假冒攻击，因为假冒的链码无法提供该证明。\n\n容器安全问题（攻击权限要求较高）（来源于2020年论文）&emsp;&emsp;容器安全问题来源于2020年发表的论文：Perturbing Smart Contract Execution Through the Underlying Runtime，是针对fabric运行环境docker容器提出的。1) 不安全通信和中间人攻击&emsp;&emsp;Peer和chaincode采取grpc通信，通信信息经过tls加密，但加密密钥等信息都存储在容器内。&emsp;&emsp;那么就存在中间人，在容器中获取信息后使用密钥解密信息，从而窃取二者的通信信息，甚至可以篡改。此类攻击我们无法防御。2) 镜像替换&emsp;&emsp;ccenv镜像：编译链码     baseos镜像：运行链码&emsp;&emsp;Fabric运行容器时只注意镜像标签tag，而不是镜像的哈希值，恶意用户可以用自己的恶意镜像打上标签，伪装成baseos镜像，从而使智能合约运行在恶意镜像中。此类攻击我认为可以防御，同样使用远程认证，被替换后的镜像无法提供远程认证，因此不被peer节点连接。&emsp;&emsp;这两个攻击是基于fabric运行的环境提出的，对攻击者的权限要求较高，比如拿到主机权限或者可以访问容器。&emsp;&emsp;总结来说，我认为可以防御的攻击有链码假冒攻击和容器替换攻击，同时我们的方法也可以加强智能合约执行的隐私性。\n\n\n存在的问题&emsp;&emsp;初步尝试替换链码进行攻击，替换后节点无法连接上新链码，导致无法处理新的智能合约运算。所有说简单替换是不行的。找不到与之相关的攻击方法，我觉得还是需要从隐私和执行保护入手。\n下周工作计划&emsp;&emsp;完善攻击方法，尽可能实现上述两种攻击。&emsp;&emsp;添加远程认证功能。\n第三周 2021/12/13 – 2021/12/19本周工作情况和进展&emsp;&emsp;本周尝试使用SGX远程认证，SGX提供两种认证方式：&emsp;&emsp;Elliptic Curve Digital Signature Algorithm (ECDSA) Attestation&emsp;&emsp;Intel® Enhanced Privacy ID (Intel® EPID) Attestation&emsp;&emsp;ECDSA：通过Intel® Software Guard Extensions Data Center Attestation Primitives (Intel® SGX DCAP)实现第三方认证，允许用户构建他们自己的认证服务，而不是使用Intel提供的远程认证服务。该认证需要机器满足Intel SGX DCAP的安装要求，需要支持flexible launch control和AES新指令。&emsp;&emsp;EPID：在不知道enclave运行在何种Intel®处理器的情况下验证enclave。使用这种技术需要一个远程认证平台，并且平台需要有互联网接入。&emsp;&emsp;两种认证方式对应两个不同的sgx驱动，因此也对应两种intel处理器，支持FLC和不支持的。&emsp;&emsp;ego也内置了认证方式，但是ego的认证是基于ECDSA的本地认证，因此使用了ego就不能使用EPID认证。&emsp;&emsp;优先还是选择ECDSA认证方式，不需要IAS（intel认证服务）注册，本地搭建认证服务，更为实用。\n存在的问题&emsp;&emsp;实验室机器原本安装的是EPID版本的sgx驱动，因此跑不通远程认证，现在正在重新安装DCAP和ECDSA的驱动，遇到一些安装问题。\n下周工作计划&emsp;&emsp;先解决sgx驱动安装问题，测试sgx的远程认证功能，再集成到fabric的框架中。&emsp;&emsp;绘制新的多enclave框架图。\n第四周 2021/12/20 – 2021/12/26本周工作情况和进展&emsp;&emsp;在上周的基础上，本周重新安装了sgx驱动和PCCS（Provisioning Certificate Caching Service）配置证书缓存服务。PCCS就相当于本地的认证服务，可以提供根证书、tcb等信息，如访问pccs服务获取tcb信息：\n\n\n&emsp;&emsp;pccs就是一个在线服务器，如上图网址https://localhost:8081/sgx/certification/v3/，传入tcb获取信息，也可以获取根证书等。&emsp;&emsp;运行sgx的远程认证案例成功：\n\n\n&emsp;&emsp;sgx远程认证有两种，基于ECDSA（椭圆曲线）算法和EPID的。此处必须先更新电脑BIOS至最新版本，然后关闭BIOS中的Hyper-Threading，然后才可以运行成功。（红框圈出了的认证过程有时依然会失败，原因未知）&emsp;&emsp;运行QuoteGeneration（生成证明）成功：\n\n\n&emsp;&emsp;运行QuoteVerification（验证证明）有warning：\n\n\n&emsp;&emsp;验证时产生warning，查阅得知a008错误：TCB level of the platform is up to date, but additional configuration of the platform at its current patching level may be needed. Moreover, SGX SW Hardening is also needed.&emsp;&emsp;不知道这个TCB level过期是什么意思，找了很多解决办法都不行，网上也有说要在BIOS关闭Internal Graphic，在实验室电脑BIOS上未找到该设置。&emsp;&emsp;运行ego的远程认证失败：\n\n\n&emsp;&emsp;这个也是提示TCB level无效，应该是和上面同样的错误。\n存在的问题&emsp;&emsp;ego认证过程会报错TCB level失效，未找到解决方法。\n下周工作计划&emsp;&emsp;解决TCB level问题，尽可能运行ego的远程认证。","dateCreated":"2022-01-01T15:28:20+08:00","dateModified":"2023-04-02T19:58:27+08:00","datePublished":"2022-01-01T15:28:20+08:00","description":"2021年12月周报汇总。","headline":"2021年12月科研月报","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg","logo":{"@type":"ImageObject","url":"picture.jpg"}},"url":"https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/","keywords":"Hyperledger Fabric, SGX, EGo, 区块链"}</script>
+    <meta name="description" content="2021年12月周报汇总。">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="2021年12月科研月报">
+<meta property="og:url" content="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/index.html">
+<meta property="og:site_name" content="YWZ">
+<meta property="og:description" content="2021年12月周报汇总。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/1.png">
+<meta property="og:image" content="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/2.png">
+<meta property="og:image" content="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/3.png">
+<meta property="og:image" content="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/4.png">
+<meta property="og:image" content="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/5.png">
+<meta property="og:image" content="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/6.png">
+<meta property="og:image" content="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/7.png">
+<meta property="og:image" content="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/8.png">
+<meta property="og:image" content="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/9.png">
+<meta property="og:image" content="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/10.png">
+<meta property="og:image" content="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/11.png">
+<meta property="og:image" content="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/12.png">
+<meta property="article:published_time" content="2022-01-01T07:28:20.000Z">
+<meta property="article:modified_time" content="2023-04-02T11:58:27.275Z">
+<meta property="article:author" content="YWZ">
+<meta property="article:tag" content="Hyperledger Fabric">
+<meta property="article:tag" content="SGX">
+<meta property="article:tag" content="EGo">
+<meta property="article:tag" content="区块链">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/1.png">
+    
+    
+        
+    
+    
+        <meta property="og:image" content="https://yiwenzhe.com/assets/images/picture.jpg">
+    
+    
+    
+    
+    <!--STYLES-->
+    
+<link rel="stylesheet" href="/assets/css/style-5ctctel0cuzrmzotlasreim3qgxouuqpfme70vruknhdpfxw6enuh6pympnk.min.css">
+
+    <!--STYLES END-->
+    
+
+    
+    <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?003fd62f149a30bc5f172a1ed42483c3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+
+
+    
+        
+    
+</head>
+
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+            
+        
+    
+
+<header id="header" data-behavior="4">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/" aria-label>
+            YWZ
+        </a>
+    </div>
+    
+        
+            <a class="header-right-picture " href="#about" aria-label="打开链接: /#about">
+        
+        
+            <img class="header-picture" src="/assets/images/picture.jpg" alt="作者的图片">
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+
+        
+    
+
+<nav id="sidebar" data-behavior="4">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about" aria-label="阅读有关作者的更多信息">
+                    <img class="sidebar-profile-picture" src="/assets/images/picture.jpg" alt="作者的图片">
+                </a>
+                <h4 class="sidebar-profile-name">YWZ</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>一个无聊的程序员</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/" rel="noopener" title="首页">
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">首页</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-categories" rel="noopener" title="分类">
+                        <i class="sidebar-button-icon fa fa-bookmark" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">分类</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-tags" rel="noopener" title="标签">
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">标签</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/all-archives" rel="noopener" title="归档">
+                        <i class="sidebar-button-icon fa fa-archive" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">归档</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link open-algolia-search" href="/search" rel="noopener" title="搜索">
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">搜索</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/shuoshuo" rel="noopener" title="说说">
+                        <i class="sidebar-button-icon fas fa-comments" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">说说</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="#about" rel="noopener" title="关于">
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">关于</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://github.com/" target="_blank" rel="external nofollow noopener noreferrer" title="GitHub">
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="http://stackoverflow.com/users" target="_blank" rel="external nofollow noopener noreferrer" title="Stack Overflow">
+                        <i class="sidebar-button-icon fab fa-stack-overflow" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Stack Overflow</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://twitter.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Twitter">
+                        <i class="sidebar-button-icon fab fa-twitter" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Twitter</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://facebook.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Facebook">
+                        <i class="sidebar-button-icon fab fa-facebook" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Facebook</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://google.com/" target="_blank" rel="external nofollow noopener noreferrer" title="Google">
+                        <i class="sidebar-button-icon fab fa-google" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Google</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="mailto:2410776350@qq.com" target="_blank" rel="external nofollow noopener noreferrer" title="邮箱">
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">邮箱</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="/atom.xml" rel="noopener" title="RSS">
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="4" style="background-color: rgba(255, 255, 255, 0.85);" class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            2021年12月科研月报
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2022-01-01T15:28:20+08:00">
+	
+		    2022 年 01 月 01 日
+    	
+    </time>
+    
+        <span>发布在 </span>
+        
+    <a class="category-link" href="/categories/%E7%A7%91%E7%A0%94%E5%91%A8%E6%8A%A5/">科研周报</a>
+
+
+    
+    
+        &nbsp;|&nbsp; 更新于
+        <time itemprop="dateUpdated" content="Sun Apr 02 2023 19:58:27 GMT+0800">
+        
+		    2023 年 04 月 02 日
+    	
+        </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <!-- excerpt -->
+<h1 id="table-of-contents">目录</h1><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AC%E5%AD%A6%E6%9C%9F%E7%A7%91%E7%A0%94%E8%A7%84%E5%88%92"><span class="toc-text">本学期科研规划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AC%E6%9C%88%E8%A7%84%E5%88%92"><span class="toc-text">本月规划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E5%91%A8-2021-11-29-%E2%80%93-2021-12-05"><span class="toc-text">第一周 2021&#x2F;11&#x2F;29 – 2021&#x2F;12&#x2F;05</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%91%A8%E5%B7%A5%E4%BD%9C%E6%83%85%E5%86%B5%E5%92%8C%E8%BF%9B%E5%B1%95"><span class="toc-text">本周工作情况和进展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">存在的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E5%91%A8%E5%B7%A5%E4%BD%9C%E8%AE%A1%E5%88%92"><span class="toc-text">下周工作计划</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E5%91%A8-2021-12-06-%E2%80%93-2021-12-12"><span class="toc-text">第二周 2021&#x2F;12&#x2F;06 – 2021&#x2F;12&#x2F;12</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%91%A8%E5%B7%A5%E4%BD%9C%E6%83%85%E5%86%B5%E5%92%8C%E8%BF%9B%E5%B1%95-1"><span class="toc-text">本周工作情况和进展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98-1"><span class="toc-text">存在的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E5%91%A8%E5%B7%A5%E4%BD%9C%E8%AE%A1%E5%88%92-1"><span class="toc-text">下周工作计划</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E5%91%A8-2021-12-13-%E2%80%93-2021-12-19"><span class="toc-text">第三周 2021&#x2F;12&#x2F;13 – 2021&#x2F;12&#x2F;19</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%91%A8%E5%B7%A5%E4%BD%9C%E6%83%85%E5%86%B5%E5%92%8C%E8%BF%9B%E5%B1%95-2"><span class="toc-text">本周工作情况和进展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98-2"><span class="toc-text">存在的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E5%91%A8%E5%B7%A5%E4%BD%9C%E8%AE%A1%E5%88%92-2"><span class="toc-text">下周工作计划</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E5%91%A8-2021-12-20-%E2%80%93-2021-12-26"><span class="toc-text">第四周 2021&#x2F;12&#x2F;20 – 2021&#x2F;12&#x2F;26</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%91%A8%E5%B7%A5%E4%BD%9C%E6%83%85%E5%86%B5%E5%92%8C%E8%BF%9B%E5%B1%95-3"><span class="toc-text">本周工作情况和进展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98-3"><span class="toc-text">存在的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E5%91%A8%E5%B7%A5%E4%BD%9C%E8%AE%A1%E5%88%92-3"><span class="toc-text">下周工作计划</span></a></li></ol></li></ol>
+<h1 id="本学期科研规划"><a href="#本学期科研规划" class="headerlink" title="本学期科研规划"></a>本学期科研规划</h1><p>&emsp;&emsp;在fabric区块链中使用sgx技术，将chaincode放入enclave中运行，保护智能合约运行安全。</p>
+<h1 id="本月规划"><a href="#本月规划" class="headerlink" title="本月规划"></a>本月规划</h1><p>&emsp;&emsp;调研针对fabric链码的攻击方法，并进行防御测试，15日前完成调研工作。月底前完成整体论文。</p>
+<h1 id="第一周-2021-11-29-–-2021-12-05"><a href="#第一周-2021-11-29-–-2021-12-05" class="headerlink" title="第一周 2021/11/29 – 2021/12/05"></a>第一周 2021/11/29 – 2021/12/05</h1><h2 id="本周工作情况和进展"><a href="#本周工作情况和进展" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h2><ol>
+<li><p>链码修复工具<br>&emsp;&emsp;上周调研后发现，针对链码的攻击都是从代码漏洞出发的，如全局变量、恶意跳转等。像以太坊、比特币的智能合约攻击也都是从代码编写层面考虑的，因此在阅读相关论文后，想添加一个自动修复fabric链码的功能。<br>&emsp;&emsp;调研后发现fabric有revive^CC这个静态分析工具，只能对源码进行漏洞检测，会检查全局变量、多线程、随机数使用、读写冲突等情况，如下图：<br><div align="center"><img src="/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/1.png"></div><br>&emsp;&emsp;但该工具只是对源码进行检测，不能直接对可执行程序打补丁，所以不能直接用于我们的系统。</p>
+</li>
+<li><p>fabric可视化<br>&emsp;&emsp;因为要对链码进行攻击，使用终端查看很不方便，因此我想将fabric可视化，更直观地查看区块和交易情况。和之前测试工具caliper一样，Hyperledger社区内也有可视化工具。<br>&emsp;&emsp;Hyperledger Explorer是一个简单，功能强大，易于使用，高度可维护的开源区块链浏览器，用于查看底层区块链网络上的活动。<br>&emsp;&emsp;通过explorer可以看到网络中的区块信息和交易内容，使用后界面如下：</p>
+<div align="center"><img src="/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/2.png"></div>
+</li>
+<li><p>sgx可视化<br>&emsp;&emsp;在思考fabric可视化后，考虑到攻击enclave中的链码，需要能够“看到”enclave，因此搜索了enclave的可视化方法，找到了sgxtop项目，它可以列出enclave数目、整体enclave内存使用、分页速率和正在使用的enclave，以及它们的内存使用情况和所属进程的信息。<br>&emsp;&emsp;因为该项目需要卸载原有的isgx driver，安装适配sgxtop的sgx驱动，因此我还没有在自己电脑上测试，官方的测试效果如下：</p>
+<div align="center"><img src="/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/3.png"></div>
+</li>
+<li><p>针对链码的攻击面<br>&emsp;&emsp;阅读使用sgx保护fabric相关论文和参考文献后，提到比较多的工作如下：<br>[1] The Hyperledger Private Data Objects (PDOs)（Private Data Objects: an Overview）<br>[2] Ekiden（Ekiden: A Platform for Confidentiality-Preserving, Trustworthy, and Performant Smart Contracts）<br>[3] The R3 Corda distributed ledger platform（Corda: A distributed ledger）<br>[4] Hawk（Hawk: The Blockchain Model of Cryptography and Privacy-Preserving Smart Contracts）<br>[5] Coco framework（CCF: A Framework for Building Confidential Verifiable Replicated Services）<br>&emsp;&emsp;这几篇论文都是与TEE或者sgx相关的，但都没有提到攻击方式，反倒是重点讲述隐私问题，以保护区块链、链码隐私开题，然后介绍加强执行过程的隐私保护。<br>&emsp;&emsp;如：区块链数据是公开的。因此，现有的智能合约系统缺乏保密性或隐私性:它们无法安全地存储或计算敏感数据(例如，拍卖出价、金融交易)。<br>&emsp;&emsp;因此我觉得找不到一个具体的攻击方法。这几篇论文倒是可以放到一起对比，然后写入related work部分。<br>&emsp;&emsp;在调研过程中我发现了一篇浙江大学的硕士论文（基于区块链和TEE的可信计算平台设计与开发_钟雨涵），该论文和我们工作方向一致，并且作者是完全使用C语言编写sgx部分，使用cgo来与fabric链码go语言部分交互的，和之前提出的想法一样。而我们的工作与之相比就过于简单，所以画不出与他一样的框架图。该论文也没有提到攻击方法。</p>
+</li>
+</ol>
+<h2 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h2><p>&emsp;&emsp;找不到与之相关的攻击方法，我觉得还是需要从隐私和执行保护入手。</p>
+<h2 id="下周工作计划"><a href="#下周工作计划" class="headerlink" title="下周工作计划"></a>下周工作计划</h2><p>&emsp;&emsp;阅读上述五篇相关论文，写一篇方法对比报告。（准备毕业开题答辩ppt）</p>
+<h1 id="第二周-2021-12-06-–-2021-12-12"><a href="#第二周-2021-12-06-–-2021-12-12" class="headerlink" title="第二周 2021/12/06 – 2021/12/12"></a>第二周 2021/12/06 – 2021/12/12</h1><h2 id="本周工作情况和进展-1"><a href="#本周工作情况和进展-1" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h2><p>&emsp;&emsp;因为上周调研工作不太完善，并且也没有总结好，本周继续进行攻击调研。</p>
+<ol>
+<li><p>sgx防护功能<br>&emsp;&emsp;在攻击前先理清sgx防护功能。sgx保护enclave中的程序不被窃取、攻击，而智能合约代码是公开的，即智能合约运行的功能是已知的，sgx可以保护链码运行，保护运行中的计算过程不被窃取。而如果代码出现漏洞，恶意用户依然可以向enclave传入数据来触发漏洞。</p>
+</li>
+<li><p>fabric和以太坊的区别<br>&emsp;&emsp;在阐述攻击方法前，有必要先了解不同区块链的区别，因为有的攻击是针对特定区块链的，不具有通用性。<br>1) 运行模式<br>&emsp;&emsp;以太坊是公有链，fabric是私有链，因此fabric本身就更为安全，任何节点加入都需要批准，许多攻击无法进入fabric网络，并且恶意用户可以快速溯源。<br>2) 货币<br>&emsp;&emsp;以太坊上有加密货币Ether，执行智能合约也伴随有花费（gas），所以以太坊有算力的概念，而fabric是没有加密货币的。因此许多由算力、花费而带来的攻击并不适用于fabric，如51%攻击、双花攻击。 fabric共识机制不是采用POW算法，而是到order里排队处理，没有算力占优就可以决定链的现象。<br>3) 运行环境<br>&emsp;&emsp;以太坊运行在虚拟机（EVM）中，fabric节点运行在docker容器中，docker容器本身比虚拟机安全性更高。<br>4) 智能合约语言<br>&emsp;&emsp;以太坊是使用的solidity，fabric使用的是go语言（也支持java、nodejs）。编程语言类的漏洞也存在一些差异。</p>
+</li>
+<li><p>代码漏洞<br>&emsp;&emsp;此类漏洞是最常见的，去网上搜索智能合约漏洞，大多都是代码编写漏洞。针对fabric的代码漏洞有以下几类：<br>1) Time库<br>&emsp;&emsp;如果链码中有获取当前时间戳的操作，不同节点执行时就会产生差异。<br>2) 全局变量<br>&emsp;&emsp;fabric中是先执行链码，再进行背书，如果背书是需要两个节点的同意，但我只向一个节点发送请求，背书会失败，此时链码已经执行一次。那么该节点全局变量会发生变化，与其他节点的数值便不一致。<br>3) 多线程<br>4) 先写后读<br>&emsp;&emsp;如果在一个操作中先改变账本的数值，然后又读取同一个值。因为是在同一个操作中，就会放入一个区块，产生读写冲突。<br>&emsp;&emsp;总结来说代码漏洞层面的攻击很多，而且需要针对特定的功能。此类攻击无法防御，因为我们只是为链码创造可信执行环境，存在漏洞的代码依然会在enclave中执行，那么恶意用户便可以传入恶意构造数值，达到攻击。</p>
+</li>
+<li><p>DoS攻击<br>&emsp;&emsp;智能合约的状态改变依赖于外部函数执行的结果，又未对执行一直失败的情况做出防护，那么该智能合约就可能遭受DOS攻击而停止服务。<br>&emsp;&emsp;垃圾流量占据整个区块链网络。用户的密钥被泄露，攻击者开始向网络发送大量事务垃圾邮件。<br>&emsp;&emsp;此类攻击和代码或者网络相关，我认为也是无法防御的。</p>
+</li>
+<li><p>重入攻击<br>&emsp;&emsp;攻击者编写了对应的恶意智能合约，调用受害者的合约，同时利用自己的回调函数，循环地调用受害者合约的代码。由于是重复进入受害者合约执行对应的一段代码导致漏洞。如下图：<br><div align="center"><img src="/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/4.png"></div><br>&emsp;&emsp;此类漏洞主要发生在以太坊中，以太坊在花费后有回调函数，容易触发。而Fabric作为私有链，安装链码需要批准，用户可以设置各种批准策略，因此难度更高。如果恶意链码可以安装，我们的sgx也无法防御，enclave中的合约调用外部函数依然会触发重入。</p>
+</li>
+<li><p>回滚攻击<br>&emsp;&emsp;攻击者得到最终区块结果后，回滚到之前的状态，调整输入，创造新的有利结果如：在得到彩票结果后，回滚到未开奖状态，重新下注。这种攻击资料较少，不知道利用什么漏洞来触发回滚。假设可以触发攻击，sgx本身就容易受到回滚攻击，sgx不对输入输出进行检查，只是安全执行，因此无法防御该漏洞。</p>
+</li>
+<li><p>隐私问题<br>&emsp;&emsp;目前所有关于TEE保护sgx的论文都是以保护智能合约隐私为目的。区块链数据是公开的。因此，现有的智能合约系统缺乏保密性或隐私性:它们无法安全地存储或计算敏感数据(例如，拍卖出价、金融交易)。<br>&emsp;&emsp;Sgx保护三种数据：<br>&emsp;&emsp;静态数据：直接获取的数据（如数据库、账本）<br>&emsp;&emsp;传递数据：传递在网络中的数据（节点间信息传递）<br>&emsp;&emsp;运行数据：运行的程序代码，参与计算（运行中的链码）<br>&emsp;&emsp;sgx可以对以上三种情况进行保护，也是所有关于sgx保护区块链论文所讨论强调的问题。我们的项目可以保护运行中的数据。</p>
+</li>
+<li><p>链码网络安全问题（该问题来源于fabric1.0版本）<br>1) 窃听:通过欺骗GRPC连接和观察事务调用以及提议响应而实现。<br>2) peer假冒攻击:这可以通过改变链码进程的配置，诱使它连接到一个假装是peer的恶意进程来实现。<br>3) 链码假冒攻击:这可以通过诱使对等端相信所连接的进程是一个合法的链码，但实际上它是一个恶意进程来实现。<br>&emsp;&emsp;我们可以添加远程认证，当链码在enclave中运行后向peer节点发送证明，证明自己在可信环境中，那么就可以防御链码假冒攻击，因为假冒的链码无法提供该证明。</p>
+</li>
+<li><p>容器安全问题（攻击权限要求较高）（来源于2020年论文）<br>&emsp;&emsp;容器安全问题来源于2020年发表的论文：Perturbing Smart Contract Execution Through the Underlying Runtime，是针对fabric运行环境docker容器提出的。<br>1) 不安全通信和中间人攻击<br>&emsp;&emsp;Peer和chaincode采取grpc通信，通信信息经过tls加密，但加密密钥等信息都存储在容器内。<br><div align="center"><img src="/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/5.png"></div><br><div align="center"><img src="/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/6.png"></div><br>&emsp;&emsp;那么就存在中间人，在容器中获取信息后使用密钥解密信息，从而窃取二者的通信信息，甚至可以篡改。此类攻击我们无法防御。<br>2) 镜像替换<br>&emsp;&emsp;ccenv镜像：编译链码     baseos镜像：运行链码<br>&emsp;&emsp;Fabric运行容器时只注意镜像标签tag，而不是镜像的哈希值，恶意用户可以用自己的恶意镜像打上标签，伪装成baseos镜像，从而使智能合约运行在恶意镜像中。此类攻击我认为可以防御，同样使用远程认证，被替换后的镜像无法提供远程认证，因此不被peer节点连接。<br><div align="center"><img src="/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/7.png"></div><br>&emsp;&emsp;这两个攻击是基于fabric运行的环境提出的，对攻击者的权限要求较高，比如拿到主机权限或者可以访问容器。<br>&emsp;&emsp;总结来说，我认为可以防御的攻击有链码假冒攻击和容器替换攻击，同时我们的方法也可以加强智能合约执行的隐私性。</p>
+</li>
+</ol>
+<h2 id="存在的问题-1"><a href="#存在的问题-1" class="headerlink" title="存在的问题"></a>存在的问题</h2><p>&emsp;&emsp;初步尝试替换链码进行攻击，替换后节点无法连接上新链码，导致无法处理新的智能合约运算。所有说简单替换是不行的。找不到与之相关的攻击方法，我觉得还是需要从隐私和执行保护入手。</p>
+<h2 id="下周工作计划-1"><a href="#下周工作计划-1" class="headerlink" title="下周工作计划"></a>下周工作计划</h2><p>&emsp;&emsp;完善攻击方法，尽可能实现上述两种攻击。<br>&emsp;&emsp;添加远程认证功能。</p>
+<h1 id="第三周-2021-12-13-–-2021-12-19"><a href="#第三周-2021-12-13-–-2021-12-19" class="headerlink" title="第三周 2021/12/13 – 2021/12/19"></a>第三周 2021/12/13 – 2021/12/19</h1><h2 id="本周工作情况和进展-2"><a href="#本周工作情况和进展-2" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h2><p>&emsp;&emsp;本周尝试使用SGX远程认证，SGX提供两种认证方式：<br>&emsp;&emsp;Elliptic Curve Digital Signature Algorithm (ECDSA) Attestation<br>&emsp;&emsp;Intel® Enhanced Privacy ID (Intel® EPID) Attestation<br>&emsp;&emsp;ECDSA：通过Intel® Software Guard Extensions Data Center Attestation Primitives (Intel® SGX DCAP)实现第三方认证，允许用户构建他们自己的认证服务，而不是使用Intel提供的远程认证服务。该认证需要机器满足Intel SGX DCAP的安装要求，需要支持flexible launch control和AES新指令。<br>&emsp;&emsp;EPID：在不知道enclave运行在何种Intel®处理器的情况下验证enclave。使用这种技术需要一个远程认证平台，并且平台需要有互联网接入。<br>&emsp;&emsp;两种认证方式对应两个不同的sgx驱动，因此也对应两种intel处理器，支持FLC和不支持的。<br>&emsp;&emsp;ego也内置了认证方式，但是ego的认证是基于ECDSA的本地认证，因此使用了ego就不能使用EPID认证。<br>&emsp;&emsp;优先还是选择ECDSA认证方式，不需要IAS（intel认证服务）注册，本地搭建认证服务，更为实用。</p>
+<h2 id="存在的问题-2"><a href="#存在的问题-2" class="headerlink" title="存在的问题"></a>存在的问题</h2><p>&emsp;&emsp;实验室机器原本安装的是EPID版本的sgx驱动，因此跑不通远程认证，现在正在重新安装DCAP和ECDSA的驱动，遇到一些安装问题。</p>
+<h2 id="下周工作计划-2"><a href="#下周工作计划-2" class="headerlink" title="下周工作计划"></a>下周工作计划</h2><p>&emsp;&emsp;先解决sgx驱动安装问题，测试sgx的远程认证功能，再集成到fabric的框架中。<br>&emsp;&emsp;绘制新的多enclave框架图。</p>
+<h1 id="第四周-2021-12-20-–-2021-12-26"><a href="#第四周-2021-12-20-–-2021-12-26" class="headerlink" title="第四周 2021/12/20 – 2021/12/26"></a>第四周 2021/12/20 – 2021/12/26</h1><h2 id="本周工作情况和进展-3"><a href="#本周工作情况和进展-3" class="headerlink" title="本周工作情况和进展"></a>本周工作情况和进展</h2><p>&emsp;&emsp;在上周的基础上，本周重新安装了sgx驱动和PCCS（Provisioning Certificate Caching Service）配置证书缓存服务。PCCS就相当于本地的认证服务，可以提供根证书、tcb等信息，如访问pccs服务获取tcb信息：</p>
+<div align="center"><img src="/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/8.png"></div>
+
+<p>&emsp;&emsp;pccs就是一个在线服务器，如上图网址<a target="_blank" rel="external nofollow noopener noreferrer" href="https://localhost:8081/sgx/certification/v3/，传入tcb获取信息，也可以获取根证书等。">https://localhost:8081/sgx/certification/v3/，传入tcb获取信息，也可以获取根证书等。</a><br>&emsp;&emsp;运行sgx的远程认证案例成功：</p>
+<div align="center"><img src="/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/9.png"></div>
+
+<p>&emsp;&emsp;sgx远程认证有两种，基于ECDSA（椭圆曲线）算法和EPID的。此处必须先更新电脑BIOS至最新版本，然后关闭BIOS中的Hyper-Threading，然后才可以运行成功。（红框圈出了的认证过程有时依然会失败，原因未知）<br>&emsp;&emsp;运行QuoteGeneration（生成证明）成功：</p>
+<div align="center"><img src="/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/10.png"></div>
+
+<p>&emsp;&emsp;运行QuoteVerification（验证证明）有warning：</p>
+<div align="center"><img src="/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/11.png"></div>
+
+<p>&emsp;&emsp;验证时产生warning，查阅得知a008错误：<br><code>TCB level of the platform is up to date, but additional configuration of the platform at its current patching level may be needed. Moreover, SGX SW Hardening is also needed.</code><br>&emsp;&emsp;不知道这个TCB level过期是什么意思，找了很多解决办法都不行，网上也有说要在BIOS关闭Internal Graphic，在实验室电脑BIOS上未找到该设置。<br>&emsp;&emsp;运行ego的远程认证失败：</p>
+<div align="center"><img src="/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/12.png"></div>
+
+<p>&emsp;&emsp;这个也是提示TCB level无效，应该是和上面同样的错误。</p>
+<h2 id="存在的问题-3"><a href="#存在的问题-3" class="headerlink" title="存在的问题"></a>存在的问题</h2><p>&emsp;&emsp;ego认证过程会报错TCB level失效，未找到解决方法。</p>
+<h2 id="下周工作计划-3"><a href="#下周工作计划-3" class="headerlink" title="下周工作计划"></a>下周工作计划</h2><p>&emsp;&emsp;解决TCB level问题，尽可能运行ego的远程认证。</p>
+            
+
+
+            <!-- 添加的部分 -->
+            <!-- copyright -->
+            
+                <div class="article-footer-copyright">
+    <!--
+    <p><span>本文标题:</span><href="/%20"> 2021年12月科研月报</a></p>
+    <p><span>文章作者:</span><a href="/" title="访问 YWZ的个人博客">YWZ</a></p>
+    <p><span>发布时间:</span>2022年01月01日 - 15:28</p>
+    <p><span>最后更新:</span>2023年04月02日 - 19:58</p>
+    <p><span>原始链接:</span><a href="/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="2021年12月科研月报">https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/</a>
+    <span class="copy-path"  title="点击复制文章链接"><i class="fa fa-clipboard" data-clipboard-text="https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/"  aria-label="复制成功！"></i></span>
+    </p>
+    <p><span>许可协议:</span><i class="fab fa-creative-commons"></i> <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">署名-非商业性使用-禁止演绎 4.0 国际</a> 转载请保留原文链接及作者。</p>  
+     -->
+    <p>文章作者:<a href="/" title="访问 YWZ的个人博客">YWZ</a>
+    <br>该文章是本人原创，转载请注明出处
+    <br>本文链接地址: <a href="/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="2021年12月科研月报">https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/</a></p>
+</div>
+
+            
+            <!-- copyright -->
+        </div>
+    </div>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">标签</span><br>
+                
+    <a class="tag tag--primary tag--small t-none-link" href="/tags/EGo/" rel="tag">EGo</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/Hyperledger-Fabric/" rel="tag">Hyperledger Fabric</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/SGX/" rel="tag">SGX</a> <a class="tag tag--primary tag--small t-none-link" href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag">区块链</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2022/03/12/%E6%8D%A2%E6%96%B0%E6%89%8B%E6%9C%BA%E6%9C%89%E6%84%9F/" data-tooltip="换新手机有感" aria-label="上一篇: 换新手机有感">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" data-tooltip="2021年11月科研月报" aria-label="下一篇: 2021年11月科研月报">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/&amp;title=2021年12月科研月报" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-qq" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="分享到 Qzone" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="分享到 Weibo" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="目录">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2023 <a href="https://yiwenzhe.com">YWZ</a>. All Rights Reserved.
+    </span>
+    <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("10/11/2020 14:56:39");//在此处修改你的建站时间，格式：月/日/年 时:分:秒
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+setInterval("createtime()",250);
+</script>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2022/03/12/%E6%8D%A2%E6%96%B0%E6%89%8B%E6%9C%BA%E6%9C%89%E6%84%9F/" data-tooltip="换新手机有感" aria-label="上一篇: 换新手机有感">
+                    
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                        <span class="hide-xs hide-sm text-small icon-ml">上一篇</span>
+                    </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2021/12/01/2021%E5%B9%B411%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" data-tooltip="2021年11月科研月报" aria-label="下一篇: 2021年11月科研月报">
+                    
+                        <span class="hide-xs hide-sm text-small icon-mr">下一篇</span>
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Diesen Beitrag teilen">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/&amp;title=2021年12月科研月报" title="分享到 QQ" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-qq" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="分享到 Qzone" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                    <i class="fa fa-star" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" title="分享到 Weibo" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                    <i class="fab fa-weibo" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#table-of-contents" aria-label="目录">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/&amp;title=2021年12月科研月报" aria-label="分享到 QQ" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-qq" aria-hidden="true"></i><span>分享到 QQ</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" aria-label="分享到 Qzone" rel="external nofollow noopener noreferrer">
+                        <i class="fa fa-star" aria-hidden="true"></i><span>分享到 Qzone</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="_blank" href="http://service.weibo.com/share/share.php?&amp;title=https://yiwenzhe.com/2022/01/01/2021%E5%B9%B412%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/" aria-label="分享到 Weibo" rel="external nofollow noopener noreferrer">
+                        <i class="fab fa-weibo" aria-hidden="true"></i><span>分享到 Weibo</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+        
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <a href="https://yiwenzhe.com">
+            <img id="about-card-picture" src="/assets/images/picture.jpg" alt="作者的图片">
+            </a>
+        
+            <a href="https://yiwenzhe.com">
+            <h4 id="about-card-name">YWZ</h4>
+            </a>
+        
+            <div id="about-card-bio"><p>一个无聊的程序员</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br>
+                <p>武汉大学在读研究生</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br>
+                湖北武汉
+            </div>
+        
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('/assets/images/cover.jpg');"></div>
+        <!--SCRIPTS-->
+
+<script src="/assets/js/script-mxznsv1n7nz3zrfuls87amiraudckgmxncavgf1ucci53txgionftndw0zwt.min.js"></script>
+
+<!--SCRIPTS END-->
+
+
+    
+
+
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
