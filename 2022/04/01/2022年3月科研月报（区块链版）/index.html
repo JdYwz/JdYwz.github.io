@@ -17,7 +17,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg"},"articleBody":"\n\n本学期科研规划&emsp;&emsp;寻找针对fabric运行环境的攻击方式，创建多个enclave，保护程序、文件安全，添加远程证明，实现enclave间的互信。\n本月规划&emsp;&emsp;完成基本Enclave、远程认证架构。\n第一周 2022/02/21 – 2021/02/27本周工作情况和进展\n写项目书&emsp;&emsp;本周周一到周三都在写项目书技术路线，周四、周五、周日还在进行各种更改。\n尝试远程证明&emsp;&emsp;本周空余时间继续尝试SGX和EGo的远程证明，SGX正常运行，EGo依然报错，但错误与去年不同，这次显示crl过期，不知道原因。\n完善论文&emsp;&emsp;仔细看了批注之后，我认为还是加不了远程证明，需要的时间太长了。可以进一步调研区块链智能合约的隐私问题，并进行内容完善。可以丰富评估内容，添加其他性能评估和安全评估。\n\n存在的问题\n远程证明无法使用，并且远程证明也不好加入，需要修改peer和chaincode两侧的通信协议。没有那么多时间。\n无法与其他工作对比。首先，有许多工作不是fabric平台，对比没有意义。其次，其他fabric平台需要搭建环境，并且对比需要运行同样的链码，去年搭建时失败。\n\n下周工作计划&emsp;&emsp;写完论文\n第二周 2022/02/28 – 2021/03/06本周工作情况和进展\n完善区块链论文&emsp;&emsp;周一-周三完善论文，对多个论文提到的区块链智能合约隐私安全问题进行总结，添加远程认证框架，添加针对各种攻击的防御分析，丰富论文内容。\nEnclave保护密钥文件&emsp;&emsp;由于远程认证存在较多问题，先对框架其他部分进行实现，周四周五实现密钥文件放入Enclave中进行保护。&emsp;&emsp;开题时原预设框架如下图：&emsp;&emsp;右侧Enclave容器内容较少，原计划将整个docker容器放入enclave中，但未找到docker容器放入Enclave的相关论文和实现方法。分析过后，链码容器中只有五个重要的密钥文件和证书，容器相比文件更大，因此只将五个证书放入可以进一步减少加载进Enclave的内存。&emsp;&emsp;本周已实现右边部分，左边部分peer侧结构和链码不同，链码是后续上传载入的，而peer是网络启动时运行的，因此需要进一步分析，创建Enclave。\n\n存在的问题\n远程认证未实现，需要进一步调研解决\nPeer侧程序和证书未加入enclave，peer容器需要配置可信镜像环境\n\n下周工作计划&emsp;&emsp;首先实现peer侧可信镜像环境构建，创建配备SGX的peer容器。然后分析peer侧启动流程，为peer程序创建Enclave。最后同样将peer容器中重要证书和密钥放入Enclave中保护。\n第三周 2022/03/07 – 2021/03/13本周工作情况和进展\n完善论文+创建eFabric镜像&emsp;&emsp;在编写peer可信镜像时，如果采用他人的SGX镜像，需要加载大量数据，导致镜像很大，1G-2G左右。并且该镜像是在DockerHub上找的，在论文中使用没有依据。因此我基于该镜像构建方式，构建eFabric/base镜像，作为链码、peer镜像的父镜像。\nPeer可信镜像构建&emsp;&emsp;经过分析，peer镜像构建主要是在dockerfile中，而源码中涉及较少。因此以golang镜像作为编译镜像，以eFabric/base作为运行父镜像，采用双阶段不同镜像的使用方式，可以缩减镜像体积。\n\n存在的问题&emsp;&emsp;Peer镜像虽然具备了SGX和EGo环境，但还是缺乏sgx驱动，需要外部挂载。Peer容器与链码容器启动方式不同，目前还没有找到挂载点。\n下周工作计划&emsp;&emsp;找到peer镜像sgx驱动的挂载点，实现peer可信容器的创建，将peer程序和证书密钥都放入Enclave中保护。\n第四周 2022/03/14 – 2021/03/20本周工作情况和进展\n完善多Enclave架构&emsp;&emsp;由于peer生命周期和链码差异较大，链码生命周期在Fabric编译时决定，而peer的生命周期由用户文件决定。Peer容器的配置都由用户的docker-compose文件设置，因此挂载点就在此处。同样，peer程序运行依赖大量的环境变量和密钥等文件，需要将环境变量传递进Enclave中，将文件挂载入Enclave。&emsp;&emsp;但程序在Enclave中运行后会意外停止，并且没有错误爆出，未找到错误点，怀疑是缺少一些环境变量。\n修改论文&emsp;&emsp;重新阅读FPC论文后发现，作者在论文中评估了TCB大小和性能数据。作者使用系统代码中可信部分的行数作为TCB大小的评估依据，并把FPC与原始Fabric进行性能比较，得出性能百分比为80%-95%。\n\n存在的问题&emsp;&emsp;目前peer Enclave可以成功创建，但程序会运行后意外停止，并且没有报错。\n下周工作计划&emsp;&emsp;继续完善该框架，找到代码错误位置，添加缺少的环境变量或者文件。\n第五周 2022/03/21 – 2021/03/27本周工作情况和进展\n修改论文&emsp;&emsp;添加了远程证明相关接口和说明。\nDebug&emsp;&emsp;Enclave添加环境变量后peer容器可以正常启动。&emsp;&emsp;Peer侧生命周期包括peer容器创建与启动、创建通道、安装链码。Peer容器内部设置通过docker-compose实现。&emsp;&emsp;错误出在链码安装部分，容器意外停止，导致通道关闭：&emsp;&emsp;而docker logs查看容器情况如下：&emsp;&emsp;报出内存不够错误，而不使用peer enclave则不会报错。然而enclave内部没有放账本、区块等结构，不应该会报出内存错误。\n\n下周工作计划&emsp;&emsp;根据链码安装流程，找出报错点。&emsp;&emsp;检查enclave配置文件，检查映射文件、挂载文件是否过大，减少enclave内存大小。","dateCreated":"2022-04-01T19:00:00+08:00","dateModified":"2023-04-02T20:15:56+08:00","datePublished":"2022-04-01T19:00:00+08:00","description":"2022年3月周报汇总。（区块链版）（此时，我偷偷换了方向跟着另一个学长学习人工智能相关知识，因此背着老师同时在做其他方向，每月会有两个版本的月报，一个上交老师，一个上交学长，此处是3月-区块链版）","headline":"2022年3月科研月报（区块链版）","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E5%8C%BA%E5%9D%97%E9%93%BE%E7%89%88%EF%BC%89/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg","logo":{"@type":"ImageObject","url":"picture.jpg"}},"url":"https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E5%8C%BA%E5%9D%97%E9%93%BE%E7%89%88%EF%BC%89/","keywords":"Hyperledger Fabric, SGX, EGo, 区块链"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com","https://yiwenzhe.com/academia/"],"image":"picture.jpg"},"articleBody":"\n\n本学期科研规划&emsp;&emsp;寻找针对fabric运行环境的攻击方式，创建多个enclave，保护程序、文件安全，添加远程证明，实现enclave间的互信。\n本月规划&emsp;&emsp;完成基本Enclave、远程认证架构。\n第一周 2022/02/21 – 2021/02/27本周工作情况和进展\n写项目书&emsp;&emsp;本周周一到周三都在写项目书技术路线，周四、周五、周日还在进行各种更改。\n尝试远程证明&emsp;&emsp;本周空余时间继续尝试SGX和EGo的远程证明，SGX正常运行，EGo依然报错，但错误与去年不同，这次显示crl过期，不知道原因。\n完善论文&emsp;&emsp;仔细看了批注之后，我认为还是加不了远程证明，需要的时间太长了。可以进一步调研区块链智能合约的隐私问题，并进行内容完善。可以丰富评估内容，添加其他性能评估和安全评估。\n\n存在的问题\n远程证明无法使用，并且远程证明也不好加入，需要修改peer和chaincode两侧的通信协议。没有那么多时间。\n无法与其他工作对比。首先，有许多工作不是fabric平台，对比没有意义。其次，其他fabric平台需要搭建环境，并且对比需要运行同样的链码，去年搭建时失败。\n\n下周工作计划&emsp;&emsp;写完论文\n第二周 2022/02/28 – 2021/03/06本周工作情况和进展\n完善区块链论文&emsp;&emsp;周一-周三完善论文，对多个论文提到的区块链智能合约隐私安全问题进行总结，添加远程认证框架，添加针对各种攻击的防御分析，丰富论文内容。\nEnclave保护密钥文件&emsp;&emsp;由于远程认证存在较多问题，先对框架其他部分进行实现，周四周五实现密钥文件放入Enclave中进行保护。&emsp;&emsp;开题时原预设框架如下图：&emsp;&emsp;右侧Enclave容器内容较少，原计划将整个docker容器放入enclave中，但未找到docker容器放入Enclave的相关论文和实现方法。分析过后，链码容器中只有五个重要的密钥文件和证书，容器相比文件更大，因此只将五个证书放入可以进一步减少加载进Enclave的内存。&emsp;&emsp;本周已实现右边部分，左边部分peer侧结构和链码不同，链码是后续上传载入的，而peer是网络启动时运行的，因此需要进一步分析，创建Enclave。\n\n存在的问题\n远程认证未实现，需要进一步调研解决\nPeer侧程序和证书未加入enclave，peer容器需要配置可信镜像环境\n\n下周工作计划&emsp;&emsp;首先实现peer侧可信镜像环境构建，创建配备SGX的peer容器。然后分析peer侧启动流程，为peer程序创建Enclave。最后同样将peer容器中重要证书和密钥放入Enclave中保护。\n第三周 2022/03/07 – 2021/03/13本周工作情况和进展\n完善论文+创建eFabric镜像&emsp;&emsp;在编写peer可信镜像时，如果采用他人的SGX镜像，需要加载大量数据，导致镜像很大，1G-2G左右。并且该镜像是在DockerHub上找的，在论文中使用没有依据。因此我基于该镜像构建方式，构建eFabric/base镜像，作为链码、peer镜像的父镜像。\nPeer可信镜像构建&emsp;&emsp;经过分析，peer镜像构建主要是在dockerfile中，而源码中涉及较少。因此以golang镜像作为编译镜像，以eFabric/base作为运行父镜像，采用双阶段不同镜像的使用方式，可以缩减镜像体积。\n\n存在的问题&emsp;&emsp;Peer镜像虽然具备了SGX和EGo环境，但还是缺乏sgx驱动，需要外部挂载。Peer容器与链码容器启动方式不同，目前还没有找到挂载点。\n下周工作计划&emsp;&emsp;找到peer镜像sgx驱动的挂载点，实现peer可信容器的创建，将peer程序和证书密钥都放入Enclave中保护。\n第四周 2022/03/14 – 2021/03/20本周工作情况和进展\n完善多Enclave架构&emsp;&emsp;由于peer生命周期和链码差异较大，链码生命周期在Fabric编译时决定，而peer的生命周期由用户文件决定。Peer容器的配置都由用户的docker-compose文件设置，因此挂载点就在此处。同样，peer程序运行依赖大量的环境变量和密钥等文件，需要将环境变量传递进Enclave中，将文件挂载入Enclave。&emsp;&emsp;但程序在Enclave中运行后会意外停止，并且没有错误爆出，未找到错误点，怀疑是缺少一些环境变量。\n修改论文&emsp;&emsp;重新阅读FPC论文后发现，作者在论文中评估了TCB大小和性能数据。作者使用系统代码中可信部分的行数作为TCB大小的评估依据，并把FPC与原始Fabric进行性能比较，得出性能百分比为80%-95%。\n\n存在的问题&emsp;&emsp;目前peer Enclave可以成功创建，但程序会运行后意外停止，并且没有报错。\n下周工作计划&emsp;&emsp;继续完善该框架，找到代码错误位置，添加缺少的环境变量或者文件。\n第五周 2022/03/21 – 2021/03/27本周工作情况和进展\n修改论文&emsp;&emsp;添加了远程证明相关接口和说明。\nDebug&emsp;&emsp;Enclave添加环境变量后peer容器可以正常启动。&emsp;&emsp;Peer侧生命周期包括peer容器创建与启动、创建通道、安装链码。Peer容器内部设置通过docker-compose实现。&emsp;&emsp;错误出在链码安装部分，容器意外停止，导致通道关闭：&emsp;&emsp;而docker logs查看容器情况如下：&emsp;&emsp;报出内存不够错误，而不使用peer enclave则不会报错。然而enclave内部没有放账本、区块等结构，不应该会报出内存错误。\n\n下周工作计划&emsp;&emsp;根据链码安装流程，找出报错点。&emsp;&emsp;检查enclave配置文件，检查映射文件、挂载文件是否过大，减少enclave内存大小。","dateCreated":"2022-04-01T19:00:00+08:00","dateModified":"2023-04-02T20:15:56+08:00","datePublished":"2022-04-01T19:00:00+08:00","description":"2022年3月周报汇总。（区块链版）（此时，我偷偷换了方向跟着另一个学长学习人工智能相关知识，因此背着老师同时在做其他方向，每月会有两个版本的月报，一个上交老师，一个上交学长，此处是3月-区块链版）","headline":"2022年3月科研月报（区块链版）","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E5%8C%BA%E5%9D%97%E9%93%BE%E7%89%88%EF%BC%89/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com","https://yiwenzhe.com/academia/"],"image":"picture.jpg","logo":{"@type":"ImageObject","url":"picture.jpg"}},"url":"https://yiwenzhe.com/2022/04/01/2022%E5%B9%B43%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5%EF%BC%88%E5%8C%BA%E5%9D%97%E9%93%BE%E7%89%88%EF%BC%89/","keywords":"Hyperledger Fabric, SGX, EGo, 区块链"}</script>
     <meta name="description" content="2022年3月周报汇总。（区块链版）（此时，我偷偷换了方向跟着另一个学长学习人工智能相关知识，因此背着老师同时在做其他方向，每月会有两个版本的月报，一个上交老师，一个上交学长，此处是3月-区块链版）">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="2022年3月科研月报（区块链版）">
@@ -229,6 +229,14 @@
                         <a class="sidebar-button-link " href="mailto:2410776350@qq.com" target="_blank" rel="external nofollow noopener noreferrer" title="邮箱">
                         <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
                         <span class="sidebar-button-desc">邮箱</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://yiwenzhe.com/academia/" rel="noopener" title="学术主页">
+                        <i class="sidebar-button-icon fa fa-graduation-cap" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">学术主页</span>
                     </a>
             </li>
             
@@ -450,7 +458,7 @@
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2023 <a href="https://yiwenzhe.com">YWZ</a>. All Rights Reserved.
+        Copyrights &copy; 2024 <a href="https://yiwenzhe.com">YWZ</a>. All Rights Reserved.
     </span>
     <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
 <script>
@@ -635,20 +643,5 @@ setInterval("createtime()",250);
 
 
 
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-</body>
+    </body>
 </html>

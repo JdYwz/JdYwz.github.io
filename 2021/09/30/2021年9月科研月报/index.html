@@ -17,7 +17,7 @@
             <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
         
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg"},"articleBody":"\n\n本学期的科研计划&emsp;&emsp;本学期的科研项目为使用SGX保护hyperledger-fabric区块链，目前已经成功部署fabric网络和SGX，对二者进行测试使用。&emsp;&emsp;初步计划在年底前实现简单地将chaincode放入SGX的enclave中运行（在fabric中称为链码chaincode，等同于其他区块链中的智能合约Smart contract）。为实现该想法，首先需要打通fabric链码由go语言编写和SGX由C语言编写的限制，通过阅读ego的实现方法，模拟ego，为go语言编写的chaincode创造enclave，保护其运行。&emsp;&emsp;在上述计划完成后，分析多种针对fabric的攻击方式，目前已经调研了Sybil攻击、Rollback攻击，改进以上方案，抵御至少一种攻击行为。\n本周工作情况和进展\nchaincode是如何安装和运行的?&emsp;&emsp;在fabric中，chaincode是通过如下命令安装到网络中的：\n1peer lifecycle chaincode install mycc.tar.gz\n&emsp;&emsp;其中peer是fabric操作的指令，mycc.tar.gz就是chaincode的压缩包，其中包含一个json文件和go文件。&emsp;&emsp;在安装后，peer实例化该chaincode时，peer命令会创建一个docker文件，为chaincode创建容器，编译go文件，并将编译后的二进制文件放入容器中运行。之后peer便会通过chaincode中的接口（Init、Invoke、Query）来与之交互。\n\nEGo&emsp;&emsp;ego官网：https://docs.edgeless.systems/ego/#/&emsp;&emsp;ego-go，一个经过改进的Go编译器，可以从给定的Go项目中构建与enclave兼容的可执行文件——同时提供与原始Go编译器相同的CLI。&emsp;&emsp;ego，一个CLI工具，可以处理所有与enclave相关的任务，如签名和创建enclave。&emsp;&emsp;ego使用如下：\n123ego-go build helloworld.go  //编译一个go程序ego sign helloworld         //创建enclave.json配置文件和公私密钥对ego run helloworld          //在enclave中运行（此处是在仿真模式运行）\n\n\n针对fabric提出三种方案&emsp;&emsp;A方案：&emsp;&emsp;使用ego，设法在运行时替换go为ego，并使用ego run运行chaincode。&emsp;&emsp;问题：chaincode不是独立的运行程序，需要与peer程序交互，因此无法直接使用ego run运行。&emsp;&emsp;B方案：&emsp;&emsp;自己编写chaincode，将chaincode划分为两部分，交互的接口部分使用go语言编写，实际运行部分使用c语言编写，并启动enclave运行。&emsp;&emsp;问题：go语言如何与C语言交互？go程序会被peer编译，c语言如何被fabric编译运行？并且该方案也不实用，用户每次都需要重新编写chaincode。&emsp;&emsp;C方案：&emsp;&emsp;阅读ego源码，模仿ego为go程序创建enclave功能的实现，在网络中直接为chaincode创建enclave。&emsp;&emsp;该方案较为实用，用户只需要和之前一样编写go语言的chaincode即可。难点在于ego源码的阅读和实现。\n\n\n存在的问题\n源码理解问题&emsp;&emsp;fabric源码、sgx实现方法、ego源码均需要时间去理解，fabric源码量较大，因此可以选择chaincode的部分先着重分析。而网络中关于ego的解释文件很少，官网也只是粗略地介绍使用方法，因此源码阅读很有难度，只能通过cmakefile来理清文件结构。同时fabric都是使用go语言编写，我未系统地学习go语言，因此也需要花时间了解go语法。\n\n二者交互问题&emsp;&emsp;整个科研方案最大的问题就是go语言和c语言的结合问题，fabric只支持go语言，sgx只能通过C语言编写，因此将二者结合就是一个难点。目前还没有较好的解决方案。\n\n\n下周工作计划\n继续ego源码阅读\nsgx相关文件阅读，并充分学会编写sgx程序\n尝试编写go语言的enclave代码（模仿ego）（可能需要多周实现）\n","dateCreated":"2021-09-30T16:28:35+08:00","dateModified":"2022-11-06T13:00:55+08:00","datePublished":"2021-09-30T16:28:35+08:00","description":"导师让我们将每周的工作用科研周报的形式汇报给她，在此同步记录。\n本次周期为2021/09/26—2021/10/01。","headline":"2021年9月科研月报","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com"],"image":"picture.jpg","logo":{"@type":"ImageObject","url":"picture.jpg"}},"url":"https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/","keywords":"Hyperledger Fabric, SGX, EGo, 区块链"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com","https://yiwenzhe.com/academia/"],"image":"picture.jpg"},"articleBody":"\n\n本学期的科研计划&emsp;&emsp;本学期的科研项目为使用SGX保护hyperledger-fabric区块链，目前已经成功部署fabric网络和SGX，对二者进行测试使用。&emsp;&emsp;初步计划在年底前实现简单地将chaincode放入SGX的enclave中运行（在fabric中称为链码chaincode，等同于其他区块链中的智能合约Smart contract）。为实现该想法，首先需要打通fabric链码由go语言编写和SGX由C语言编写的限制，通过阅读ego的实现方法，模拟ego，为go语言编写的chaincode创造enclave，保护其运行。&emsp;&emsp;在上述计划完成后，分析多种针对fabric的攻击方式，目前已经调研了Sybil攻击、Rollback攻击，改进以上方案，抵御至少一种攻击行为。\n本周工作情况和进展\nchaincode是如何安装和运行的?&emsp;&emsp;在fabric中，chaincode是通过如下命令安装到网络中的：\n1peer lifecycle chaincode install mycc.tar.gz\n&emsp;&emsp;其中peer是fabric操作的指令，mycc.tar.gz就是chaincode的压缩包，其中包含一个json文件和go文件。&emsp;&emsp;在安装后，peer实例化该chaincode时，peer命令会创建一个docker文件，为chaincode创建容器，编译go文件，并将编译后的二进制文件放入容器中运行。之后peer便会通过chaincode中的接口（Init、Invoke、Query）来与之交互。\n\nEGo&emsp;&emsp;ego官网：https://docs.edgeless.systems/ego/#/&emsp;&emsp;ego-go，一个经过改进的Go编译器，可以从给定的Go项目中构建与enclave兼容的可执行文件——同时提供与原始Go编译器相同的CLI。&emsp;&emsp;ego，一个CLI工具，可以处理所有与enclave相关的任务，如签名和创建enclave。&emsp;&emsp;ego使用如下：\n123ego-go build helloworld.go  //编译一个go程序ego sign helloworld         //创建enclave.json配置文件和公私密钥对ego run helloworld          //在enclave中运行（此处是在仿真模式运行）\n\n\n针对fabric提出三种方案&emsp;&emsp;A方案：&emsp;&emsp;使用ego，设法在运行时替换go为ego，并使用ego run运行chaincode。&emsp;&emsp;问题：chaincode不是独立的运行程序，需要与peer程序交互，因此无法直接使用ego run运行。&emsp;&emsp;B方案：&emsp;&emsp;自己编写chaincode，将chaincode划分为两部分，交互的接口部分使用go语言编写，实际运行部分使用c语言编写，并启动enclave运行。&emsp;&emsp;问题：go语言如何与C语言交互？go程序会被peer编译，c语言如何被fabric编译运行？并且该方案也不实用，用户每次都需要重新编写chaincode。&emsp;&emsp;C方案：&emsp;&emsp;阅读ego源码，模仿ego为go程序创建enclave功能的实现，在网络中直接为chaincode创建enclave。&emsp;&emsp;该方案较为实用，用户只需要和之前一样编写go语言的chaincode即可。难点在于ego源码的阅读和实现。\n\n\n存在的问题\n源码理解问题&emsp;&emsp;fabric源码、sgx实现方法、ego源码均需要时间去理解，fabric源码量较大，因此可以选择chaincode的部分先着重分析。而网络中关于ego的解释文件很少，官网也只是粗略地介绍使用方法，因此源码阅读很有难度，只能通过cmakefile来理清文件结构。同时fabric都是使用go语言编写，我未系统地学习go语言，因此也需要花时间了解go语法。\n\n二者交互问题&emsp;&emsp;整个科研方案最大的问题就是go语言和c语言的结合问题，fabric只支持go语言，sgx只能通过C语言编写，因此将二者结合就是一个难点。目前还没有较好的解决方案。\n\n\n下周工作计划\n继续ego源码阅读\nsgx相关文件阅读，并充分学会编写sgx程序\n尝试编写go语言的enclave代码（模仿ego）（可能需要多周实现）\n","dateCreated":"2021-09-30T16:28:35+08:00","dateModified":"2022-11-06T13:00:55+08:00","datePublished":"2021-09-30T16:28:35+08:00","description":"导师让我们将每周的工作用科研周报的形式汇报给她，在此同步记录。\n本次周期为2021/09/26—2021/10/01。","headline":"2021年9月科研月报","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/"},"publisher":{"@type":"Organization","name":"YWZ","sameAs":["https://github.com/","http://stackoverflow.com/users","https://twitter.com/","https://facebook.com/","https://google.com/","mailto:2410776350@qq.com","https://yiwenzhe.com/academia/"],"image":"picture.jpg","logo":{"@type":"ImageObject","url":"picture.jpg"}},"url":"https://yiwenzhe.com/2021/09/30/2021%E5%B9%B49%E6%9C%88%E7%A7%91%E7%A0%94%E6%9C%88%E6%8A%A5/","keywords":"Hyperledger Fabric, SGX, EGo, 区块链"}</script>
     <meta name="description" content="导师让我们将每周的工作用科研周报的形式汇报给她，在此同步记录。 本次周期为2021&#x2F;09&#x2F;26—2021&#x2F;10&#x2F;01。">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="2021年9月科研月报">
@@ -230,6 +230,14 @@
                     </a>
             </li>
             
+                <li class="sidebar-button">
+                    
+                        <a class="sidebar-button-link " href="https://yiwenzhe.com/academia/" rel="noopener" title="学术主页">
+                        <i class="sidebar-button-icon fa fa-graduation-cap" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">学术主页</span>
+                    </a>
+            </li>
+            
         </ul>
         
             <ul class="sidebar-buttons">
@@ -434,7 +442,7 @@
 
                 <footer id="footer" class="main-content-wrap">
     <span class="copyrights">
-        Copyrights &copy; 2023 <a href="https://yiwenzhe.com">YWZ</a>. All Rights Reserved.
+        Copyrights &copy; 2024 <a href="https://yiwenzhe.com">YWZ</a>. All Rights Reserved.
     </span>
     <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
 <script>
@@ -619,20 +627,5 @@ setInterval("createtime()",250);
 
 
 
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-</body>
+    </body>
 </html>
